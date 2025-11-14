@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* ================================
+   Tailwind v4 THEME CONFIGURATION
+   ================================ */
+@theme {
+  /* Border radius */
+  --radius-sm: calc(0.5rem - 4px);
+  --radius-md: calc(0.5rem - 2px);
+  --radius-lg: 0.5rem;
+  --radius-xl: calc(0.5rem + 4px);
+
+  /* HSL COLOR SYSTEM */
+  --color-background: 220 26% 6%;
+  --color-foreground: 180 100% 90%;
+
+  --color-card: 220 20% 10%;
+  --color-card-foreground: 180 100% 90%;
+
+  --color-popover: 220 20% 10%;
+  --color-popover-foreground: 180 100% 90%;
+
+  --color-primary: 180 100% 50%;
+  --color-primary-foreground: 220 26% 6%;
+
+  --color-secondary: 150 100% 45%;
+  --color-secondary-foreground: 220 26% 6%;
+
+  --color-muted: 220 20% 15%;
+  --color-muted-foreground: 180 20% 60%;
+
+  --color-accent: 280 100% 60%;
+  --color-accent-foreground: 220 26% 6%;
+
+  --color-destructive: 0 84.2% 60.2%;
+  --color-destructive-foreground: 210 40% 98%;
+
+  --color-border: 220 20% 20%;
+  --color-input: 220 20% 20%;
+  --color-ring: 180 100% 50%;
+
+  /* CTF Colors */
+  --color-cyber-glow: 180 100% 50%;
+  --color-neon-green: 150 100% 45%;
+  --color-neon-purple: 280 100% 60%;
+  --grid-color: 220 20% 15%;
+
+  /* Gradients */
+  --gradient-cyber: linear-gradient(135deg, hsl(180 100% 50% / 0.2), hsl(280 100% 60% / 0.2));
+  --gradient-hero: linear-gradient(180deg, hsl(220 26% 6%) 0%, hsl(220 20% 10%) 100%);
+}
+
+/* ================================
+   GLOBAL BASE STYLES
+   ================================ */
+body {
+  background: hsl(var(--color-background));
+  color: hsl(var(--color-foreground));
+}
+
+/* ================================
+   UTILITIES
+   ================================ */
+
+.text-glow-cyan {
+  text-shadow: 0 0 20px hsl(var(--color-cyber-glow) / 0.5),
+               0 0 40px hsl(var(--color-cyber-glow) / 0.3);
+}
+
+.text-glow-green {
+  text-shadow: 0 0 20px hsl(var(--color-neon-green) / 0.5),
+               0 0 40px hsl(var(--color-neon-green) / 0.3);
+}
+
+.bg-gradient-cyber {
+  background: var(--gradient-cyber);
+}
+
+.bg-gradient-hero {
+  background: var(--gradient-hero);
+}
+
+.shadow-elevated {
+  box-shadow: 0 10px 40px hsl(220 26% 6% / 0.5);
+}
+
+/* Glitch animation */
+@keyframes glitch {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+.glitch {
+  animation: glitch 1s infinite;
+}
+
+/* Floating animation for glowing orbs */
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

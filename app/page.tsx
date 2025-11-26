@@ -1,8 +1,25 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { Shield, Terminal, Flag } from "lucide-react";
+import { Shield, Terminal } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import "@/app/styles/cyber-global.css";
 
 const MainPage = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const handleStartHacking = () => {
+    if (session?.user) {
+      // If logged in, go to levels page
+      router.push("/levels/1.1");
+    } else {
+      // If not logged in, go to sign up
+      router.push("/auth/signup");
+    }
+  };
+
   return (
     <>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -31,16 +48,42 @@ const MainPage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(0,255,255,0.5)] hover:shadow-[0_0_30px_rgba(0,255,255,0.7)] transition-all duration-300 group">
+              <Button
+                size="lg"
+                onClick={handleStartHacking}
+                className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(0,255,255,0.5)] hover:shadow-[0_0_30px_rgba(0,255,255,0.7)] transition-all duration-300 group"
+              >
                 <Terminal className="w-5 h-5 mr-2 group-hover:animate-glitch" />
-                Start Hacking
+                {session?.user ? 'Continue Hacking' : 'Start Hacking'}
               </Button>
-              
+
+              {session?.user ? (
+                session.user.isAdmin && (
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    onClick={() => router.push("/admin")}
+                    className="border-2 border-purple-500/50 text-purple-400 hover:bg-purple-500/10"
+                  >
+                    <Shield className="w-5 h-5 mr-2" />
+                    Admin Dashboard
+                  </Button>
+                )
+              ) : (
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => router.push("/auth/signin")}
+                  className="border-2 border-primary/50"
+                >
+                  Sign In
+                </Button>
+              )}
             </div>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-8 mt-20 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.5s" }}>
+          {/* <div className="grid grid-cols-3 gap-8 mt-20 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: "0.5s" }}>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-primary text-glow-cyan mb-2">500+</div>
               <div className="text-sm text-muted-foreground">Active Players</div>
@@ -53,7 +96,7 @@ const MainPage = () => {
               <div className="text-3xl md:text-4xl font-bold text-accent mb-2">24/7</div>
               <div className="text-sm text-muted-foreground">Live Competitions</div>
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </>)

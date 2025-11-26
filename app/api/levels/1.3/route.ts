@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const EXPLOIT = "dns-rebinding-test.internal";
-const FLAG = "flag{javascript_is_not_security}";
+const FLAG = "flag{javascript_security_is_an_illusion}";
 
 export async function POST(req: Request) {
   try {

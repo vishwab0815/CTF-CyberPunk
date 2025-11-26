@@ -18,35 +18,34 @@ export async function POST(req: NextRequest) {
     // --- Flag Fragments ---
     if (d === "flag-archive.internal") {
       return NextResponse.json({
-        flagPart: "flag{dns_failures_are_just_",
-        hint: "Check the older resolver for additional logs.",
+        flagPart: "flag{legacy_systems_",
+        hint: "🔍 Good! You found the first piece. Try checking 'legacy.internal' next.",
       });
     }
 
     if (d === "legacy.internal") {
       return NextResponse.json({
-        flagPart: "informative_",
-        hint: "Think about a DNS record type that stores text.",
+        flagPart: "tell_",
+        hint: "💡 Excellent! One more to go. DNS TXT records often hold text data...",
       });
     }
 
     if (d === "txt.internal") {
       return NextResponse.json({
-        flagPart: "logs}",
-        hint: "You now have all fragments. Reconstruct the flag.",
+        flagPart: "secrets}",
+        hint: "🎉 Perfect! You have all three pieces. Combine them to form the complete flag!",
       });
     }
 
-    // Default
+    // Default - helpful response
     return NextResponse.json({
-      flagPart: "No data found. This domain is secure.",
-      hint: "Try internal domains mentioned in the system notes.",
+      flagPart: "No records found for this domain.",
+      hint: "💭 Tip: Check the page source (Right-click → View Page Source or Ctrl+U) for clues!",
     });
 
   } catch (err) {
     return NextResponse.json({
       flagPart: "Error processing request.",
-      hint: "Ensure your request format is correct.",
     });
   }
 }

@@ -5,10 +5,14 @@ import { motion } from "framer-motion";
 import { ShieldAlert, Terminal as TerminalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useSession } from "next-auth/react";
 import "@/app/styles/cyber-global.css";
 
 export default function LevelOneTwo() {
   const router = useRouter();
+  const { canAccess, isChecking } = useLevelAccess('1.2');
+  const { update } = useSession();
 
   // Input (maxlength trap)
   const [input, setInput] = useState("");
@@ -22,13 +26,14 @@ export default function LevelOneTwo() {
 
   const terminalRef = useRef<HTMLDivElement | null>(null);
 
-  // Injected View Source HTML comment
+  // Injected View Source HTML comment (subtle hint)
   const htmlComment = `
     <!--
-      Admin Note:
-      Tool is failing on 'dns-rebinding-test.internal'. It's too long!
-      TEMP FIX: Added maxlength="15" to the input.
-      DO NOT REMOVE.
+      Security patch v1.2 applied: client-side input validation
+      Max input length: 15 characters enforced at UI layer
+
+      Test domain: secure-testing-environment-27.internal
+      Note: Exceeds maxlength constraint - verify server-side validation works
     -->
   `;
 
@@ -84,10 +89,44 @@ export default function LevelOneTwo() {
         await appendTypedLine(ln);
       }
 
-      // Detect flag
+      // Detect flag and submit
       if (output.includes("flag{")) {
-        setFlagFound(true);
-        setTimeout(() => router.push("/levels/1.3"), 1600);
+        const flagMatch = output.match(/flag\{[^}]+\}/);
+        if (flagMatch) {
+          const flag = flagMatch[0];
+          try {
+            const submitRes = await fetch('/api/submit-flag', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ level: '1.2', flag }),
+            });
+            const submitData = await submitRes.json();
+
+            // Debug logging
+            console.log('Submit response:', submitData);
+
+            if (submitData.correct) {
+              setFlagFound(true);
+
+              // Refresh the session to update JWT token with new currentLevel
+              await update();
+
+              // Use completionPage if available, otherwise use nextLevel
+              const redirectPath = submitData.completionPage || `/levels/${submitData.nextLevel}`;
+              console.log('Redirecting to:', redirectPath);
+              setTimeout(() => router.push(redirectPath), 1600);
+            } else if (submitData.error) {
+              console.error('Submission failed:', submitData.error);
+              await appendTypedLine(`> Error: ${submitData.error}`);
+            } else {
+              console.log('Flag incorrect, attempts:', submitData.attempts);
+              await appendTypedLine(`> Incorrect flag. Attempts: ${submitData.attempts}`);
+            }
+          } catch (err) {
+            console.error('Submission error:', err);
+            await appendTypedLine(`> Network error: ${err}`);
+          }
+        }
       }
     } catch (err: any) {
       await appendTypedLine(`> Error: ${err?.message ?? "unknown"}`);
@@ -98,11 +137,19 @@ export default function LevelOneTwo() {
   useEffect(() => {
     if (logRef.current.length === 0) {
       (async () => {
-        await appendTypedLine("[SYSTEM] Patches v1.2 deployed — maxlength enforced.");
-        await appendTypedLine("[TIP] Inspect page source for admin notes.");
+        await appendTypedLine("[SYSTEM] Patches v1.2 deployed — validation active.");
       })();
     }
   }, []);
+
+  // Show loading while checking access
+  if (isChecking || !canAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
+        <div className="text-cyan-400 text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
@@ -163,38 +210,33 @@ export default function LevelOneTwo() {
               Mission Brief
             </div>
 
-            <h2
-              className="text-3xl font-semibold mb-4"
-              style={{
-                background: "linear-gradient(90deg,#7efcff,#a86bff)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              The Patches Team Panicked
-            </h2>
-
-            <p className="text-foreground/80 mb-4">
-              Their “security patch” was simply adding{" "}
-              <span className="text-primary font-semibold">maxlength="15"</span> to the input.
+            <p className="text-base text-foreground/90 font-semibold text-cyan-300 mb-3">
+              📖 Chapter 2: The Client Trap
             </p>
 
-            <p className="text-foreground/70 text-sm">
-              Your task: bypass this client-side restriction using Developer Tools and send the FULL
-              exploit domain to the server:
+            <p className="text-base text-foreground/90 mb-4">
+              After exposing the legacy DNS systems, you've caught NebulaCorp's attention.
+              The development team rushed to implement a{" "}
+              <span className="text-primary font-semibold">"security patch"</span>
+              {" "}to prevent unauthorized access.
             </p>
 
-            <div className="mt-3 font-mono text-primary bg-black/30 px-3 py-2 rounded-lg border border-primary/20 w-fit">
-              dns-rebinding-test.internal
-            </div>
+            <p className="text-foreground/80 text-sm mb-3">
+              Their solution? Add a <span className="text-yellow-400 font-mono">maxlength=15</span> attribute
+              to the input field. That should stop any attempts to query suspicious domains... right?
+            </p>
 
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => navigator.clipboard.writeText("dns-rebinding-test.internal")}
-            >
-              Copy Exploit
-            </Button>
+            <p className="text-foreground/70 text-sm mb-3">
+              Intelligence suggests that NebulaCorp has internal test domains that exceed normal
+              naming conventions. Some are quite long — far beyond the 15-character "security" limit
+              they've imposed.
+            </p>
+
+            <p className="text-foreground/60 text-xs italic">
+              <span className="text-cyan-400">Your Mission:</span> Investigate whether client-side
+              restrictions can truly protect against server-side vulnerabilities. The page source
+              might contain useful information...
+            </p>
           </motion.div>
 
           {/* CONSOLE */}

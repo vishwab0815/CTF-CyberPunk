@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const EXPLOIT_DOMAIN = "dns-rebinding-test.internal"; // 27 chars
-const FLAG = "flag{html_is_not_a_security_control}";
+const EXPLOIT_DOMAIN = "secure-testing-environment-27.internal"; // 27 chars
+const FLAG = "flag{trust_the_server_not_the_client}";
 
 export async function POST(req: NextRequest) {
   try {

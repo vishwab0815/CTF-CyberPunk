@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm tsx:*)",
+      "Bash(node -e:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useSession } from "next-auth/react";
 import "@/app/styles/cyber-global.css";
 
 type ApiResponse = { flagPart: string; hint?: string };
@@ -19,6 +21,8 @@ const normalize = (s: string) => s.trim().toLowerCase();
 
 export default function LevelOneOne() {
   const router = useRouter();
+  const { canAccess, isChecking } = useLevelAccess('1.1');
+  const { update } = useSession();
 
   // Input state
   const [input, setInput] = useState("");
@@ -41,12 +45,16 @@ export default function LevelOneOne() {
 
   const terminalRef = useRef<HTMLDivElement | null>(null);
 
-  // HTML comment for View Source
+  // HTML comment for View Source (helpful for beginners)
   const htmlComment = `
     <!--
-      TODO (jules-dev):
-      DNSSEC still breaks for 'flag-archive.internal'.
-      Fix before production deployment.
+      📝 DEVELOPER NOTE:
+      The old DNS system still responds to queries for:
+      - flag-archive.internal
+      - legacy.internal
+      - txt.internal
+
+      TODO: Decommission these legacy domains before launch!
     -->
   `;
 
@@ -96,6 +104,11 @@ export default function LevelOneOne() {
 
       await appendTypedLine(`> ${data.flagPart}`);
 
+      // Show hints for beginners
+      if (data.hint) {
+        await appendTypedLine(`> ${data.hint}`);
+      }
+
       // store part
       if (
         data.flagPart &&
@@ -106,10 +119,6 @@ export default function LevelOneOne() {
           if (prev.includes(data.flagPart)) return prev;
           return [...prev, data.flagPart];
         });
-      }
-
-      if (data.hint) {
-        await appendTypedLine(`(hint) ${data.hint}`);
       }
     } catch (err: any) {
       await appendTypedLine(`> Error: ${err?.message ?? "unknown"}`);
@@ -125,34 +134,46 @@ export default function LevelOneOne() {
 
   const expectedFlag = collectedParts.join("");
 
-  // Submit modal
-  const handleModalSubmit = (e?: React.FormEvent) => {
+  // Submit modal with API
+  const handleModalSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
     setModalError(null);
 
-    const user = normalize(modalInput);
-    const expected = normalize(expectedFlag);
-
-    if (!user) {
+    if (!modalInput.trim()) {
       setModalError("Please enter the reconstructed flag.");
       return;
     }
 
-    if (user === expected) {
-      setSubmitSuccess(true);
+    try {
+      const res = await fetch('/api/submit-flag', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level: '1.1', flag: modalInput }),
+      });
 
-      void appendTypedLine(`> Flag submitted: ${modalInput}`);
-      void appendTypedLine("> Flag correct. Level complete.");
+      const data = await res.json();
 
-      setTimeout(() => {
-        router.push("/levels/1.2");
-      }, 1500);
+      if (data.correct) {
+        setSubmitSuccess(true);
+        void appendTypedLine(`> Flag submitted: ${modalInput}`);
+        void appendTypedLine("> Flag correct. Level complete.");
 
-    } else {
-      setModalError("Incorrect flag. Check fragments and try again.");
-      void appendTypedLine("> Flag submitted: " + modalInput);
-      void appendTypedLine("> Result: Incorrect flag.");
+        // Refresh session to update JWT token
+        await update();
+
+        // Use completionPage if available, otherwise use nextLevel
+        const redirectPath = data.completionPage || `/levels/${data.nextLevel}`;
+        setTimeout(() => {
+          router.push(redirectPath);
+        }, 1500);
+      } else {
+        setModalError(`Incorrect flag. Attempts: ${data.attempts || 1}`);
+        void appendTypedLine("> Flag submitted: " + modalInput);
+        void appendTypedLine("> Result: Incorrect flag.");
+      }
+    } catch (err: any) {
+      setModalError("Error submitting flag. Please try again.");
     }
   };
 
@@ -160,6 +181,15 @@ export default function LevelOneOne() {
     setModalOpen(false);
     setModalError(null);
   };
+
+  // Show loading while checking access
+  if (isChecking || !canAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
+        <div className="text-cyan-400 text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
@@ -205,30 +235,40 @@ export default function LevelOneOne() {
             </div>
 
             <div className="grid gap-4 text-foreground/80 text-sm leading-relaxed">
-              <p className="text-base text-foreground/90">
-                Welcome, analyst. You’ve been assigned to evaluate NebulaCorp’s newly deployed
-                <span className="text-primary font-semibold"> DNS Integrity Auditor</span>.
+              <p className="text-base text-foreground/90 font-semibold text-cyan-300">
+                📖 Chapter 1: The Discovery
               </p>
 
-              <ul className="text-left mx-auto max-w-md grid gap-2">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">▹</span> Engineers pushed it live without full
-                  security review.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">▹</span> Rumor says a developer left clues hidden
-                  inside the page source.
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary">▹</span> Query internal domains to retrieve flag
-                  fragments.
-                </li>
-              </ul>
+              <p className="text-base text-foreground/90">
+                Welcome, investigator! You've been hired by NebulaCorp's board of directors to audit their new
+                <span className="text-primary font-semibold"> DNS Integrity System</span>.
+                They rushed it to production, and whispers suggest it may not be secure.
+              </p>
 
-              <div className="h-px bg-primary/20 my-3 rounded-full" />
+              <p className="text-foreground/80">
+                Your contact at NebulaCorp mentions that the development team left some "breadcrumbs"
+                in the system. <span className="text-green-400 font-semibold">Legacy DNS servers are still running</span>,
+                and old internal domains might reveal secrets...
+              </p>
 
-              <p className="text-foreground/80 italic">
-                Objective: uncover the trail, retrieve fragments, reconstruct the flag.
+              <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3 my-2">
+                <p className="text-cyan-300 text-xs font-semibold mb-2">🎯 YOUR MISSION:</p>
+                <ul className="text-left grid gap-1 text-xs">
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400">1.</span> Check the page source code for developer notes
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400">2.</span> Query the internal DNS domains you discover
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400">3.</span> Collect all flag fragments and combine them
+                  </li>
+                </ul>
+              </div>
+
+              <p className="text-foreground/70 text-xs italic">
+                💡 <span className="text-yellow-400">Beginner Tip:</span> Right-click anywhere on this page
+                and select "View Page Source" to see hidden comments!
               </p>
             </div>
           </div>

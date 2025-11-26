@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import { ShieldAlert, Terminal as TerminalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useSession } from "next-auth/react";
 import "@/app/styles/cyber-global.css";
 
-/* Simple JS guard — players must delete this in DevTools */
+// Security validation (exposed to window for "bypass")
 function jsGuard(domain: string): boolean {
   if (domain === "dns-rebinding-test.internal") {
     alert("Blocked by JavaScript security policy.");
@@ -16,8 +18,15 @@ function jsGuard(domain: string): boolean {
   return false;
 }
 
+// Expose to global scope so it can be "hacked"
+if (typeof window !== 'undefined') {
+  (window as any).jsGuard = jsGuard;
+}
+
 export default function LevelOneThree() {
   const router = useRouter();
+  const { canAccess, isChecking } = useLevelAccess('1.3');
+  const { update } = useSession();
 
   // HYDRATION-SAFE MOUNT FLAG
   const [mounted, setMounted] = useState(false);
@@ -67,7 +76,6 @@ export default function LevelOneThree() {
     if (mounted) {
       (async () => {
         await appendTypedLine("[SYSTEM] JavaScript Guard v1.0 Activated.");
-        await appendTypedLine("[TIP] Open DevTools → Sources → remove jsGuard() check.");
       })();
     }
   }, [mounted]);
@@ -78,7 +86,8 @@ export default function LevelOneThree() {
     const domain = input.trim();
     if (!domain || isTyping) return;
 
-    if (jsGuard(domain)) return;
+    // Use window.jsGuard to allow console override
+    if ((window as any).jsGuard(domain)) return;
 
     setInput("");
     await appendTypedLine(`> Querying ${domain} ...`);
@@ -98,26 +107,53 @@ export default function LevelOneThree() {
     }
 
     if (output.includes("flag{")) {
-      setFlagFound(true);
-      setTimeout(() => router.push("/completion/level-1-completed"), 1500);
+      const flagMatch = output.match(/flag\{[^}]+\}/);
+      if (flagMatch) {
+        const flag = flagMatch[0];
+        try {
+          const submitRes = await fetch('/api/submit-flag', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ level: '1.3', flag }),
+          });
+          const submitData = await submitRes.json();
+          if (submitData.correct) {
+            setFlagFound(true);
+            // Refresh session
+            await update();
+            // Use completionPage if available, otherwise use nextLevel
+            const redirectPath = submitData.completionPage || `/levels/${submitData.nextLevel}`;
+            setTimeout(() => router.push(redirectPath), 1500);
+          }
+        } catch (err) {
+          console.error('Submission error:', err);
+        }
+      }
     }
   };
 
-  // HTML comment injection (safe)
+  // HTML comment injection (more subtle)
   const htmlComment = `
     <!--
-      Dev Note:
-      JS Guard enabled for domain:
-      dns-rebinding-test.internal
-      TODO: Move security logic to backend.
+      Frontend validation layer active
+      Consider migrating critical checks server-side
     -->
   `;
 
-  /* 
+  /*
   ============================================================
   RETURN SECTION (Hydration-safe)
   ============================================================
   */
+
+  // Show loading while checking access
+  if (isChecking || !canAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
+        <div className="text-cyan-400 text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center p-6 overflow-hidden">
@@ -175,36 +211,38 @@ export default function LevelOneThree() {
           >
             <div className="text-xs text-primary uppercase mb-2">Mission Brief</div>
 
-            <h2
-              className="text-3xl font-semibold mb-4"
-              style={{
-                background: "linear-gradient(90deg,#7efcff,#a86bff)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              The JavaScript Guard
-            </h2>
-
-            <p className="text-foreground/80 mb-3">
-              The Patches Team added a <span className="text-primary font-bold">JavaScript check</span> that blocks your request if the exploit domain is detected.
+            <p className="text-base text-foreground/90 font-semibold text-cyan-300 mb-3">
+              📖 Chapter 3: The JavaScript Illusion
             </p>
 
-            <p className="text-foreground/70 text-sm">
-              Your task: Open DevTools → Sources, remove or modify the <strong>jsGuard</strong> function.
+            <p className="text-base text-foreground/90 mb-4">
+              NebulaCorp's security team is frustrated. After your previous exploits, they've
+              deployed what they call their{" "}
+              <span className="text-primary font-semibold">"unbreakable defense"</span>
+              {" "}— a JavaScript validation layer.
             </p>
 
-            <div className="mt-3 font-mono text-primary bg-black/40 px-3 py-2 rounded-lg border border-primary/30 w-fit">
-              dns-rebinding-test.internal
+            <p className="text-foreground/80 text-sm mb-3">
+              This time, a <span className="text-yellow-400 font-mono">jsGuard()</span> function
+              actively blocks suspicious domains before they even reach the server. Try querying
+              <span className="font-mono text-red-300"> "dns-rebinding-test.internal"</span>
+              {" "}and watch it get intercepted.
+            </p>
+
+            <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 my-3">
+              <p className="text-purple-300 text-xs font-semibold mb-1">🛡️ SECURITY LAYER DETECTED:</p>
+              <p className="text-foreground/70 text-xs">
+                JavaScript Guard v1.0 is active and monitoring all domain queries.
+                The development team believes this is foolproof since it runs
+                {" "}<span className="text-yellow-300">"before the user can do anything."</span>
+              </p>
             </div>
 
-            <Button
-              variant="outline"
-              className="mt-6"
-              onClick={() => navigator.clipboard.writeText("dns-rebinding-test.internal")}
-            >
-              Copy Exploit
-            </Button>
+            <p className="text-foreground/60 text-xs italic">
+              <span className="text-cyan-400">Your Mission:</span> JavaScript runs in the browser...
+              which means it runs on <span className="text-primary font-semibold">your machine</span>.
+              Can you find a way to take control?
+            </p>
           </motion.div>
 
           {/* TERMINAL PANEL */}

@@ -1,23 +1,31 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useLevelAccess } from "@/lib/useLevelAccess";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Zap, Check } from "lucide-react";
+import { AlertTriangle, Zap, Check, Lock, Skull } from "lucide-react";
 import { useSession } from "next-auth/react";
 import "@/app/styles/cyber-global.css";
 
-// Error log data for Phase 3
+// Expanded error logs for Phase 3 (15 total, 5 critical)
 const ERROR_LOGS = [
-  { id: 1, code: 'ERR-11', color: 'red', text: 'MEMORY_LEAK_DETECTED' },
-  { id: 2, code: 'ERR-28', color: 'yellow', text: 'CACHE_OVERFLOW_WARNING' },
-  { id: 3, code: 'ERR-07', color: 'blue', text: 'NETWORK_TIMEOUT_ERROR' },
-  { id: 4, code: 'ERR-44', color: 'red', text: 'STACK_CORRUPTION_CRITICAL' },
-  { id: 5, code: 'ERR-13', color: 'green', text: 'PROCESS_SPAWN_SUCCESS' },
-  { id: 6, code: 'ERR-31', color: 'red', text: 'SEGFAULT_VIOLATION_FATAL' },
-  { id: 7, code: 'ERR-92', color: 'purple', text: 'THREAD_DEADLOCK_DETECTED' },
+  { id: 1, code: 'ERR-11', color: 'red', text: 'CRITICAL_MEMORY_LEAK_FATAL', critical: true },
+  { id: 2, code: 'ERR-28', color: 'yellow', text: 'CACHE_OVERFLOW_WARNING', critical: false },
+  { id: 3, code: 'ERR-07', color: 'blue', text: 'NETWORK_TIMEOUT_ERROR', critical: false },
+  { id: 4, code: 'ERR-44', color: 'red', text: 'STACK_CORRUPTION_IMMINENT', critical: true },
+  { id: 5, code: 'ERR-13', color: 'green', text: 'PROCESS_SPAWN_SUCCESS', critical: false },
+  { id: 6, code: 'ERR-31', color: 'red', text: 'SEGFAULT_VIOLATION_CRITICAL', critical: true },
+  { id: 7, code: 'ERR-92', color: 'purple', text: 'THREAD_DEADLOCK_DETECTED', critical: false },
+  { id: 8, code: 'ERR-55', color: 'cyan', text: 'BUFFER_UNDERFLOW_INFO', critical: false },
+  { id: 9, code: 'ERR-88', color: 'red', text: 'KERNEL_PANIC_EMERGENCY', critical: true },
+  { id: 10, code: 'ERR-19', color: 'yellow', text: 'DISK_SPACE_LOW_WARNING', critical: false },
+  { id: 11, code: 'ERR-66', color: 'blue', text: 'CONNECTION_RESET_PEER', critical: false },
+  { id: 12, code: 'ERR-77', color: 'red', text: 'HEAP_OVERFLOW_EXPLOIT_DETECTED', critical: true },
+  { id: 13, code: 'ERR-33', color: 'green', text: 'SERVICE_RESTART_OK', critical: false },
+  { id: 14, code: 'ERR-22', color: 'purple', text: 'MUTEX_WAIT_TIMEOUT', critical: false },
+  { id: 15, code: 'ERR-99', color: 'cyan', text: 'LOGGING_BUFFER_FULL', critical: false },
 ];
 
 export default function LevelThreeOne() {
@@ -30,19 +38,26 @@ export default function LevelThreeOne() {
   const [completedPhases, setCompletedPhases] = useState<number[]>([]);
   const [fragments, setFragments] = useState<string[]>([]);
 
-  // Phase 1: Multi-click state
+  // Phase 1: Rapid multi-click (12 clicks in 2.5 seconds)
   const [clickCount, setClickCount] = useState<number>(0);
-  const [clickTimestamp, setClickTimestamp] = useState<number>(0);
-  const [phase1Hint, setPhase1Hint] = useState<boolean>(false);
+  const [phase1Timer, setPhase1Timer] = useState<number>(0);
+  const phase1StartTime = useRef<number>(0);
 
-  // Phase 2: Arrow key state
+  // Phase 2: Extended arrow key sequence
   const [keySequence, setKeySequence] = useState<string[]>([]);
-  const [phase2Hint, setPhase2Hint] = useState<boolean>(false);
-  const [phase2SpacingAlign, setPhase2SpacingAlign] = useState<boolean>(false);
+  const [phase2Failed, setPhase2Failed] = useState<boolean>(false);
 
-  // Phase 3: Error line state
+  // Phase 3: Critical error triage (5 critical errors)
   const [selectedErrors, setSelectedErrors] = useState<number[]>([]);
   const [phase3Failed, setPhase3Failed] = useState<boolean>(false);
+  const [phase3Timer, setPhase3Timer] = useState<number>(10);
+
+  // Phase 4: Cipher decode
+  const [cipherInput, setCipherInput] = useState<string>('');
+  const [phase4Hint, setPhase4Hint] = useState<boolean>(false);
+
+  // Phase 5: Final authentication
+  const [finalInput, setFinalInput] = useState<string>('');
 
   // General state
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,14 +66,10 @@ export default function LevelThreeOne() {
   const [allComplete, setAllComplete] = useState<boolean>(false);
 
   // Visual effects
-  const [glitchIntensity, setGlitchIntensity] = useState<number>(1);
+  const [glitchIntensity, setGlitchIntensity] = useState<number>(2);
   const [scanlineOffset, setScanlineOffset] = useState<number>(0);
 
-  // Refs
-  const phase1StartTime = useRef<number>(0);
-  const phase2StartTime = useRef<number>(Date.now());
-
-  // Fetch current progress on mount
+  // Fetch progress
   useEffect(() => {
     fetchProgress();
   }, []);
@@ -82,57 +93,59 @@ export default function LevelThreeOne() {
   // Scanline animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setScanlineOffset((prev) => (prev + 2) % 100);
-    }, 50);
+      setScanlineOffset((prev) => (prev + 3) % 100);
+    }, 40);
     return () => clearInterval(interval);
   }, []);
 
-  // Phase 1 hint timer (45 seconds)
+  // Phase 3 countdown timer
   useEffect(() => {
-    if (currentPhase === 1 && !completedPhases.includes(1)) {
-      const timer = setTimeout(() => {
-        setPhase1Hint(true);
-      }, 45000);
+    if (currentPhase === 3 && !completedPhases.includes(3) && phase3Timer > 0) {
+      const interval = setInterval(() => {
+        setPhase3Timer((prev) => {
+          if (prev <= 1) {
+            // Time's up - reset
+            setSelectedErrors([]);
+            return 10;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [currentPhase, completedPhases, phase3Timer]);
 
+  // Phase 4 hint timer (90 seconds)
+  useEffect(() => {
+    if (currentPhase === 4 && !completedPhases.includes(4)) {
+      const timer = setTimeout(() => {
+        setPhase4Hint(true);
+      }, 90000);
       return () => clearTimeout(timer);
     }
   }, [currentPhase, completedPhases]);
 
-  // Phase 2 hint timer (60 seconds)
-  useEffect(() => {
-    if (currentPhase === 2 && !completedPhases.includes(2)) {
-      const timer = setTimeout(() => {
-        setPhase2Hint(true);
-        // Flash alignment for 1 second
-        setPhase2SpacingAlign(true);
-        setTimeout(() => setPhase2SpacingAlign(false), 1000);
-      }, 60000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [currentPhase, completedPhases]);
-
-  // Phase 1: Multi-click handler
+  // Phase 1: Rapid clicking (12 clicks in 2.5 seconds)
   const handleAccessClick = async () => {
     const now = Date.now();
 
-    // Reset if more than 3 seconds passed
-    if (phase1StartTime.current === 0 || now - phase1StartTime.current > 3000) {
+    if (phase1StartTime.current === 0 || now - phase1StartTime.current > 2500) {
       setClickCount(1);
       phase1StartTime.current = now;
+      setPhase1Timer(2500);
       return;
     }
 
     const newClickCount = clickCount + 1;
     setClickCount(newClickCount);
+    setPhase1Timer(2500 - (now - phase1StartTime.current));
 
-    // Check if 5 clicks within 3 seconds
-    if (newClickCount === 5 && now - phase1StartTime.current <= 3000) {
-      await submitPhase(1, 'ACCESS-SEQUENCE');
+    if (newClickCount === 12 && now - phase1StartTime.current <= 2500) {
+      await submitPhase(1, 'RAPID-ACCESS-OVERRIDE');
     }
   };
 
-  // Phase 2: Arrow key handler
+  // Phase 2: Extended Konami code ↑↑↓↓←→←→↓→↓→
   useEffect(() => {
     if (currentPhase !== 2 || completedPhases.includes(2)) return;
 
@@ -152,21 +165,27 @@ export default function LevelThreeOne() {
         const newSequence = [...keySequence, keyMap[key]];
         setKeySequence(newSequence);
 
-        // Check if sequence matches ↑↑↓↓←→←→
-        const targetSequence = ['↑', '↑', '↓', '↓', '←', '→', '←', '→'];
+        // Extended sequence: ↑↑↓↓←→←→↓→↓→
+        const targetSequence = ['↑', '↑', '↓', '↓', '←', '→', '←', '→', '↓', '→', '↓', '→'];
 
         if (newSequence.length === targetSequence.length) {
           const isCorrect = newSequence.every((k, i) => k === targetSequence[i]);
 
           if (isCorrect) {
-            submitPhase(2, 'KONAMI-VARIANT');
+            submitPhase(2, 'EXTENDED-KONAMI-CIPHER');
           } else {
-            // Reset on incorrect
-            setTimeout(() => setKeySequence([]), 500);
+            setPhase2Failed(true);
+            setTimeout(() => {
+              setKeySequence([]);
+              setPhase2Failed(false);
+            }, 800);
           }
         } else if (newSequence.length > targetSequence.length) {
-          // Reset if too long
-          setTimeout(() => setKeySequence([]), 500);
+          setPhase2Failed(true);
+          setTimeout(() => {
+            setKeySequence([]);
+            setPhase2Failed(false);
+          }, 800);
         }
       }
     };
@@ -175,37 +194,46 @@ export default function LevelThreeOne() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentPhase, completedPhases, keySequence]);
 
-  // Phase 3: Error line click handler
+  // Phase 3: Critical error triage (select 5 red errors in exact order, within 10 seconds)
   const handleErrorClick = async (errorId: number) => {
     if (currentPhase !== 3 || completedPhases.includes(3)) return;
 
     const error = ERROR_LOGS.find((e) => e.id === errorId);
     if (!error) return;
 
-    // Check if it's red
-    if (error.color !== 'red') {
-      // Wrong color clicked - shake and reset
+    // Must click critical (red) errors only
+    if (!error.critical || error.color !== 'red') {
       setPhase3Failed(true);
       setSelectedErrors([]);
-      setTimeout(() => setPhase3Failed(false), 500);
+      setPhase3Timer(10);
+      setTimeout(() => setPhase3Failed(false), 600);
       return;
     }
 
-    // Add to selected
     const newSelected = [...selectedErrors, errorId];
     setSelectedErrors(newSelected);
 
-    // Check if all red errors selected in order
-    const redErrors = ERROR_LOGS.filter((e) => e.color === 'red').map((e) => e.id);
-    const isCorrect = newSelected.length === redErrors.length &&
-      newSelected.every((id, index) => id === redErrors[index]);
+    // Get all critical errors in order
+    const criticalErrors = ERROR_LOGS.filter((e) => e.critical && e.color === 'red').map((e) => e.id);
+    const isComplete = newSelected.length === criticalErrors.length &&
+      newSelected.every((id, index) => id === criticalErrors[index]);
 
-    if (isCorrect) {
-      await submitPhase(3, 'ERROR-FILTER');
+    if (isComplete) {
+      await submitPhase(3, 'CRITICAL-ERROR-TRIAGE');
     }
   };
 
-  // Submit phase to server
+  // Phase 4: Cipher decode (ROT13)
+  const handleCipherSubmit = async () => {
+    await submitPhase(4, cipherInput.trim());
+  };
+
+  // Phase 5: Final authentication
+  const handleFinalSubmit = async () => {
+    await submitPhase(5, finalInput.trim());
+  };
+
+  // Submit phase
   const submitPhase = async (phase: number, input: string) => {
     if (loading) return;
 
@@ -223,17 +251,16 @@ export default function LevelThreeOne() {
       const data = await res.json();
 
       if (res.status === 429) {
-        // Rate limited
         setError(data.error || 'Rate limit exceeded. Please wait.');
-        setGlitchIntensity(3);
-        setTimeout(() => setGlitchIntensity(1), 1000);
+        setGlitchIntensity(4);
+        setTimeout(() => setGlitchIntensity(2), 1200);
         return;
       }
 
       if (!res.ok) {
         setError(data.error || 'An error occurred');
-        setGlitchIntensity(2);
-        setTimeout(() => setGlitchIntensity(1), 1000);
+        setGlitchIntensity(3);
+        setTimeout(() => setGlitchIntensity(2), 1000);
         return;
       }
 
@@ -247,9 +274,8 @@ export default function LevelThreeOne() {
 
         if (data.allComplete) {
           setAllComplete(true);
-          setGlitchIntensity(0); // Stabilize
+          setGlitchIntensity(0);
 
-          // Auto-submit final flag
           setTimeout(async () => {
             const submitRes = await fetch('/api/submit-flag', {
               method: 'POST',
@@ -258,11 +284,8 @@ export default function LevelThreeOne() {
             });
 
             const submitData = await submitRes.json();
-
-            // Refresh session
             await update();
 
-            // Redirect after 2 seconds - use completionPage from API response
             setTimeout(() => {
               const redirectPath = submitData.completionPage || `/levels/${submitData.nextLevel}` || '/';
               router.push(redirectPath);
@@ -270,27 +293,28 @@ export default function LevelThreeOne() {
           }, 1000);
         } else {
           setCurrentPhase(data.nextPhase);
-          // Reset phase-specific state
           setClickCount(0);
           setKeySequence([]);
           setSelectedErrors([]);
+          setCipherInput('');
+          setFinalInput('');
+          setPhase3Timer(10);
         }
       } else {
         setError(data.message || 'Incorrect input');
-        setGlitchIntensity(2);
-        setTimeout(() => setGlitchIntensity(1), 1000);
+        setGlitchIntensity(3);
+        setTimeout(() => setGlitchIntensity(2), 1000);
       }
     } catch (err: any) {
       setError('Network error. Please try again.');
-      setGlitchIntensity(2);
-      setTimeout(() => setGlitchIntensity(1), 1000);
+      setGlitchIntensity(3);
+      setTimeout(() => setGlitchIntensity(2), 1000);
     } finally {
       setLoading(false);
     }
   };
 
-  // Loading state
-  if (isChecking || !canAccess) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
         <div className="text-cyan-400 text-xl">Loading...</div>
@@ -299,287 +323,343 @@ export default function LevelThreeOne() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6"
-      style={{ backgroundColor: '#05070b' }}>
-
-      {/* Scanline Effect */}
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-6">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-hero" />
       <div
-        className="absolute inset-0 pointer-events-none z-50 opacity-20"
+        className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:3rem_3rem]"
         style={{
-          background: `repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent ${scanlineOffset}px,
-            rgba(255, 0, 51, 0.1) ${scanlineOffset}px,
-            rgba(255, 0, 51, 0.1) ${scanlineOffset + 2}px
-          )`,
+          opacity: 0.3 + (glitchIntensity * 0.1),
+          filter: `hue-rotate(${glitchIntensity * 30}deg)`,
         }}
       />
 
-      {/* Glitch Overlay */}
+      {/* Glitch effects */}
       <motion.div
-        className="absolute inset-0 pointer-events-none z-40"
-        animate={{
-          opacity: [0, 0.1 * glitchIntensity, 0],
-          x: [-2 * glitchIntensity, 2 * glitchIntensity, 0],
-        }}
-        transition={{ duration: 0.2, repeat: Infinity, repeatDelay: Math.random() * 2 }}
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'linear-gradient(90deg, #ff0033, transparent, #00ff99)',
-          mixBlendMode: 'screen',
+          background: `linear-gradient(180deg, transparent ${scanlineOffset}%, rgba(0,255,255,0.05) ${scanlineOffset + 1}%, transparent ${scanlineOffset + 2}%)`,
         }}
       />
 
-      {/* Main Content */}
+      {/* Main Card */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-10 w-full max-w-4xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 container mx-auto max-w-4xl"
       >
-        {/* Corrupted Header */}
-        <motion.div
-          className="mb-8 text-center"
-          animate={{
-            x: [-1, 1, 0],
-            opacity: allComplete ? 1 : [0.9, 1, 0.9],
-          }}
-          transition={{ duration: 0.5, repeat: allComplete ? 0 : Infinity }}
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 border border-red-500/30 mb-4">
-            <AlertTriangle className="w-5 h-5 text-red-400 animate-pulse" />
-            <span className="text-sm text-red-300 font-mono">
-              SYSTEM ALERT: Interface Corruption Detected
-            </span>
+        <div className="bg-black/60 border-2 border-red-500/40 rounded-3xl p-8 backdrop-blur-xl shadow-2xl"
+          style={{
+            boxShadow: `0 0 ${20 + glitchIntensity * 10}px rgba(255, 0, 0, 0.${3 + glitchIntensity})`,
+          }}>
+
+          {/* Header */}
+          <div className="flex items-center gap-4 mb-6">
+            <Skull className="w-10 h-10 text-red-500 animate-pulse" />
+            <div>
+              <h1
+                className="text-4xl font-bold"
+                style={{
+                  background: "linear-gradient(90deg,#ff0000,#ff6600,#ff0000)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Level 3.1 — The Gauntlet
+              </h1>
+              <p className="text-red-400/80 text-sm">
+                5 Phases • Advanced Difficulty • No Mercy
+              </p>
+            </div>
           </div>
 
-          <h1
-            className="text-4xl md:text-5xl font-bold mb-2 tracking-tight"
-            style={{
-              color: allComplete ? '#00ff99' : '#ff0033',
-              textShadow: allComplete ? '0 0 20px #00ff99' : '0 0 20px #ff0033',
-              letterSpacing: '0.05em',
-            }}
-          >
-            {allComplete ? 'INTERFACE RESTORED' : 'THE BROKEN INTERFACE'}
-          </h1>
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between text-xs text-foreground/60 mb-2">
+              <span>Progress: Phase {currentPhase}/5</span>
+              <span>{completedPhases.length}/5 Completed</span>
+            </div>
+            <div className="h-3 bg-black/60 rounded-full overflow-hidden border border-red-500/30">
+              <motion.div
+                className="h-full bg-gradient-to-r from-red-600 to-orange-500"
+                initial={{ width: 0 }}
+                animate={{ width: `${(completedPhases.length / 5) * 100}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
+          </div>
 
-          <p className="text-white/60 text-sm font-mono">
-            Module: <span className="text-red-400">user-interface.renderer.js</span>
-            <br />
-            Status: <span className={allComplete ? 'text-green-400' : 'text-red-400'}>
-              {allComplete ? 'OPERATIONAL' : 'FAILED'}
-            </span>
-          </p>
-        </motion.div>
+          {/* Phase Content */}
+          <div className="min-h-[400px]">
+            <AnimatePresence mode="wait">
+              {/* Phase 1: Rapid Click */}
+              {currentPhase === 1 && !completedPhases.includes(1) && (
+                <motion.div
+                  key="phase1"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6">
+                    <h3 className="text-2xl font-bold text-red-400 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="w-6 h-6" />
+                      Phase 1: Rapid Access Override
+                    </h3>
+                    <p className="text-foreground/80 mb-4">
+                      The system requires rapid authentication. Click the ACCESS button
+                      <span className="text-red-300 font-bold"> 12 times within 2.5 seconds</span>.
+                    </p>
+                    <div className="text-center mb-4">
+                      <div className="text-5xl font-mono text-cyan-400 mb-2">{clickCount}/12</div>
+                      {clickCount > 0 && (
+                        <div className="text-xl text-yellow-400 font-mono">
+                          {Math.max(0, Math.ceil(phase1Timer / 1000))}s remaining
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-center">
+                      <Button
+                        onClick={handleAccessClick}
+                        disabled={loading}
+                        className="bg-red-600 hover:bg-red-700 px-12 py-8 text-2xl font-bold rounded-xl"
+                      >
+                        <Zap className="w-6 h-6 mr-2" />
+                        ACCESS
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
 
-        {/* Error/Success Messages */}
-        <AnimatePresence>
+              {/* Phase 2: Extended Konami Code */}
+              {currentPhase === 2 && !completedPhases.includes(2) && (
+                <motion.div
+                  key="phase2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <div className={`border rounded-xl p-6 ${phase2Failed ? 'bg-red-500/20 border-red-500' : 'bg-purple-500/10 border-purple-500/30'}`}>
+                    <h3 className="text-2xl font-bold text-purple-400 mb-3">
+                      Phase 2: Extended Cipher Sequence
+                    </h3>
+                    <p className="text-foreground/80 mb-4">
+                      Enter the extended arrow key sequence. This is a 12-key cipher pattern.
+                      <br />
+                      <span className="text-yellow-400 text-sm">Hint: It starts with a classic pattern...</span>
+                    </p>
+                    <div className="bg-black/40 rounded-xl p-6 font-mono text-3xl text-center mb-4 min-h-[80px] flex items-center justify-center">
+                      {keySequence.length > 0 ? keySequence.join(' ') : '..waiting for input..'}
+                    </div>
+                    <div className="text-center text-cyan-400 text-sm">
+                      {keySequence.length}/12 keys entered
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Phase 3: Critical Error Triage */}
+              {currentPhase === 3 && !completedPhases.includes(3) && (
+                <motion.div
+                  key="phase3"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <div className={`border rounded-xl p-6 ${phase3Failed ? 'bg-red-500/20 border-red-500' : 'bg-orange-500/10 border-orange-500/30'}`}>
+                    <h3 className="text-2xl font-bold text-orange-400 mb-3 flex items-center justify-between">
+                      <span>Phase 3: Critical Error Triage</span>
+                      <span className="text-4xl text-red-500 font-mono">{phase3Timer}s</span>
+                    </h3>
+                    <p className="text-foreground/80 mb-4">
+                      Select ALL critical (red) errors in the exact order they appear.
+                      <span className="text-red-400 font-bold"> You have 10 seconds.</span>
+                    </p>
+                    <div className="bg-black/60 rounded-xl p-4 max-h-[300px] overflow-y-auto space-y-2">
+                      {ERROR_LOGS.map((log) => (
+                        <div
+                          key={log.id}
+                          onClick={() => handleErrorClick(log.id)}
+                          className={`p-3 rounded-lg cursor-pointer transition-all border ${
+                            selectedErrors.includes(log.id)
+                              ? 'bg-green-500/30 border-green-500'
+                              : log.color === 'red'
+                              ? 'bg-red-500/10 border-red-500/50 hover:bg-red-500/20'
+                              : log.color === 'yellow'
+                              ? 'bg-yellow-500/10 border-yellow-500/30'
+                              : log.color === 'blue'
+                              ? 'bg-blue-500/10 border-blue-500/30'
+                              : log.color === 'purple'
+                              ? 'bg-purple-500/10 border-purple-500/30'
+                              : log.color === 'green'
+                              ? 'bg-green-500/10 border-green-500/30'
+                              : 'bg-cyan-500/10 border-cyan-500/30'
+                          }`}
+                        >
+                          <span className={`font-mono text-sm ${
+                            log.color === 'red' ? 'text-red-400' :
+                            log.color === 'yellow' ? 'text-yellow-400' :
+                            log.color === 'blue' ? 'text-blue-400' :
+                            log.color === 'purple' ? 'text-purple-400' :
+                            log.color === 'green' ? 'text-green-400' :
+                            'text-cyan-400'
+                          }`}>
+                            [{log.code}] {log.text}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 text-center text-foreground/60 text-sm">
+                      Selected: {selectedErrors.length}/5
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Phase 4: Cipher Decode */}
+              {currentPhase === 4 && !completedPhases.includes(4) && (
+                <motion.div
+                  key="phase4"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
+                    <h3 className="text-2xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                      <Lock className="w-6 h-6" />
+                      Phase 4: Cipher Matrix Decode
+                    </h3>
+                    <p className="text-foreground/80 mb-4">
+                      Decode the encrypted authentication key below. The system uses a classic cipher.
+                    </p>
+                    <div className="bg-black/60 rounded-xl p-6 mb-4">
+                      <div className="text-center text-green-400 font-mono text-2xl mb-2">
+                        PVCURE-ZNGEVK-QRPBQR
+                      </div>
+                      <div className="text-center text-foreground/50 text-xs">
+                        [ENCRYPTED AUTHENTICATION KEY]
+                      </div>
+                    </div>
+                    {phase4Hint && (
+                      <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 mb-4 text-sm text-yellow-300">
+                        💡 Hint: ROT13 is a simple letter substitution cipher (A↔N, B↔O, etc.)
+                      </div>
+                    )}
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={cipherInput}
+                        onChange={(e) => setCipherInput(e.target.value)}
+                        placeholder="Enter decoded key..."
+                        className="w-full p-4 rounded-xl bg-black/40 border border-blue-500/40 text-foreground font-mono text-lg"
+                        disabled={loading}
+                      />
+                      <Button
+                        onClick={handleCipherSubmit}
+                        disabled={loading || !cipherInput.trim()}
+                        className="w-full bg-blue-600 hover:bg-blue-700 py-6 text-xl font-bold"
+                      >
+                        Submit Decoded Key
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Phase 5: Final Authentication */}
+              {currentPhase === 5 && !completedPhases.includes(5) && (
+                <motion.div
+                  key="phase5"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-6"
+                >
+                  <div className="bg-gradient-to-br from-red-500/10 via-purple-500/10 to-blue-500/10 border-2 border-cyan-500/50 rounded-xl p-6">
+                    <h3 className="text-2xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
+                      <Check className="w-6 h-6" />
+                      Phase 5: Final Authentication
+                    </h3>
+                    <p className="text-foreground/80 mb-4">
+                      The final gate requires the ultimate passphrase. Combine all your knowledge.
+                      <br />
+                      <span className="text-yellow-400 text-sm">Think about what connects all phases...</span>
+                    </p>
+                    <div className="bg-black/60 rounded-xl p-6 mb-4 space-y-2 text-sm font-mono text-foreground/70">
+                      <div>Phase 1: RAPID-?-?</div>
+                      <div>Phase 2: EXTENDED-?-?</div>
+                      <div>Phase 3: CRITICAL-?-?</div>
+                      <div>Phase 4: CIPHER-?-?</div>
+                      <div className="text-cyan-400 text-base">Final Key: ?-?-?</div>
+                    </div>
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={finalInput}
+                        onChange={(e) => setFinalInput(e.target.value)}
+                        placeholder="Enter final authentication key..."
+                        className="w-full p-4 rounded-xl bg-black/40 border border-cyan-500/40 text-foreground font-mono text-lg"
+                        disabled={loading}
+                      />
+                      <Button
+                        onClick={handleFinalSubmit}
+                        disabled={loading || !finalInput.trim()}
+                        className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 py-6 text-xl font-bold"
+                      >
+                        Final Submit
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* All Complete */}
+              {allComplete && (
+                <motion.div
+                  key="complete"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-12"
+                >
+                  <Check className="w-24 h-24 text-green-400 mx-auto mb-6 animate-pulse" />
+                  <h2 className="text-4xl font-bold text-green-400 mb-4">
+                    ALL PHASES COMPLETED!
+                  </h2>
+                  <p className="text-foreground/80 text-xl">
+                    The gauntlet has been conquered. Redirecting...
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Status Messages */}
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-300 text-sm font-mono"
-            >
+            <div className="mt-6 p-4 bg-red-500/20 border border-red-500 rounded-xl text-red-400 text-center animate-pulse">
               {error}
-            </motion.div>
+            </div>
           )}
 
           {success && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mb-4 p-3 bg-green-500/10 border border-green-500/50 rounded-lg text-green-300 text-sm font-mono"
-            >
+            <div className="mt-6 p-4 bg-green-500/20 border border-green-500 rounded-xl text-green-400 text-center">
               {success}
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
-        {/* Fragments Display */}
-        {fragments.length > 0 && (
-          <div className="mb-6 p-4 bg-black/40 border border-cyan-500/30 rounded-lg">
-            <p className="text-cyan-400 text-xs mb-2 font-mono">FRAGMENTS COLLECTED:</p>
-            <div className="flex gap-2 flex-wrap">
-              {fragments.map((frag, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="px-3 py-1 bg-cyan-500/20 border border-cyan-500/50 rounded text-cyan-300 font-mono text-sm"
-                >
-                  {frag}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Phase 1: Multi-Click */}
-        {currentPhase === 1 && !completedPhases.includes(1) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="p-6 bg-black/50 border border-red-500/30 rounded-lg"
-          >
-            <motion.div
-              className="text-center cursor-pointer select-none"
-              onClick={handleAccessClick}
-              animate={{
-                x: phase1Hint ? [-2, 2, -2, 2, 0] : 0,
-                opacity: phase1Hint ? [1, 0.7, 1, 0.7, 1] : 1,
-              }}
-              transition={{
-                duration: phase1Hint ? 0.75 : 0,
-                repeat: phase1Hint ? 5 : 0,
-              }}
-            >
-              <p className="text-2xl md:text-3xl font-bold text-red-300 font-mono mb-2">
-                ERROR 404: <span style={{ marginLeft: '0.1em' }}>Access</span>    Denied
-              </p>
-              <p className="text-white/40 text-xs">
-                {clickCount > 0 && `(${clickCount}/5)`}
-              </p>
-            </motion.div>
-
-            {phase1Hint && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                className="text-center text-yellow-400 text-xs mt-4 font-mono"
-              >
-                💡 Something flickers five times...
-              </motion.p>
-            )}
-          </motion.div>
-        )}
-
-        {/* Phase 2: Arrow Keys */}
-        {currentPhase === 2 && !completedPhases.includes(2) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="p-6 bg-black/50 border border-red-500/30 rounded-lg"
-          >
-            <div className="space-y-2 font-mono text-sm text-red-300">
-              <motion.div
-                animate={{
-                  marginLeft: phase2SpacingAlign ? '0px' : '20px',
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                ERR_UP      ERR_UP
-              </motion.div>
-              <motion.div
-                animate={{
-                  marginLeft: phase2SpacingAlign ? '0px' : '35px',
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                ERR_DOWN    ERR_DOWN
-              </motion.div>
-              <motion.div
-                animate={{
-                  marginLeft: phase2SpacingAlign ? '0px' : '15px',
-                }}
-                transition={{ duration: 0.3 }}
-              >
-                ERR_LEFT    ERR_RIGHT    ERR_LEFT    ERR_RIGHT
-              </motion.div>
-            </div>
-
-            {keySequence.length > 0 && (
-              <div className="mt-4 text-center">
-                <p className="text-white/60 text-xs font-mono">
-                  Sequence: {keySequence.join(' ')}
-                </p>
+          {/* Fragments Display */}
+          {fragments.length > 0 && !allComplete && (
+            <div className="mt-6 p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl">
+              <div className="text-xs text-cyan-400 mb-2">Collected Fragments:</div>
+              <div className="font-mono text-sm text-foreground/70">
+                {fragments.join('')}...
               </div>
-            )}
-
-            {phase2Hint && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.5 }}
-                className="text-center text-yellow-400 text-xs mt-4 font-mono"
-              >
-                💡 The spacing reveals a pattern...
-              </motion.p>
-            )}
-          </motion.div>
-        )}
-
-        {/* Phase 3: Red Errors */}
-        {currentPhase === 3 && !completedPhases.includes(3) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="p-6 bg-black/50 border border-red-500/30 rounded-lg"
-          >
-            <p className="text-white/40 text-xs mb-4 font-mono text-center italic">
-              ... only the red ones remain stable ...
-            </p>
-
-            <motion.div
-              className="space-y-2"
-              animate={phase3Failed ? { x: [-10, 10, -10, 10, 0] } : {}}
-              transition={{ duration: 0.5 }}
-            >
-              {ERROR_LOGS.map((log) => {
-                const isSelected = selectedErrors.includes(log.id);
-                const colorMap: Record<string, string> = {
-                  red: '#ff0033',
-                  yellow: '#ffcc00',
-                  blue: '#0099ff',
-                  green: '#00ff99',
-                  purple: '#cc00ff',
-                };
-
-                return (
-                  <motion.div
-                    key={log.id}
-                    onClick={() => handleErrorClick(log.id)}
-                    className="p-3 cursor-pointer border rounded font-mono text-sm transition-all"
-                    style={{
-                      color: colorMap[log.color],
-                      borderColor: isSelected ? '#00ff99' : `${colorMap[log.color]}50`,
-                      backgroundColor: isSelected ? '#00ff9920' : 'transparent',
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    {log.code} — {log.text}
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* All Complete */}
-        {allComplete && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="text-center p-8 bg-green-500/10 border border-green-500/50 rounded-lg"
-          >
-            <Check className="w-16 h-16 text-green-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-green-300 mb-2">
-              INTERFACE RESTORED
-            </h2>
-            <p className="text-white/80 text-sm mb-4">
-              The broken interface was never broken. You are.
-            </p>
-            <p className="text-green-400 font-mono text-sm">
-              FLAG{'{'}INTERFACE_NOT_BROKEN_YOU_ARE{'}'}
-            </p>
-            <p className="text-white/40 text-xs mt-4">
-              Redirecting to dashboard...
-            </p>
-          </motion.div>
-        )}
+            </div>
+          )}
+        </div>
       </motion.div>
     </section>
   );

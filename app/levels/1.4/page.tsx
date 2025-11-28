@@ -114,7 +114,7 @@ export default function LevelOneFour() {
   };
 
   // Show loading while checking access
-  if (isChecking || !canAccess) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
         <div className="text-cyan-400 text-xl">Loading...</div>

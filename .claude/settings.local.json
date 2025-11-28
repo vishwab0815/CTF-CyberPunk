@@ -5,7 +5,13 @@
       "Bash(pnpm add:*)",
       "Bash(pnpm list:*)",
       "Bash(pnpm tsx:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(for file in 1.4/page.tsx 3.1/page.tsx 3.2/page.tsx)",
+      "Bash(do echo \"Fixing $file\")",
+      "Bash(done)",
+      "Bash(pnpm run build:*)",
+      "Bash(find . -type f ( -name \"*.log\" -o -name \"*.tmp\" -o -name \"*.bak\" -o -name \"*~\" ) -not -path \"./node_modules/*\" -delete)",
+      "Bash(pnpm run seed:flags:*)"
     ],
     "deny": [],
     "ask": []

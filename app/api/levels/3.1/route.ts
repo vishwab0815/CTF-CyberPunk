@@ -9,22 +9,34 @@ import { authOptions } from '@/lib/auth';
 // Canonical phase data (server-side only, never exposed to client)
 const PHASE_DATA = {
   1: {
-    canonicalKey: 'ACCESS-SEQUENCE',
-    acceptedAliases: ['access-sequence', 'ACCESS_SEQUENCE', 'accesssequence'],
-    fragment: 'INTERFACE_',
-    hintText: 'Click "Access" 5 times within 3 seconds',
+    canonicalKey: 'RAPID-ACCESS-OVERRIDE',
+    acceptedAliases: ['rapid-access-override', 'RAPID_ACCESS_OVERRIDE', 'rapidaccessoverride'],
+    fragment: 'INTER',
+    hintText: 'Rapid clicking required - speed is critical',
   },
   2: {
-    canonicalKey: 'KONAMI-VARIANT',
-    acceptedAliases: ['konami-variant', 'KONAMI_VARIANT', 'konamivariant'],
-    fragment: 'NOT_BROKEN_',
-    hintText: 'Arrow key sequence: ↑↑↓↓←→←→',
+    canonicalKey: 'EXTENDED-KONAMI-CIPHER',
+    acceptedAliases: ['extended-konami-cipher', 'EXTENDED_KONAMI_CIPHER', 'extendedkonamicipher'],
+    fragment: 'FACE_',
+    hintText: 'Extended arrow sequence - more complex than before',
   },
   3: {
-    canonicalKey: 'ERROR-FILTER',
-    acceptedAliases: ['error-filter', 'ERROR_FILTER', 'errorfilter'],
-    fragment: 'YOU_ARE',
-    hintText: 'Select only the red error lines in order',
+    canonicalKey: 'CRITICAL-ERROR-TRIAGE',
+    acceptedAliases: ['critical-error-triage', 'CRITICAL_ERROR_TRIAGE', 'criticalerrortriage'],
+    fragment: 'NOT_BR',
+    hintText: 'Identify and select ALL critical errors in exact order',
+  },
+  4: {
+    canonicalKey: 'CIPHER-MATRIX-DECODE',
+    acceptedAliases: ['cipher-matrix-decode', 'CIPHER_MATRIX_DECODE', 'ciphermatrixdecode'],
+    fragment: 'OKEN_Y',
+    hintText: 'Decode the cipher: ROT13 or Caesar shift may help',
+  },
+  5: {
+    canonicalKey: 'FINAL-AUTHENTICATION',
+    acceptedAliases: ['final-authentication', 'FINAL_AUTHENTICATION', 'finalauthentication'],
+    fragment: 'OU_ARE',
+    hintText: 'Combine all knowledge gained from previous phases',
   },
 } as const;
 
@@ -90,9 +102,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (phase < 1 || phase > 3) {
+    if (phase < 1 || phase > 5) {
       return NextResponse.json(
-        { error: 'Invalid phase. Must be 1, 2, or 3.' },
+        { error: 'Invalid phase. Must be between 1 and 5.' },
         { status: 400 }
       );
     }
@@ -271,7 +283,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 19. Check if all phases completed
-    const allPhasesComplete = progress.completedPhases.length === 3;
+    const allPhasesComplete = progress.completedPhases.length === 5;
 
     if (allPhasesComplete) {
       // Calculate final flag
@@ -294,7 +306,7 @@ export async function POST(req: NextRequest) {
           success: true,
           phaseComplete: true,
           allComplete: true,
-          message: 'All phases completed! The interface is yours.',
+          message: 'All 5 phases completed! The interface has been conquered.',
           phase,
           fragment: step.fragment,
           finalFlag: 'FLAG{INTERFACE_NOT_BROKEN_YOU_ARE}',
@@ -385,7 +397,7 @@ export async function GET(req: NextRequest) {
         totalAttempts: progress.attempts.length,
         isLocked: progress.isLocked,
         lockoutUntil: progress.rateLimiting.lockoutUntil,
-        allComplete: progress.completedPhases.length === 3,
+        allComplete: progress.completedPhases.length === 5,
       },
       { status: 200 }
     );

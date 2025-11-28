@@ -1,8 +1,8 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
-// Level progression map
-const LEVEL_ORDER = ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '3.1', '3.2'];
+// Level progression map (7 levels total - removed 2.2)
+const LEVEL_ORDER = ['1.1', '1.2', '1.3', '1.4', '2.1', '3.1', '3.2'];
 const COMPLETION_ROUTES = [
   '/completion/level-1-completed',
   '/completion/level-2-completed',
@@ -82,11 +82,9 @@ export default withAuth(
         }
       }
 
-      // For level-2-completed, must have completed levels 2.1-2.2
+      // For level-2-completed, must have completed level 2.1
       if (path.startsWith('/completion/level-2-completed')) {
-        const level2Completed = ['2.1', '2.2'].every(
-          level => completedLevels.includes(level)
-        );
+        const level2Completed = completedLevels.includes('2.1');
         if (!level2Completed) {
           const currentLevel = (token?.currentLevel as string) || '1.1';
           return NextResponse.redirect(new URL(`/levels/${currentLevel}`, req.url));

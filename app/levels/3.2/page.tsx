@@ -132,7 +132,7 @@ export default function LevelThreeTwo() {
   };
 
   // Loading state
-  if (isChecking || !canAccess) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
         <div className="text-cyan-400 text-xl">Loading...</div>

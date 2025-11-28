@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     // Calculate rankings
     const leaderboard = users.map((user, index) => {
       const completedCount = user.completedLevels?.length || 0;
-      const totalLevels = 5; // 1.1, 1.2, 1.3, 2.1, 2.2
+      const totalLevels = 7; // 1.1, 1.2, 1.3, 1.4, 2.1, 3.1, 3.2
       const completionPercentage = (completedCount / totalLevels) * 100;
 
       // Calculate actual time

@@ -12,8 +12,7 @@ const NEXT_LEVELS: Record<string, string> = {
   '1.2': '1.3',
   '1.3': '1.4',
   '1.4': '2.1',
-  '2.1': '2.2',
-  '2.2': '3.1',
+  '2.1': '3.1',
   '3.1': '3.2',
   '3.2': 'complete',
 };
@@ -120,7 +119,7 @@ export async function POST(req: NextRequest) {
       let completionPage = null;
       if (level === '1.4') {
         completionPage = '/completion/level-1-completed';
-      } else if (level === '2.2') {
+      } else if (level === '2.1') {
         completionPage = '/completion/level-2-completed';
       } else if (level === '3.2') {
         completionPage = '/completion/final-completed';

@@ -123,7 +123,7 @@ export default function Level2Completed() {
         >
           <div className="bg-black/40 border border-green-500/30 rounded-xl p-4 text-center">
             <CheckCircle2 className="w-8 h-8 text-green-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-green-400">6/8</div>
+            <div className="text-2xl font-bold text-green-400">5/7</div>
             <div className="text-sm text-foreground/60">Levels Completed</div>
           </div>
 
@@ -144,8 +144,8 @@ export default function Level2Completed() {
           className="bg-primary/10 border border-primary/30 rounded-xl p-6 mb-8"
         >
           <p className="text-center text-foreground/80 italic">
-            "You've conquered IDOR and JWT manipulation. Now face the ultimate challenges:
-            advanced interactive puzzles and injection attacks. The hardest tests lie ahead."
+            "You've conquered IDOR vulnerabilities and server-side attacks. Now face the ultimate challenges:
+            advanced interactive puzzles and sophisticated injection attacks. The hardest tests lie ahead."
           </p>
         </motion.div>
 

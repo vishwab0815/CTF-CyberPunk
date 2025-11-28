@@ -32,12 +32,16 @@ export default function LevelTwoOnePage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
+  const [attemptCount, setAttemptCount] = useState<number>(0);
+  const [searchHistory, setSearchHistory] = useState<number[]>([]);
 
   async function loadProfile(id: number) {
     setLoading(true);
     setProfile(null);
     setError(null);
     setHasSearched(true);
+    setAttemptCount(prev => prev + 1);
+    setSearchHistory(prev => [...prev, id]);
 
     try {
       const res = await fetch("/api/levels/2.1", {
@@ -77,7 +81,7 @@ export default function LevelTwoOnePage() {
   }
 
   // Show loading while checking access
-  if (isChecking || !canAccess) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
         <div className="text-cyan-400 text-xl">Loading...</div>
@@ -150,8 +154,17 @@ export default function LevelTwoOnePage() {
 
               <p className="text-xs text-foreground/60 italic">
                 <span className="text-cyan-400">⚠️ Warning:</span> Not every profile with "admin"
-                in the title is what you're looking for. This system is filled with decoys...
+                in the title is what you're looking for. This system is filled with decoys.
+                <span className="text-yellow-300"> Think about special numbers that admins love...</span>
               </p>
+
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 my-3">
+                <p className="text-blue-300 text-xs font-semibold mb-1">📊 SYSTEM INTELLIGENCE:</p>
+                <p className="text-foreground/70 text-xs">
+                  User IDs range from 1 to 9999. Regular users: 1000-2000.
+                  <span className="text-yellow-300"> Admins often use repeating digits or lucky numbers.</span>
+                </p>
+              </div>
             </div>
           </header>
 
@@ -205,9 +218,55 @@ export default function LevelTwoOnePage() {
             hasSearched={hasSearched}
           />
 
+          {/* Hint System */}
+          {attemptCount > 0 && !profile?.ghost_token && (
+            <div className="mt-4 space-y-2">
+              {attemptCount >= 3 && attemptCount < 6 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg"
+                >
+                  <p className="text-cyan-300 text-xs">
+                    💡 <span className="font-semibold">Hint 1:</span> You've tried {attemptCount} IDs.
+                    Think bigger. Admin accounts often use high numbers (5000+) with patterns.
+                  </p>
+                </motion.div>
+              )}
+
+              {attemptCount >= 6 && attemptCount < 10 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg"
+                >
+                  <p className="text-purple-300 text-xs">
+                    💡 <span className="font-semibold">Hint 2:</span> Repeating digits are powerful.
+                    Think: 7777, 8888, 9999... Lucky numbers in Chinese culture.
+                  </p>
+                </motion.div>
+              )}
+
+              {attemptCount >= 10 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg"
+                >
+                  <p className="text-yellow-300 text-xs">
+                    💡 <span className="font-semibold">Strong Hint:</span> Seven is often considered the luckiest number.
+                    What if the admin loved it so much they used it four times?
+                  </p>
+                </motion.div>
+              )}
+            </div>
+          )}
+
           {/* Footer actions */}
           <div className="mt-6 flex justify-between items-center">
-            <div className="text-xs text-foreground/60">Investigate the system — anomalies are the key.</div>
+            <div className="text-xs text-foreground/60">
+              Attempts: {attemptCount} {attemptCount > 5 ? '— Keep searching!' : '— Investigate the system'}
+            </div>
 
             <div>
               {profile?.ghost_token ? (

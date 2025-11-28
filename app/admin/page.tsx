@@ -221,7 +221,7 @@ export default function AdminDashboard() {
                       <td className="py-3 px-4 text-cyan-400/70">{entry.email}</td>
                       <td className="py-3 px-4">
                         <span className="text-green-400 font-mono">
-                          {entry.completedCount}/5
+                          {entry.completedCount}/7
                         </span>
                       </td>
                       <td className="py-3 px-4">
@@ -260,8 +260,8 @@ export default function AdminDashboard() {
           animate={{ opacity: 1 }}
         >
           {/* Level Filter */}
-          <div className="mb-6 flex gap-3">
-            {['all', '1.1', '1.2', '1.3', '2.1', '2.2'].map((level) => (
+          <div className="mb-6 flex gap-2 flex-wrap">
+            {['all', '1.1', '1.2', '1.3', '1.4', '2.1', '3.1', '3.2'].map((level) => (
               <button
                 key={level}
                 onClick={() => setSelectedLevel(level)}
@@ -278,7 +278,7 @@ export default function AdminDashboard() {
 
           {/* Statistics */}
           {stats.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               {stats.map((stat) => (
                 <div
                   key={stat.level}

@@ -2,63 +2,80 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-export default function SignUpPage() {
+export default function ChangePasswordPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { data: session, status } = useSession();
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [teamName, setTeamName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect to signin if not authenticated
+  if (status === 'unauthenticated') {
+    router.push('/auth/signin');
+    return null;
+  }
+
+  // Show loading while checking session
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[hsl(220,26%,6%)] flex items-center justify-center">
+        <div className="text-cyan-400">Loading...</div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     // Validation
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
+    if (newPassword !== confirmPassword) {
+      setError('New passwords do not match');
       return;
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (newPassword.length < 6) {
+      setError('New password must be at least 6 characters');
       return;
     }
 
-    if (teamName.length < 3) {
-      setError('Team name must be at least 3 characters');
+    if (currentPassword === newPassword) {
+      setError('New password must be different from current password');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/auth/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email,
-          password,
-          teamName,
+          currentPassword,
+          newPassword,
+          confirmPassword,
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Registration failed');
+        setError(data.error || 'Failed to change password');
         setIsLoading(false);
         return;
       }
 
-      // Redirect to sign in page after successful registration
-      router.push('/auth/signin?registered=true');
+      // Sign out user and redirect to signin page
+      await signOut({ redirect: false });
+      router.push('/auth/signin?passwordChanged=true');
     } catch (err) {
       setError('An error occurred. Please try again.');
       setIsLoading(false);
@@ -72,7 +89,7 @@ export default function SignUpPage() {
 
       {/* Glowing Orbs */}
       <motion.div
-        className="absolute top-1/4 -left-20 w-96 h-96 bg-green-500/20 rounded-full blur-3xl"
+        className="absolute top-1/4 -left-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
         animate={{
           x: [0, 100, 0],
           y: [0, 50, 0],
@@ -96,7 +113,7 @@ export default function SignUpPage() {
         }}
       />
 
-      {/* Sign Up Form */}
+      {/* Change Password Form */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -110,9 +127,9 @@ export default function SignUpPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent"
+              className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-cyan-400 to-green-400 bg-clip-text text-transparent"
             >
-              Sign Up
+              Change Password
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -120,7 +137,7 @@ export default function SignUpPage() {
               transition={{ delay: 0.3 }}
               className="text-cyan-300/70"
             >
-              Create your account and start hacking
+              Update your account password
             </motion.p>
           </div>
 
@@ -138,62 +155,41 @@ export default function SignUpPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="teamName" className="block text-sm font-medium text-cyan-300 mb-2">
-                Team Name <span className="text-green-400">*</span>
+              <label htmlFor="currentPassword" className="block text-sm font-medium text-cyan-300 mb-2">
+                Current Password
               </label>
               <input
-                id="teamName"
-                type="text"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                required
-                disabled={isLoading}
-                minLength={3}
-                maxLength={50}
-                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
-                placeholder="Enter your team name"
-              />
-              <p className="mt-1 text-xs text-cyan-400/50">
-                This will be displayed on the leaderboard
-              </p>
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-cyan-300 mb-2">
-                Email Address
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
                 required
                 disabled={isLoading}
                 className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50"
-                placeholder="Enter your email"
+                placeholder="Enter current password"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-cyan-300 mb-2">
-                Password
+              <label htmlFor="newPassword" className="block text-sm font-medium text-cyan-300 mb-2">
+                New Password
               </label>
               <input
-                id="password"
+                id="newPassword"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 required
                 disabled={isLoading}
                 minLength={6}
-                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50"
+                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
                 placeholder="At least 6 characters"
               />
             </div>
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-cyan-300 mb-2">
-                Confirm Password
+                Confirm New Password
               </label>
               <input
                 id="confirmPassword"
@@ -202,35 +198,34 @@ export default function SignUpPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={isLoading}
-                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50"
-                placeholder="Re-enter your password"
+                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all disabled:opacity-50"
+                placeholder="Re-enter new password"
               />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-500/25"
+              className="w-full py-3 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/25"
             >
-              {isLoading ? 'Creating Account...' : 'Sign Up'}
+              {isLoading ? 'Changing Password...' : 'Change Password'}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="mt-8 text-center">
-            <p className="text-cyan-400/70 text-sm">
-              Already have an account?{' '}
-              <Link
-                href="/auth/signin"
-                className="text-green-400 hover:text-green-300 font-semibold underline underline-offset-4 transition-colors"
-              >
-                Sign In
-              </Link>
+          {/* Info Box */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-6 p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-lg"
+          >
+            <p className="text-cyan-300 text-xs text-center">
+              <span className="font-semibold">Note:</span> You will be signed out after changing your password
             </p>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Back to Home */}
+        {/* Back Link */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -238,10 +233,10 @@ export default function SignUpPage() {
           className="text-center mt-6"
         >
           <Link
-            href="/"
+            href="/levels/1.1"
             className="text-cyan-400/70 hover:text-cyan-400 text-sm transition-colors"
           >
-            ← Back to Home
+            ← Back to Levels
           </Link>
         </motion.div>
       </motion.div>

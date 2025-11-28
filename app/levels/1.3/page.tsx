@@ -28,21 +28,13 @@ export default function LevelOneThree() {
   const { canAccess, isChecking } = useLevelAccess('1.3');
   const { update } = useSession();
 
-  // HYDRATION-SAFE MOUNT FLAG
-  const [mounted, setMounted] = useState(false);
-
-  // Other hooks (these MUST stay above any condition!)
+  // State hooks
   const [input, setInput] = useState("");
   const [logLines, setLogLines] = useState<string[]>([]);
   const logRef = useRef<string[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [flagFound, setFlagFound] = useState(false);
   const terminalRef = useRef<HTMLDivElement | null>(null);
-
-  // Set mounted on client
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Scroll terminal
   useEffect(() => {
@@ -71,14 +63,14 @@ export default function LevelOneThree() {
     setIsTyping(false);
   };
 
-  // On-load terminal boot messages
+  // On-load terminal boot messages (client-side only)
   useEffect(() => {
-    if (mounted) {
+    if (typeof window !== 'undefined' && logRef.current.length === 0) {
       (async () => {
         await appendTypedLine("[SYSTEM] JavaScript Guard v1.0 Activated.");
       })();
     }
-  }, [mounted]);
+  }, []);
 
   // Submit handler
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -132,11 +124,22 @@ export default function LevelOneThree() {
     }
   };
 
-  // HTML comment injection (more subtle)
+  // HTML comment hints (visible in View Page Source)
   const htmlComment = `
     <!--
-      Frontend validation layer active
-      Consider migrating critical checks server-side
+      Level 1.3 - JavaScript Security Challenge
+
+      The domain "dns-rebinding-test.internal" is blocked by client-side JavaScript.
+
+      HINT: JavaScript security checks run in YOUR browser.
+      You control the JavaScript environment!
+
+      Try opening the browser console (F12) and exploring:
+      - What functions are exposed to the window object?
+      - Can you override or disable the security check?
+      - Look for: window.jsGuard
+
+      Remember: Client-side validation can always be bypassed!
     -->
   `;
 
@@ -147,7 +150,7 @@ export default function LevelOneThree() {
   */
 
   // Show loading while checking access
-  if (isChecking || !canAccess) {
+  if (isChecking) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-hero">
         <div className="text-cyan-400 text-xl">Loading...</div>
@@ -205,7 +208,7 @@ export default function LevelOneThree() {
           {/* STORY PANEL */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 14 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="bg-black/40 p-6 rounded-2xl border border-primary/20 backdrop-blur-lg"
           >
@@ -248,7 +251,7 @@ export default function LevelOneThree() {
           {/* TERMINAL PANEL */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 14 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.05 }}
             className="bg-black/40 p-6 rounded-2xl border border-primary/20 backdrop-blur-lg"
           >

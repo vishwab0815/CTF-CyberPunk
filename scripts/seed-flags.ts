@@ -70,15 +70,6 @@ const flagsData = [
     points: 250,
     isActive: true,
   },
-  {
-    level: '2.2',
-    flag: 'ADMIN-IDENTITY-FORGED',
-    description: 'Forge JWT tokens to gain admin privileges',
-    category: 'Authentication',
-    difficulty: 'intermediate' as const,
-    points: 250,
-    isActive: true,
-  },
 
   // ========================================
   // CHAPTER 3: ADVANCED CHALLENGES

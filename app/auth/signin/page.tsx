@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Suspense } from 'react';
-import "../../app/styles/cyber-global.css";
+import "../../styles/cyber-global.css";
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';

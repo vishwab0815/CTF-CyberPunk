@@ -6,7 +6,7 @@ import { Trophy, CheckCircle2, Clock, Award, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import "../../app/styles/cyber-global.css";
+import "../../styles/cyber-global.css";
 
 export default function FinalCompleted() {
   const router = useRouter();

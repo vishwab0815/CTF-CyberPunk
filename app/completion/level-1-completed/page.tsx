@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "../../../components/ui/button";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import "../../app/styles/cyber-global.css";
+import "../../styles/cyber-global.css";
 
 export default function Level1Completed() {
   const router = useRouter();

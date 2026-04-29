@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import "../../app/styles/cyber-global.css";
+import "../../styles/cyber-global.css";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';

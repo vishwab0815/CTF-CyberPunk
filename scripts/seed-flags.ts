@@ -22,36 +22,36 @@ const flagsData = [
   // CHAPTER 1: CLIENT-SIDE VULNERABILITIES
   // ========================================
   {
-    level: '1.1',
+    level: '1',
     flag: 'flag{legacy_systems_tell_secrets}',
-    description: 'View source / HTML comments to find hidden DNS records',
+    description: 'Chapter I: recover archived DNS fragments from legacy developer breadcrumbs',
     category: 'Information Disclosure',
     difficulty: 'beginner' as const,
     points: 100,
     isActive: true,
   },
   {
-    level: '1.2',
+    level: '2',
     flag: 'flag{trust_the_server_not_the_client}',
-    description: 'Bypass client-side validation by sending direct API requests',
+    description: 'Chapter II: bypass client-side limits and prove server-side validation is required',
     category: 'Client-Side Security',
     difficulty: 'beginner' as const,
     points: 150,
     isActive: true,
   },
   {
-    level: '1.3',
+    level: '3',
     flag: 'flag{javascript_security_is_an_illusion}',
-    description: 'Bypass JavaScript security checks using browser tools',
+    description: 'Chapter III: break front-end security theatre using runtime tampering',
     category: 'Client-Side Security',
     difficulty: 'beginner' as const,
     points: 150,
     isActive: true,
   },
   {
-    level: '1.4',
+    level: '4',
     flag: 'flag{hidden_endpoints_reveal_truth}',
-    description: 'Discover hidden API endpoints through reconnaissance',
+    description: 'Chapter IV: discover ghost endpoints left in the deployment surface',
     category: 'API Security',
     difficulty: 'intermediate' as const,
     points: 200,
@@ -62,9 +62,9 @@ const flagsData = [
   // CHAPTER 2: SERVER-SIDE VULNERABILITIES
   // ========================================
   {
-    level: '2.1',
+    level: '5',
     flag: 'GHOST-ACCESS-GRANTED',
-    description: 'Exploit IDOR vulnerability to access unauthorized profiles',
+    description: 'Chapter V: abuse IDOR to impersonate the ghost admin pathway',
     category: 'IDOR',
     difficulty: 'intermediate' as const,
     points: 250,
@@ -75,18 +75,18 @@ const flagsData = [
   // CHAPTER 3: ADVANCED CHALLENGES
   // ========================================
   {
-    level: '3.1',
+    level: '6',
     flag: 'FLAG{INTERFACE_NOT_BROKEN_YOU_ARE}',
-    description: 'Complete multi-phase interactive puzzle with server validation',
+    description: 'Chapter VI: survive the five-phase gauntlet and assemble the core key',
     category: 'Interactive Puzzle',
     difficulty: 'advanced' as const,
     points: 350,
     isActive: true,
   },
   {
-    level: '3.2',
+    level: '7',
     flag: 'FLAG{NO_SQL_YES_INJECTION}',
-    description: 'Exploit NoSQL injection to extract sensitive employee data',
+    description: 'Chapter VII: exploit NoSQL query flaws to awaken the silent database',
     category: 'Injection',
     difficulty: 'advanced' as const,
     points: 400,
@@ -122,8 +122,9 @@ async function seedFlags() {
 
     console.log('\n🎉 Flag seeding completed successfully!');
     process.exit(0);
-  } catch (error: any) {
-    console.error('\n❌ Error seeding flags:', error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('\n❌ Error seeding flags:', message);
     console.error(error);
     process.exit(1);
   }

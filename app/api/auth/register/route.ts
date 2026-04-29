@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/User';
+import connectDB from '../../../../lib/mongodb';
+import User from '../../../../lib/models/User';
 import { z } from 'zod';
 
 const registerSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  teamName: z
-    .string()
-    .min(3, 'Team name must be at least 3 characters')
-    .max(50, 'Team name must not exceed 50 characters'),
 });
 
 export async function POST(req: NextRequest) {
@@ -22,13 +18,26 @@ export async function POST(req: NextRequest) {
 
     await connectDB();
 
-    // Check for admin credentials
-    const isAdminEmail = validatedData.email.toLowerCase() === 'admin@gmail.com';
-    if (isAdminEmail && validatedData.password !== 'admin1234') {
-      return NextResponse.json(
-        { error: 'Invalid admin credentials' },
-        { status: 401 }
-      );
+    // Admin creation: require explicit environment-configured credentials.
+    // Prevent hardcoded backdoor admin account creation from source code.
+    let isAdmin = false;
+    const initAdminEmail = process.env.INIT_ADMIN_EMAIL?.toLowerCase();
+    const initAdminPassword = process.env.INIT_ADMIN_PASSWORD;
+    const intendedAdmin = initAdminEmail && validatedData.email.toLowerCase() === initAdminEmail;
+    if (intendedAdmin) {
+      if (!initAdminPassword) {
+        return NextResponse.json(
+          { error: 'Admin registration is disabled on this instance' },
+          { status: 403 }
+        );
+      }
+      if (validatedData.password !== initAdminPassword) {
+        return NextResponse.json(
+          { error: 'Invalid admin credentials' },
+          { status: 401 }
+        );
+      }
+      isAdmin = true;
     }
 
     // Check if user already exists
@@ -43,28 +52,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if team name is already taken
-    const existingTeam = await User.findOne({
-      teamName: validatedData.teamName,
-    });
-
-    if (existingTeam) {
-      return NextResponse.json(
-        { error: 'Team name is already taken' },
-        { status: 400 }
-      );
-    }
-
     // Hash password
     const hashedPassword = await bcrypt.hash(validatedData.password, 12);
 
-    // Create new user
+    // Create new user (admin flag only set when explicitly allowed via env vars)
     const user = await User.create({
       email: validatedData.email.toLowerCase(),
       password: hashedPassword,
-      teamName: validatedData.teamName,
-      isAdmin: isAdminEmail,
-      currentLevel: '1.1',
+      isAdmin,
+      currentLevel: '1',
       completedLevels: [],
       startTime: null,
       endTime: null,
@@ -78,7 +74,6 @@ export async function POST(req: NextRequest) {
         user: {
           id: user._id,
           email: user.email,
-          teamName: user.teamName,
           isAdmin: user.isAdmin,
         },
       },

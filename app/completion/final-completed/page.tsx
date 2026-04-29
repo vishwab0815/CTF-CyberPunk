@@ -1,17 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Trophy, CheckCircle2, Clock, Award, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import "@/app/styles/cyber-global.css";
+import "../../app/styles/cyber-global.css";
 
 export default function FinalCompleted() {
   const router = useRouter();
   const { data: session } = useSession();
   const [totalTime, setTotalTime] = useState<number>(0);
+  const userLabel = session?.user?.email?.split('@')[0] || 'Elite Hacker';
 
   useEffect(() => {
     // Fetch final time from server
@@ -50,7 +51,7 @@ export default function FinalCompleted() {
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-10">
       {/* Background Layers */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem]" />
 
       {/* Animated Glow Orbs */}
       <motion.div
@@ -122,7 +123,7 @@ export default function FinalCompleted() {
           transition={{ delay: 0.5 }}
           className="text-center text-foreground/90 text-xl leading-relaxed mb-6"
         >
-          Legendary work, <span className="text-primary font-bold">{session?.user?.teamName || 'Elite Hacker'}</span>!
+          Legendary work, <span className="text-primary font-bold">{userLabel}</span>!
           <br />
           You've mastered all 8 CTF challenges across 3 chapters.
         </motion.p>
@@ -162,19 +163,19 @@ export default function FinalCompleted() {
           transition={{ delay: 0.7 }}
           className="grid grid-cols-3 gap-3 mb-8"
         >
-          <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 rounded-lg p-3 text-center">
+          <div className="bg-linear-to-br from-blue-500/20 to-cyan-500/20 border border-cyan-500/30 rounded-lg p-3 text-center">
             <div className="text-3xl mb-1">🔍</div>
             <div className="text-xs text-cyan-400 font-semibold">Chapter 1</div>
             <div className="text-[10px] text-foreground/60">Client-Side</div>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg p-3 text-center">
+          <div className="bg-linear-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-lg p-3 text-center">
             <div className="text-3xl mb-1">🛡️</div>
             <div className="text-xs text-purple-400 font-semibold">Chapter 2</div>
             <div className="text-[10px] text-foreground/60">Server-Side</div>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-lg p-3 text-center">
+          <div className="bg-linear-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-lg p-3 text-center">
             <div className="text-3xl mb-1">⚔️</div>
             <div className="text-xs text-orange-400 font-semibold">Chapter 3</div>
             <div className="text-[10px] text-foreground/60">Advanced</div>
@@ -205,7 +206,7 @@ export default function FinalCompleted() {
         >
           <Button
             size="lg"
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 px-8 py-6 rounded-xl text-white text-lg font-bold shadow-[0_0_25px_rgba(0,255,255,0.5)] hover:shadow-[0_0_40px_rgba(0,255,255,0.7)] transition-all"
+            className="bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-6 rounded-xl text-white text-lg font-bold shadow-[0_0_25px_rgba(0,255,255,0.5)] hover:shadow-[0_0_40px_rgba(0,255,255,0.7)] transition-all"
             onClick={() => router.push("/")}
           >
             Back to Home
@@ -226,7 +227,7 @@ export default function FinalCompleted() {
             size="lg"
             variant="outline"
             className="border-2 border-green-500/50 px-8 py-6 rounded-xl text-green-400 text-lg font-bold hover:bg-green-500/10 transition-all"
-            onClick={() => router.push("/levels/1.1")}
+            onClick={() => router.push("/levels/1")}
           >
             Play Again
           </Button>

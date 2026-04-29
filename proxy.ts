@@ -1,8 +1,9 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
+import { LEVEL_SEQUENCE, normalizeLevelId, normalizeLevelList } from './lib/levelIds';
 
 // Level progression map (7 levels total - removed 2.2)
-const LEVEL_ORDER = ['1.1', '1.2', '1.3', '1.4', '2.1', '3.1', '3.2'];
+const LEVEL_ORDER = [...LEVEL_SEQUENCE];
 const COMPLETION_ROUTES = [
   '/completion/level-1-completed',
   '/completion/level-2-completed',
@@ -15,15 +16,18 @@ function canAccessLevel(
   completedLevels: string[],
   currentLevel: string
 ): boolean {
-  const requestedIndex = LEVEL_ORDER.indexOf(requestedLevel);
+  const normalizedRequestedLevel = normalizeLevelId(requestedLevel);
+  const normalizedCompletedLevels = normalizeLevelList(completedLevels);
+  const normalizedCurrentLevel = normalizeLevelId(currentLevel);
+  const requestedIndex = LEVEL_ORDER.indexOf(normalizedRequestedLevel);
 
   if (requestedIndex === -1) return false;
 
   // Can access if it's the current level
-  if (requestedLevel === currentLevel) return true;
+  if (normalizedRequestedLevel === normalizedCurrentLevel) return true;
 
   // Can access if already completed
-  if (completedLevels.includes(requestedLevel)) return true;
+  if (normalizedCompletedLevels.includes(normalizedRequestedLevel)) return true;
 
   // Can't access future levels
   return false;
@@ -56,8 +60,8 @@ export default withAuth(
 
       if (levelMatch) {
         const requestedLevel = levelMatch[1];
-        const completedLevels = (token?.completedLevels as string[]) || [];
-        const currentLevel = (token?.currentLevel as string) || '1.1';
+        const completedLevels = normalizeLevelList((token?.completedLevels as string[]) || []);
+        const currentLevel = normalizeLevelId((token?.currentLevel as string) || '1');
 
         // Check if user can access this level
         if (!canAccessLevel(requestedLevel, completedLevels, currentLevel)) {
@@ -69,24 +73,24 @@ export default withAuth(
 
     // Completion route protection
     if (COMPLETION_ROUTES.some(route => path.startsWith(route))) {
-      const completedLevels = (token?.completedLevels as string[]) || [];
+      const completedLevels = normalizeLevelList((token?.completedLevels as string[]) || []);
 
-      // For level-1-completed, must have completed levels 1.1-1.4
+      // For level-1-completed, must have completed levels 1-4
       if (path.startsWith('/completion/level-1-completed')) {
-        const level1Completed = ['1.1', '1.2', '1.3', '1.4'].every(
+        const level1Completed = (['1', '2', '3', '4'] as const).every(
           level => completedLevels.includes(level)
         );
         if (!level1Completed) {
-          const currentLevel = (token?.currentLevel as string) || '1.1';
+          const currentLevel = normalizeLevelId((token?.currentLevel as string) || '1');
           return NextResponse.redirect(new URL(`/levels/${currentLevel}`, req.url));
         }
       }
 
-      // For level-2-completed, must have completed level 2.1
+      // For level-2-completed, must have completed level 5
       if (path.startsWith('/completion/level-2-completed')) {
-        const level2Completed = completedLevels.includes('2.1');
+        const level2Completed = completedLevels.includes('5' as any);
         if (!level2Completed) {
-          const currentLevel = (token?.currentLevel as string) || '1.1';
+          const currentLevel = normalizeLevelId((token?.currentLevel as string) || '1');
           return NextResponse.redirect(new URL(`/levels/${currentLevel}`, req.url));
         }
       }
@@ -97,7 +101,7 @@ export default withAuth(
           level => completedLevels.includes(level)
         );
         if (!allCompleted) {
-          const currentLevel = (token?.currentLevel as string) || '1.1';
+          const currentLevel = normalizeLevelId((token?.currentLevel as string) || '1');
           return NextResponse.redirect(new URL(`/levels/${currentLevel}`, req.url));
         }
       }

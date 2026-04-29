@@ -2,8 +2,8 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface ILevel3_1_Progress extends Document {
   userId: mongoose.Types.ObjectId;
-  completedPhases: number[]; // Array of phase numbers (1, 2, 3)
-  currentPhase: number; // Current phase (1-3)
+  completedPhases: number[]; // Array of phase numbers (1-5)
+  currentPhase: number; // Current phase (1-5)
   attempts: {
     phase: number;
     input: string;
@@ -41,7 +41,7 @@ const Level3_1_ProgressSchema = new Schema<ILevel3_1_Progress>(
       type: Number,
       default: 1,
       min: 1,
-      max: 3,
+      max: 5,
     },
     attempts: [
       {

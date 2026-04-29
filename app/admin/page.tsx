@@ -1,9 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { BadgeCheck, Clock3, RefreshCw, Search, ShieldAlert, Users } from 'lucide-react';
+import LEVEL_META, { getDisplayLevel } from '../../lib/levelMeta';
+import { Button } from '../../components/ui/button';
 
 type Tab = 'leaderboard' | 'monitoring';
 
@@ -23,6 +26,7 @@ interface Submission {
   teamName: string;
   email: string;
   level: string;
+  legacyLevel?: string;
   flag: string;
   isCorrect: boolean;
   attemptNumber: number;
@@ -38,6 +42,15 @@ interface LevelStats {
   successRate: number;
 }
 
+const LEVEL_FILTERS = ['all', '1', '2', '3', '4', '5', '6', '7'] as const;
+
+const getLevelLabel = (level: string) => {
+  if (level === 'all') return 'All Levels';
+  const meta = LEVEL_META[level as keyof typeof LEVEL_META];
+  const displayLevel = getDisplayLevel(level);
+  return meta && displayLevel ? `Level ${displayLevel} - ${meta.shortTitle}` : `Level ${level}`;
+};
+
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -48,34 +61,18 @@ export default function AdminDashboard() {
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [totalTeams, setTotalTeams] = useState<number>(0);
+  const [totalSubmissions, setTotalSubmissions] = useState<number>(0);
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
-    } else if (status === 'authenticated' && !session?.user?.isAdmin) {
-      router.push('/levels/1.1');
-    }
-  }, [status, session, router]);
-
-  useEffect(() => {
-    if (session?.user?.isAdmin) {
-      fetchData();
-    }
-  }, [session, activeTab, selectedLevel]);
-
-  useEffect(() => {
-    if (!autoRefresh || !session?.user?.isAdmin) return;
-
-    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
-    return () => clearInterval(interval);
-  }, [autoRefresh, activeTab, selectedLevel, session]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       if (activeTab === 'leaderboard') {
         const res = await fetch('/api/admin/leaderboard');
         const data = await res.json();
         setLeaderboard(data.leaderboard || []);
+        setTotalTeams(data.totalUsers || 0);
       } else {
         const url = selectedLevel === 'all'
           ? '/api/admin/submissions'
@@ -84,13 +81,36 @@ export default function AdminDashboard() {
         const data = await res.json();
         setSubmissions(data.submissions || []);
         setStats(data.stats || []);
+        setTotalSubmissions(data.totalSubmissions || 0);
       }
+      setLastUpdated(new Date().toLocaleString());
       setIsLoading(false);
     } catch (error) {
       console.error('Failed to fetch data:', error);
       setIsLoading(false);
     }
-  };
+  }, [activeTab, selectedLevel]);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin');
+    } else if (status === 'authenticated' && !session?.user?.isAdmin) {
+      router.push('/levels/1');
+    }
+  }, [status, session, router]);
+
+  useEffect(() => {
+    if (session?.user?.isAdmin) {
+      void fetchData();
+    }
+  }, [session, fetchData]);
+
+  useEffect(() => {
+    if (!autoRefresh || !session?.user?.isAdmin) return;
+
+    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, [autoRefresh, session, fetchData]);
 
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
@@ -103,6 +123,28 @@ export default function AdminDashboard() {
   const formatTimestamp = (timestamp: string) => {
     return new Date(timestamp).toLocaleString();
   };
+
+  const filteredLeaderboard = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return leaderboard;
+    return leaderboard.filter((entry) =>
+      [entry.teamName, entry.email, entry.completedCount.toString(), entry.isComplete ? 'complete' : 'in progress']
+        .join(' ')
+        .toLowerCase()
+        .includes(query)
+    );
+  }, [leaderboard, searchQuery]);
+
+  const filteredSubmissions = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return submissions;
+    return submissions.filter((sub) =>
+      [sub.teamName, sub.email, sub.level, sub.legacyLevel || '', sub.flag, sub.isCorrect ? 'correct' : 'wrong']
+        .join(' ')
+        .toLowerCase()
+        .includes(query)
+    );
+  }, [submissions, searchQuery]);
 
   if (status === 'loading' || isLoading) {
     return (
@@ -124,11 +166,43 @@ export default function AdminDashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 via-purple-400 to-green-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold mb-2 bg-linear-to-r from-cyan-400 via-purple-400 to-green-400 bg-clip-text text-transparent">
           Admin Dashboard
         </h1>
         <p className="text-cyan-400/70">Real-time CTF monitoring and leaderboard</p>
       </motion.div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="rounded-2xl border border-cyan-500/20 bg-[hsl(220,26%,10%)] p-4 shadow-lg shadow-cyan-500/5">
+          <div className="flex items-center justify-between text-cyan-400 text-sm mb-2">
+            <span>Ranked Teams</span>
+            <Users className="w-4 h-4" />
+          </div>
+          <div className="text-3xl font-bold text-cyan-300">{totalTeams}</div>
+        </div>
+        <div className="rounded-2xl border border-purple-500/20 bg-[hsl(220,26%,10%)] p-4 shadow-lg shadow-purple-500/5">
+          <div className="flex items-center justify-between text-purple-400 text-sm mb-2">
+            <span>Submissions</span>
+            <BadgeCheck className="w-4 h-4" />
+          </div>
+          <div className="text-3xl font-bold text-cyan-300">{totalSubmissions}</div>
+        </div>
+        <div className="rounded-2xl border border-green-500/20 bg-[hsl(220,26%,10%)] p-4 shadow-lg shadow-green-500/5">
+          <div className="flex items-center justify-between text-green-400 text-sm mb-2">
+            <span>Live Refresh</span>
+            <RefreshCw className={`w-4 h-4 ${autoRefresh ? 'animate-spin' : ''}`} />
+          </div>
+          <div className="text-lg font-semibold text-cyan-300">{autoRefresh ? 'Every 5s' : 'Paused'}</div>
+        </div>
+        <div className="rounded-2xl border border-yellow-500/20 bg-[hsl(220,26%,10%)] p-4 shadow-lg shadow-yellow-500/5">
+          <div className="flex items-center justify-between text-yellow-400 text-sm mb-2">
+            <span>Last Updated</span>
+            <Clock3 className="w-4 h-4" />
+          </div>
+          <div className="text-sm font-medium text-cyan-300">{lastUpdated || 'Waiting for data'}</div>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-4 mb-6">
@@ -164,12 +238,24 @@ export default function AdminDashboard() {
             />
             <span className="text-cyan-400 text-sm">Auto-refresh (5s)</span>
           </label>
-          <button
-            onClick={() => router.push('/')}
-            className="px-4 py-2 bg-[hsl(220,26%,10%)] text-cyan-400 rounded-lg hover:bg-[hsl(220,26%,15%)] transition-all"
-          >
+          <Button onClick={() => router.push('/')} variant="outline" size="sm">
             Home
-          </button>
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-6 flex flex-col lg:flex-row gap-4 lg:items-center">
+        <div className="relative flex-1 max-w-xl">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyan-400/60" />
+          <input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={activeTab === 'leaderboard' ? 'Search team, email, or status...' : 'Search team, flag, or level...'}
+            className="w-full rounded-xl border border-cyan-500/20 bg-[hsl(220,26%,10%)] py-3 pl-10 pr-4 text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/40"
+          />
+        </div>
+        <div className="text-sm text-cyan-400/70">
+          Showing {activeTab === 'leaderboard' ? filteredLeaderboard.length : filteredSubmissions.length} records
         </div>
       </div>
 
@@ -183,8 +269,8 @@ export default function AdminDashboard() {
         >
           <h2 className="text-2xl font-bold mb-4 text-cyan-400">Leaderboard</h2>
 
-          {leaderboard.length === 0 ? (
-            <p className="text-cyan-400/50 text-center py-8">No submissions yet</p>
+          {filteredLeaderboard.length === 0 ? (
+            <p className="text-cyan-400/50 text-center py-8">No ranked teams yet</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -200,7 +286,7 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {leaderboard.map((entry) => (
+                  {filteredLeaderboard.map((entry) => (
                     <tr
                       key={entry.rank}
                       className="border-b border-cyan-500/10 hover:bg-[hsl(220,26%,12%)] transition-colors"
@@ -227,7 +313,7 @@ export default function AdminDashboard() {
                       <td className="py-3 px-4">
                         <div className="w-full bg-[hsl(220,26%,15%)] rounded-full h-2">
                           <div
-                            className="bg-gradient-to-r from-cyan-500 to-green-500 h-2 rounded-full transition-all"
+                            className="bg-linear-to-r from-cyan-500 to-green-500 h-2 rounded-full transition-all"
                             style={{ width: `${entry.completionPercentage}%` }}
                           />
                         </div>
@@ -261,7 +347,7 @@ export default function AdminDashboard() {
         >
           {/* Level Filter */}
           <div className="mb-6 flex gap-2 flex-wrap">
-            {['all', '1.1', '1.2', '1.3', '1.4', '2.1', '3.1', '3.2'].map((level) => (
+            {LEVEL_FILTERS.map((level) => (
               <button
                 key={level}
                 onClick={() => setSelectedLevel(level)}
@@ -271,7 +357,7 @@ export default function AdminDashboard() {
                     : 'bg-[hsl(220,26%,10%)] text-cyan-400 hover:bg-[hsl(220,26%,15%)]'
                 }`}
               >
-                {level === 'all' ? 'All Levels' : `Level ${level}`}
+                {getLevelLabel(level)}
               </button>
             ))}
           </div>
@@ -284,7 +370,7 @@ export default function AdminDashboard() {
                   key={stat.level}
                   className="bg-[hsl(220,26%,10%)] rounded-lg p-4 border border-purple-500/20"
                 >
-                  <div className="text-purple-400 text-sm mb-2">Level {stat.level}</div>
+                  <div className="text-purple-400 text-sm mb-2">{getLevelLabel(stat.level)}</div>
                   <div className="text-2xl font-bold text-cyan-300 mb-1">
                     {stat.successfulAttempts}/{stat.totalAttempts}
                   </div>
@@ -305,7 +391,7 @@ export default function AdminDashboard() {
               Recent Submissions
             </h2>
 
-            {submissions.length === 0 ? (
+            {filteredSubmissions.length === 0 ? (
               <p className="text-cyan-400/50 text-center py-8">No submissions yet</p>
             ) : (
               <div className="overflow-x-auto">
@@ -322,7 +408,7 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {submissions.map((sub) => (
+                    {filteredSubmissions.map((sub) => (
                       <tr
                         key={sub.id}
                         className="border-b border-purple-500/10 hover:bg-[hsl(220,26%,12%)] transition-colors"
@@ -332,7 +418,7 @@ export default function AdminDashboard() {
                         </td>
                         <td className="py-3 px-4 text-cyan-300">{sub.teamName}</td>
                         <td className="py-3 px-4 font-mono text-purple-300">
-                          {sub.level}
+                          {getLevelLabel(sub.level)}
                         </td>
                         <td className="py-3 px-4 font-mono text-xs text-cyan-400/70 max-w-xs truncate">
                           {sub.flag}

@@ -8,20 +8,17 @@ import {
   ArrowRight,
   X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import LEVEL_META, { getDisplayLevel } from '../../../lib/levelMeta';
 
 type ApiResponse = { flagPart: string; hint?: string };
 
-// Normalize for validation
-const normalize = (s: string) => s.trim().toLowerCase();
-
 export default function LevelOneOne() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('1.1');
+  const { isChecking } = useLevelAccess('1');
   const { update } = useSession();
 
   // Input state
@@ -94,7 +91,7 @@ export default function LevelOneOne() {
     await appendTypedLine(`> Querying ${domain} ...`);
 
     try {
-      const rsp = await fetch("/api/levels/1.1", {
+      const rsp = await fetch("/api/levels/1", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ domain }),
@@ -120,8 +117,9 @@ export default function LevelOneOne() {
           return [...prev, data.flagPart];
         });
       }
-    } catch (err: any) {
-      await appendTypedLine(`> Error: ${err?.message ?? "unknown"}`);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "unknown";
+      await appendTypedLine(`> Error: ${message}`);
     }
   };
 
@@ -131,8 +129,6 @@ export default function LevelOneOne() {
       setTimeout(() => setModalOpen(true), 500);
     }
   }, [collectedParts]);
-
-  const expectedFlag = collectedParts.join("");
 
   // Submit modal with API
   const handleModalSubmit = async (e?: React.FormEvent) => {
@@ -149,7 +145,7 @@ export default function LevelOneOne() {
       const res = await fetch('/api/submit-flag', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ level: '1.1', flag: modalInput }),
+        body: JSON.stringify({ level: '1', flag: modalInput }),
       });
 
       const data = await res.json();
@@ -172,7 +168,7 @@ export default function LevelOneOne() {
         void appendTypedLine("> Flag submitted: " + modalInput);
         void appendTypedLine("> Result: Incorrect flag.");
       }
-    } catch (err: any) {
+    } catch {
       setModalError("Error submitting flag. Please try again.");
     }
   };
@@ -195,7 +191,7 @@ export default function LevelOneOne() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
       {/* BG */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem]" />
 
       <div dangerouslySetInnerHTML={{ __html: htmlComment }} />
 
@@ -205,7 +201,7 @@ export default function LevelOneOne() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 border border-primary/20">
             <ShieldAlert className="w-4 h-4 text-primary animate-glow-pulse" />
             <span className="text-sm text-muted-foreground">
-              Level 1.1 — The Forgotten Sticky Note
+              {`Level ${getDisplayLevel('1')} — ${LEVEL_META['1'].shortTitle}`}
             </span>
           </div>
         </div>
@@ -221,7 +217,7 @@ export default function LevelOneOne() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            DNS Archive Breach
+            {LEVEL_META['1'].title}
           </h1>
 
           <div className="mx-auto max-w-3xl bg-black/40 border border-primary/20 backdrop-blur-md rounded-xl p-6 shadow-[0_0_25px_rgba(0,255,255,0.2)]">
@@ -230,26 +226,22 @@ export default function LevelOneOne() {
                 Mission Briefing
               </span>
               <span className="px-3 py-1 text-xs uppercase tracking-wider bg-accent/20 text-accent border border-accent/30 rounded-md">
-                Operation: Level 1.1
+                {`Operation: Level ${getDisplayLevel('1.1')}`}
               </span>
             </div>
 
             <div className="grid gap-4 text-foreground/80 text-sm leading-relaxed">
-              <p className="text-base text-foreground/90 font-semibold text-cyan-300">
-                📖 Chapter 1: The Discovery
-              </p>
+                <p className="text-base font-semibold text-cyan-300">
+                  {`📖 ${LEVEL_META['1'].shortTitle}`}
+                </p>
 
-              <p className="text-base text-foreground/90">
-                Welcome, investigator! You've been hired by NebulaCorp's board of directors to audit their new
-                <span className="text-primary font-semibold"> DNS Integrity System</span>.
-                They rushed it to production, and whispers suggest it may not be secure.
-              </p>
+                <p className="text-base text-foreground/90">
+                  {LEVEL_META['1'].storyIntro}
+                </p>
 
-              <p className="text-foreground/80">
-                Your contact at NebulaCorp mentions that the development team left some "breadcrumbs"
-                in the system. <span className="text-green-400 font-semibold">Legacy DNS servers are still running</span>,
-                and old internal domains might reveal secrets...
-              </p>
+                <p className="text-foreground/80">
+                  {LEVEL_META['1'].tagline}
+                </p>
 
               <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3 my-2">
                 <p className="text-cyan-300 text-xs font-semibold mb-2">🎯 YOUR MISSION:</p>
@@ -268,7 +260,7 @@ export default function LevelOneOne() {
 
               <p className="text-foreground/70 text-xs italic">
                 💡 <span className="text-yellow-400">Beginner Tip:</span> Right-click anywhere on this page
-                and select "View Page Source" to see hidden comments!
+                and select &quot;View Page Source&quot; to see hidden comments!
               </p>
             </div>
           </div>
@@ -304,7 +296,7 @@ export default function LevelOneOne() {
           )}
 
           {logLines.map((ln, i) => (
-            <div key={i} className="text-[#00ff41] leading-6 break-words">
+            <div key={i} className="text-[#00ff41] leading-6 wrap-break-word">
               {ln}
             </div>
           ))}

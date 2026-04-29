@@ -3,15 +3,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ShieldAlert, Terminal as TerminalIcon, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import "../../../app/styles/cyber-global.css";
 
 export default function LevelOneFour() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('1.4');
+  const { canAccess, isChecking } = useLevelAccess('4');
   const { update } = useSession();
 
   const [flagInput, setFlagInput] = useState("");
@@ -57,7 +57,7 @@ export default function LevelOneFour() {
       current += line[i];
       logRef.current[idx] = current;
       setLogLines([...logRef.current]);
-      // eslint-disable-next-line no-await-in-loop
+       
       await new Promise((r) => setTimeout(r, 8 + Math.random() * 12));
     }
 
@@ -90,7 +90,7 @@ export default function LevelOneFour() {
       const res = await fetch('/api/submit-flag', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ level: '1.4', flag: flagInput }),
+        body: JSON.stringify({ level: '4', flag: flagInput }),
       });
 
       const data = await res.json();
@@ -126,7 +126,7 @@ export default function LevelOneFour() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
       {/* Background grid */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:5rem_5rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[5rem_5rem]" />
 
       {/* Glowing background elements */}
       <motion.div
@@ -181,7 +181,7 @@ export default function LevelOneFour() {
               Mission Brief
             </div>
 
-            <p className="text-base text-foreground/90 font-semibold text-cyan-300 mb-3">
+            <p className="text-base font-semibold text-cyan-300 mb-3">
               📖 Chapter 4: The Hidden Gateway
             </p>
 
@@ -227,7 +227,7 @@ export default function LevelOneFour() {
               className="rounded-xl bg-[#071014]/70 border border-primary/10 p-4 h-[280px] overflow-auto font-mono text-[#00ff41] text-sm mb-4"
             >
               {logLines.map((ln, i) => (
-                <div key={i} className="leading-6 break-words">
+                <div key={i} className="leading-6 wrap-break-word">
                   {ln}
                 </div>
               ))}
@@ -236,7 +236,7 @@ export default function LevelOneFour() {
             {/* Flag submission form */}
             <form onSubmit={handleFlagSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs text-foreground/60 mb-2 flex items-center gap-2">
+                <label className="text-xs text-foreground/60 mb-2 flex items-center gap-2">
                   <Search className="w-3 h-3" />
                   Submit Flag
                 </label>

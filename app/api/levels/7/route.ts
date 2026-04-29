@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import connectDB from '@/lib/mongodb';
-import Employee from '@/lib/models/Employee';
-import { authOptions } from '@/lib/auth';
+import connectDB from '../../../../lib/mongodb';
+import Employee from '../../../../lib/models/Employee';
+import { authOptions } from '../../../../lib/auth';
 
 /**
- * POST /api/levels/3.2
+ * POST /api/levels/7
  *
  * INTENTIONALLY VULNERABLE Employee Search Endpoint
  *
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Log the query (for debugging/learning)
-    console.log('🔍 Level 3.2 Query:', JSON.stringify(query));
+    console.log('🔍 Level 7 Query:', JSON.stringify(query));
 
     // 5. Execute the vulnerable query
     // Limit to 1 result to avoid overwhelming response
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (error: any) {
-    console.error('Level 3.2 API Error:', error);
+    console.error('Level 7 API Error:', error);
 
     // Check for MongoDB errors (can reveal query structure)
     if (error.name === 'CastError') {
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * GET /api/levels/3.2
+ * GET /api/levels/7
  *
  * Returns list of departments and basic info (for reconnaissance)
  */
@@ -209,7 +209,7 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error('Level 3.2 GET Error:', error);
+    console.error('Level 7 GET Error:', error);
 
     return NextResponse.json(
       {

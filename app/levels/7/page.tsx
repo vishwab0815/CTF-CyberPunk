@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
-import { Button } from "@/components/ui/button";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
+import { Button } from "../../../components/ui/button";
 import { Search, Database, AlertCircle, CheckCircle2, Info, Code } from "lucide-react";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import LEVEL_META from '../../../lib/levelMeta';
+import "../../../app/styles/cyber-global.css";
 
 type ReconData = {
   totalEmployees: number;
@@ -34,7 +35,7 @@ type SearchResult = {
 
 export default function LevelThreeTwo() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('3.2');
+  const { canAccess, isChecking } = useLevelAccess('7');
   const { update } = useSession();
 
   // State
@@ -53,7 +54,7 @@ export default function LevelThreeTwo() {
 
   const fetchReconData = async () => {
     try {
-      const res = await fetch('/api/levels/3.2');
+      const res = await fetch('/api/levels/7');
       if (res.ok) {
         const data = await res.json();
         setReconData(data);
@@ -80,7 +81,7 @@ export default function LevelThreeTwo() {
         searchBody = { name: searchInput };
       }
 
-      const res = await fetch('/api/levels/3.2', {
+      const res = await fetch('/api/levels/7', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(searchBody),
@@ -101,7 +102,7 @@ export default function LevelThreeTwo() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              level: '3.2',
+              level: '7',
               flag: data.employee.secretData,
             }),
           });
@@ -144,7 +145,7 @@ export default function LevelThreeTwo() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem]" />
 
       {/* Glowing orbs */}
       <motion.div
@@ -178,13 +179,12 @@ export default function LevelThreeTwo() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            The Database Whisper
+            {LEVEL_META['7'].title}
           </h1>
 
           <p className="text-white/70 text-lg mb-6 max-w-3xl mx-auto">
-            NebulaCorp's Employee Search Portal uses a NoSQL database.
-            The search function seems secure, but can you manipulate the queries
-            to find the hidden administrator?
+            {LEVEL_META['7'].storyIntro}
+            <span className="block mt-2 text-cyan-300 text-base">{LEVEL_META['7'].tagline}</span>
           </p>
         </div>
 

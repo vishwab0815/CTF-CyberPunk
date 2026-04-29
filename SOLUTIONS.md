@@ -6,18 +6,17 @@
 
 ## 📚 Table of Contents
 
-- [Level 1.1: The Forgotten Sticky Note](#level-11-the-forgotten-sticky-note)
-- [Level 1.2: Client-Side Validation Bypass](#level-12-client-side-validation-bypass)
-- [Level 1.3: JavaScript Security Illusion](#level-13-javascript-security-illusion)
-- [Level 1.4: Hidden Endpoints Discovery](#level-14-hidden-endpoints-discovery)
-- [Level 2.1: The Ghost Admin (IDOR)](#level-21-the-ghost-admin-idor)
-- [Level 2.2: Admin Identity Forge](#level-22-admin-identity-forge)
-- [Level 3.1: The Broken Interface](#level-31-the-broken-interface)
-- [Level 3.2: The Database Whisper (NoSQL Injection)](#level-32-the-database-whisper-nosql-injection)
+- [Level 1: The Forgotten Sticky Note](#level-1-the-forgotten-sticky-note)
+- [Level 2: Client-Side Validation Bypass](#level-2-client-side-validation-bypass)
+- [Level 3: JavaScript Security Illusion](#level-3-javascript-security-illusion)
+- [Level 4: Hidden Endpoints Discovery](#level-4-hidden-endpoints-discovery)
+- [Level 5: The Ghost Admin (IDOR)](#level-5-the-ghost-admin-idor)
+- [Level 6: The Broken Interface](#level-6-the-broken-interface)
+- [Level 7: The Database Whisper (NoSQL Injection)](#level-7-the-database-whisper-nosql-injection)
 
 ---
 
-## Level 1.1: The Forgotten Sticky Note
+## Level 1: The Forgotten Sticky Note
 
 **Difficulty:** ⭐ Beginner
 **Concept:** View Source / HTML Comments
@@ -156,7 +155,7 @@ flag{legacy_systems_tell_secrets}
 
 ---
 
-## Level 1.2: Client-Side Validation Bypass
+## Level 2: Client-Side Validation Bypass
 
 **Difficulty:** ⭐⭐ Beginner-Intermediate
 **Concept:** Client-Side Validation Bypass
@@ -168,7 +167,7 @@ Bypass the client-side `maxlength` restriction to submit a longer domain name.
 
 ### 👀 What You'll See
 
-- Title: "Level 1.2 — The 15-Character Ruler"
+- Title: "Level 2 — The 15-Character Ruler"
 - Mission brief mentions a "security patch" with `maxlength=15`
 - An input field with a visual "max 15" indicator
 - A "Query" button
@@ -286,7 +285,7 @@ flag{trust_the_server_not_the_client}
 <input maxLength={15} />
 
 // ✅ GOOD: Server-side validation
-app.post('/api/levels/1.2', (req, res) => {
+app.post('/api/levels/2', (req, res) => {
   const { domain } = req.body;
 
   // Validate on the server!
@@ -303,7 +302,7 @@ app.post('/api/levels/1.2', (req, res) => {
 
 ---
 
-## Level 1.3: JavaScript Security Illusion
+## Level 3: JavaScript Security Illusion
 
 **Difficulty:** ⭐⭐ Intermediate
 **Concept:** JavaScript Bypass / Function Manipulation
@@ -315,7 +314,7 @@ Bypass the JavaScript security guard function that blocks certain domains.
 
 ### 👀 What You'll See
 
-- Title: "Level 1.3 — The JavaScript Guard"
+- Title: "Level 3 — The JavaScript Guard"
 - Mission brief mentions an "unbreakable defense" using JavaScript
 - An input field and "Lookup" button
 - Terminal showing: `[SYSTEM] JavaScript Guard v1.0 Activated.`
@@ -465,7 +464,7 @@ app.post('/api/query', (req, res) => {
 
 ---
 
-## Level 1.4: Hidden Endpoints Discovery
+## Level 4: Hidden Endpoints Discovery
 
 **Difficulty:** ⭐⭐ Intermediate
 **Concept:** API Endpoint Discovery / Security by Obscurity
@@ -477,15 +476,15 @@ Discover a hidden API endpoint that was supposed to be decommissioned but still 
 
 ### 👀 What You'll See
 
-- Title: "Level 1.4 — The Hidden Gateway"
+- Title: "Level 4 — The Hidden Gateway"
 - Mission brief about NebulaCorp's "security through obscurity"
 - A terminal-style interface showing:
   ```
   [SYSTEM] Endpoint Discovery Tool v2.0 initialized.
   [INFO] Scanning NebulaCorp API architecture...
-  [SCAN] Found: /api/levels/1.1 - Active
-  [SCAN] Found: /api/levels/1.2 - Active
-  [SCAN] Found: /api/levels/1.3 - Active
+  [SCAN] Found: /api/levels/1 - Active
+  [SCAN] Found: /api/levels/2 - Active
+  [SCAN] Found: /api/levels/3 - Active
   [WARNING] Scan incomplete. Some endpoints may be hidden from public routes.
   ```
 - An input field to "Submit Flag"
@@ -497,12 +496,12 @@ Discover a hidden API endpoint that was supposed to be decommissioned but still 
 **Step 1: Analyze the Clues**
 
 The terminal output is a huge hint:
-- Three endpoints were found: `1.1`, `1.2`, `1.3`
+- Three endpoints were found: `1`, `2`, `3`
 - The scan says it's "incomplete"
 - It warns: "Some endpoints may be hidden from public routes"
 - The mission brief mentions a "fourth endpoint — a legacy admin panel"
 
-💡 **Pattern Recognition:** If there are endpoints `1.1`, `1.2`, `1.3`... there's probably a `1.4`!
+💡 **Pattern Recognition:** If there are endpoints `1`, `2`, `3`... there's probably a `4`!
 
 **Step 2: View Page Source**
 
@@ -513,10 +512,10 @@ Press `Ctrl+U` to view source. Look for HTML comments:
   🔒 INTERNAL SECURITY AUDIT LOG 🔒
 
   System endpoints discovered during investigation:
-  - /api/levels/1.1 (DNS Query System)
-  - /api/levels/1.2 (Validation System)
-  - /api/levels/1.3 (JavaScript Guard)
-  - /api/levels/1.4 (Legacy Admin Panel - DECOMMISSIONED)
+  - /api/levels/1 (DNS Query System)
+  - /api/levels/2 (Validation System)
+  - /api/levels/3 (JavaScript Guard)
+  - /api/levels/4 (Legacy Admin Panel - DECOMMISSIONED)
 
   TODO: Remove reference to legacy admin endpoint before production!
   Note: Endpoint still responds to requests despite being marked as deprecated.
@@ -524,7 +523,7 @@ Press `Ctrl+U` to view source. Look for HTML comments:
 ```
 
 💡 **JACKPOT!**
-- The endpoint is `/api/levels/1.4`
+-- The endpoint is `/api/levels/4`
 - It's marked as "DECOMMISSIONED" but **"still responds to requests"**
 - Classic security-by-obscurity fail!
 
@@ -537,7 +536,7 @@ Press **F12** → **Console** tab
 
 Type this JavaScript command:
 ```javascript
-fetch('/api/levels/1.4', {
+fetch('/api/levels/4', {
   method: 'GET',
   headers: { 'Content-Type': 'application/json' }
 })
@@ -576,9 +575,9 @@ Paste it into the "Submit Flag" input field and click "Submit Flag"
 1. Press **F12** → **Network** tab
 2. In the Console, run:
    ```javascript
-   fetch('/api/levels/1.4').then(r => r.json()).then(console.log)
+  fetch('/api/levels/4').then(r => r.json()).then(console.log)
    ```
-3. Watch the Network tab show the request to `/api/levels/1.4`
+3. Watch the Network tab show the request to `/api/levels/4`
 4. Click on the request to see the response with the flag
 
 #### **Exploitation Phase - Method 3: Direct Navigation**
@@ -587,7 +586,7 @@ Paste it into the "Submit Flag" input field and click "Submit Flag"
 
 Some endpoints might be accessible via GET. Try navigating directly:
 ```
-http://localhost:3000/api/levels/1.4
+http://localhost:3000/api/levels/4
 ```
 
 (This might work depending on the API design!)
@@ -670,7 +669,7 @@ app.get('/api/admin/panel',
 
 ---
 
-## Level 2.1: The Ghost Admin (IDOR)
+## Level 5: The Ghost Admin (IDOR)
 
 **Difficulty:** ⭐⭐⭐ Advanced
 **Concept:** IDOR (Insecure Direct Object Reference)
@@ -682,7 +681,7 @@ Exploit an IDOR vulnerability to access unauthorized user profiles by enumeratin
 
 ### 👀 What You'll See
 
-- Title: "Level 2.1 — The Ghost Admin"
+- Title: "Level 5 — The Ghost Admin"
 - Mission brief mentions you have access to Profile ID `1001` (a basic user)
 - An input field for "Profile ID"
 - "SEARCH" button and "My Profile" button
@@ -820,7 +819,7 @@ Try ranges:
 ```javascript
 // Automate the search
 for (let id = 5000; id <= 9999; id++) {
-  fetch('/api/levels/2.1', {
+  fetch('/api/levels/5', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id })
@@ -1062,7 +1061,7 @@ The "Continue" button appears → Click to advance to Chapter 3
 
 For fun, let's forge a completely different identity:
 ```javascript
-// Become user 7777 (the Ghost Admin from Level 2.1!) with admin role
+// Become user 7777 (the Ghost Admin from Level 5!) with admin role
 btoa('{"user_id": 7777, "role": "admin"}')
 ```
 
@@ -1239,7 +1238,7 @@ app.get('/admin/dashboard', requireAuth, (req, res) => {
 
 ---
 
-## Level 3.1: The Broken Interface
+## Level 6: The Broken Interface
 
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 **Concept:** Multi-Phase Interactive Puzzle
@@ -1410,7 +1409,7 @@ INTERFACE RESTORED
 Status: OPERATIONAL
 ```
 
-"Continue" button appears → Advance to Level 3.2
+"Continue" button appears → Advance to Level 7
 
 ### 🏁 Flag
 ```
@@ -1455,7 +1454,7 @@ In security testing and CTF challenges:
 
 ---
 
-## Level 3.2: The Database Whisper (NoSQL Injection)
+## Level 7: The Database Whisper (NoSQL Injection)
 
 **Difficulty:** ⭐⭐⭐⭐⭐ Expert
 **Concept:** NoSQL Injection (MongoDB)
@@ -1467,7 +1466,7 @@ Exploit a NoSQL injection vulnerability in an employee search system to find and
 
 ### 👀 What You'll See
 
-- Title: "Level 3.2 — The Database Whisper"
+- Title: "Level 7 — The Database Whisper"
 - An **"Employee Search Portal"**
 - Intelligence panel showing:
   ```
@@ -1913,14 +1912,13 @@ const query = allowedQueries[queryType](queryValue);
 
 | Level | OWASP Category | Vulnerability | Severity |
 |-------|----------------|---------------|----------|
-| 1.1 | Information Disclosure | HTML Comments Exposure | Low |
-| 1.2 | A04: Insecure Design | Client-Side Validation Only | Medium |
-| 1.3 | A04: Insecure Design | Client-Side Security Logic | Medium |
-| 1.4 | A01: Broken Access Control | Hidden Endpoints Without Auth | Medium |
-| 2.1 | A01: Broken Access Control | IDOR (Insecure Direct Object Reference) | High |
-| 2.2 | A07: Identification Failures | Unsigned/Weak Token Manipulation | Critical |
-| 3.1 | N/A | Interactive Puzzle (Pattern Recognition) | N/A |
-| 3.2 | A03: Injection | NoSQL Injection | Critical |
+| 1 | Information Disclosure | HTML Comments Exposure | Low |
+| 2 | A04: Insecure Design | Client-Side Validation Only | Medium |
+| 3 | A04: Insecure Design | Client-Side Security Logic | Medium |
+| 4 | A01: Broken Access Control | Hidden Endpoints Without Auth | Medium |
+| 5 | A01: Broken Access Control | IDOR (Insecure Direct Object Reference) | High |
+| 6 | N/A | Interactive Puzzle (Pattern Recognition) | N/A |
+| 7 | A03: Injection | NoSQL Injection | Critical |
 
 ---
 

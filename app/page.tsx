@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import { Shield, Terminal } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import "./styles/cyber-global.css";
 
 const MainPage = () => {
   const router = useRouter();
@@ -13,7 +13,7 @@ const MainPage = () => {
   const handleStartHacking = () => {
     if (session?.user) {
       // If logged in, go to levels page
-      router.push("/levels/1.1");
+      router.push("/levels/1");
     } else {
       // If not logged in, go to sign up
       router.push("/auth/signup");
@@ -25,7 +25,7 @@ const MainPage = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Background Grid */}
         <div className="absolute inset-0 bg-gradient-hero">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
         </div>
 
         {/* Glowing Orbs */}

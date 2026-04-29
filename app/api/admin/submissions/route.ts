@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import connectDB from '@/lib/mongodb';
-import Submission from '@/lib/models/Submission';
+import { authOptions } from '../../../../lib/auth';
+import connectDB from '../../../../lib/mongodb';
+import Submission from '../../../../lib/models/Submission';
+import { getLevelLookupCandidates, normalizeLevelId } from '../../../../lib/levelIds';
 
 export async function GET(req: NextRequest) {
   try {
@@ -21,13 +22,15 @@ export async function GET(req: NextRequest) {
 
     // Build query
     const query: any = {};
-    if (level) {
-      query.level = level;
+    if (level && level !== 'all') {
+      query.level = { $in: getLevelLookupCandidates(level) };
     }
+
+    const totalSubmissions = await Submission.countDocuments(query);
 
     // Get submissions
     const submissions = await Submission.find(query)
-      .populate('userId', 'email teamName')
+      .populate('userId', 'email')
       .sort({ createdAt: -1 })
       .limit(limit)
       .lean();
@@ -35,9 +38,10 @@ export async function GET(req: NextRequest) {
     // Format submissions
     const formattedSubmissions = submissions.map((sub: any) => ({
       id: sub._id,
-      teamName: sub.teamName,
+      teamName: sub.userId?.email?.split('@')[0] || sub.teamName || 'Unknown',
       email: sub.userId?.email || 'Unknown',
-      level: sub.level,
+      level: normalizeLevelId(sub.level),
+      legacyLevel: sub.level,
       flag: sub.flag,
       isCorrect: sub.isCorrect,
       attemptNumber: sub.attemptNumber,
@@ -48,8 +52,26 @@ export async function GET(req: NextRequest) {
     // Get statistics by level
     const stats = await Submission.aggregate([
       {
+        $addFields: {
+          normalizedLevel: {
+            $switch: {
+              branches: [
+                { case: { $eq: ['$level', '1.1'] }, then: '1' },
+                { case: { $eq: ['$level', '1.2'] }, then: '2' },
+                { case: { $eq: ['$level', '1.3'] }, then: '3' },
+                { case: { $eq: ['$level', '1.4'] }, then: '4' },
+                { case: { $eq: ['$level', '2.1'] }, then: '5' },
+                { case: { $eq: ['$level', '3.1'] }, then: '6' },
+                { case: { $eq: ['$level', '3.2'] }, then: '7' },
+              ],
+              default: '$level',
+            },
+          },
+        },
+      },
+      {
         $group: {
-          _id: '$level',
+          _id: '$normalizedLevel',
           totalAttempts: { $sum: 1 },
           successfulAttempts: {
             $sum: { $cond: ['$isCorrect', 1, 0] },
@@ -80,6 +102,7 @@ export async function GET(req: NextRequest) {
       success: true,
       submissions: formattedSubmissions,
       stats,
+      totalSubmissions,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

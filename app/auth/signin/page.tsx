@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
+import "../../app/styles/cyber-global.css";
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Button } from '../../../components/ui/button';
 
 function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [remember, setRemember] = useState(false);
 
-  useEffect(() => {
-    if (searchParams.get('registered') === 'true') {
-      setSuccessMessage('Account created successfully! Please sign in.');
-    }
-    if (searchParams.get('passwordChanged') === 'true') {
-      setSuccessMessage('Password changed successfully! Please sign in with your new password.');
-    }
-  }, [searchParams]);
+  const successMessage = searchParams.get('registered') === 'true'
+    ? 'Account created successfully! Please sign in.'
+    : searchParams.get('passwordChanged') === 'true'
+      ? 'Password changed successfully! Please sign in with your new password.'
+      : '';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +34,7 @@ function SignInForm() {
         email,
         password,
         redirect: false,
+        remember,
       });
 
       if (result?.error) {
@@ -43,9 +44,9 @@ function SignInForm() {
       }
 
       // Redirect to levels page
-      router.push('/levels/1.1');
+      router.push('/levels/1');
       router.refresh();
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
       setIsLoading(false);
     }
@@ -54,7 +55,7 @@ function SignInForm() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-[hsl(220,26%,6%)] flex items-center justify-center p-4">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
 
       {/* Glowing Orbs */}
       <motion.div
@@ -96,8 +97,8 @@ function SignInForm() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl font-bold mb-2 bg-gradient-to-r from-cyan-400 via-green-400 to-purple-400 bg-clip-text text-transparent"
-            >
+              className="text-4xl font-bold mb-2 bg-linear-to-r from-cyan-400 via-green-400 to-purple-400 bg-clip-text text-transparent"
+              >
               Sign In
             </motion.h1>
             <motion.p
@@ -154,25 +155,49 @@ function SignInForm() {
               <label htmlFor="password" className="block text-sm font-medium text-cyan-300 mb-2">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={isLoading}
-                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50"
-                placeholder="Enter your password"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  disabled={isLoading}
+                  className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all disabled:opacity-50"
+                  placeholder="Enter your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-2 top-2 text-xs text-cyan-300/80 hover:text-cyan-200"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </div>
 
-            <button
+            <div className="flex items-center justify-between gap-4">
+              <label className="inline-flex items-center gap-2 text-sm text-cyan-300">
+                <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  className="w-4 h-4 rounded bg-[hsl(220,26%,8%)] border-cyan-500/30"
+                />
+                Remember me
+              </label>
+              <Link href="/auth/change-password" className="text-sm text-cyan-400/70 hover:text-cyan-300">Forgot password?</Link>
+            </div>
+
+            <Button
               type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/25"
+              aria-label="Sign in"
+              className="w-full py-3"
+              disabled={isLoading || !email.includes('@') || password.length < 6}
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
-            </button>
+            </Button>
           </form>
 
           {/* Divider */}
@@ -196,7 +221,7 @@ function SignInForm() {
             className="mt-6 p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg"
           >
             <p className="text-purple-300 text-xs text-center">
-              <span className="font-semibold">Admin Access:</span> admin@gmail.com
+              Admin accounts are provisioned by the server administrator and cannot be self-created.
             </p>
           </motion.div>
         </div>

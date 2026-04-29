@@ -4,14 +4,14 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-import AuroraBackground from "@/components/visuals/AuroraBackground";
-import LevelCard from "@/components/LevelCard";
-import Terminal from "@/components/Terminal";
-import { btnTap } from "@/lib/animation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
+import AuroraBackground from "../../../components/visuals/AuroraBackground";
+import LevelCard from "../../../components/LevelCard";
+import Terminal from "../../../components/Terminal";
+import { btnTap } from "../../../lib/animation";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
-import { Button } from "@/components/ui/button";
+import "../../../app/styles/cyber-global.css";
+import { Button } from "../../../components/ui/button";
 
 type Profile = {
   id: number;
@@ -23,7 +23,7 @@ type Profile = {
 
 export default function LevelTwoOnePage() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('2.1');
+  const { canAccess, isChecking } = useLevelAccess('5');
   const { update } = useSession();
 
   const [userId] = useState<number>(1001);
@@ -44,7 +44,7 @@ export default function LevelTwoOnePage() {
     setSearchHistory(prev => [...prev, id]);
 
     try {
-      const res = await fetch("/api/levels/2.1", {
+      const res = await fetch("/api/levels/5", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -64,7 +64,7 @@ export default function LevelTwoOnePage() {
             await fetch('/api/submit-flag', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ level: '2.1', flag: data.ghost_token }),
+              body: JSON.stringify({ level: '5', flag: data.ghost_token }),
             });
             // Refresh session after successful submission
             await update();
@@ -272,8 +272,8 @@ export default function LevelTwoOnePage() {
               {profile?.ghost_token ? (
                 <motion.div whileTap={btnTap}>
                   <Button
-                    onClick={() => router.push("/levels/2.2")}
-                    className="bg-gradient-to-r from-lime-400 to-cyan-400 text-black font-bold px-6 py-3"
+                    onClick={() => router.push("/levels/6")}
+                    className="bg-linear-to-r from-lime-400 to-cyan-400 text-black font-bold px-6 py-3"
                   >
                     Continue
                   </Button>

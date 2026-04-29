@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
-import { Button } from "@/components/ui/button";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
+import { Button } from "../../../components/ui/button";
 import { AlertTriangle, Zap, Check, Lock, Skull } from "lucide-react";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import LEVEL_META, { getDisplayLevel } from '../../../lib/levelMeta';
+import "../../../app/styles/cyber-global.css";
 
 // Expanded error logs for Phase 3 (15 total, 5 critical)
 const ERROR_LOGS = [
@@ -30,7 +31,7 @@ const ERROR_LOGS = [
 
 export default function LevelThreeOne() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('3.1');
+  const { canAccess, isChecking } = useLevelAccess('6');
   const { update } = useSession();
 
   // Phase tracking
@@ -280,7 +281,7 @@ export default function LevelThreeOne() {
             const submitRes = await fetch('/api/submit-flag', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ level: '3.1', flag: data.finalFlag }),
+              body: JSON.stringify({ level: '6', flag: data.finalFlag }),
             });
 
             const submitData = await submitRes.json();
@@ -327,7 +328,7 @@ export default function LevelThreeOne() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-hero" />
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:3rem_3rem]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[3rem_3rem]"
         style={{
           opacity: 0.3 + (glitchIntensity * 0.1),
           filter: `hue-rotate(${glitchIntensity * 30}deg)`,
@@ -365,10 +366,13 @@ export default function LevelThreeOne() {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Level 3.1 — The Gauntlet
+                {`Level ${getDisplayLevel('6')} — ${LEVEL_META['6'].shortTitle}`}
               </h1>
               <p className="text-red-400/80 text-sm">
-                5 Phases • Advanced Difficulty • No Mercy
+                {`${LEVEL_META['6'].tagline} • 5 Phases`}
+              </p>
+              <p className="text-foreground/70 text-xs mt-1 max-w-xl">
+                {LEVEL_META['6'].storyIntro}
               </p>
             </div>
           </div>
@@ -381,7 +385,7 @@ export default function LevelThreeOne() {
             </div>
             <div className="h-3 bg-black/60 rounded-full overflow-hidden border border-red-500/30">
               <motion.div
-                className="h-full bg-gradient-to-r from-red-600 to-orange-500"
+                className="h-full bg-linear-to-r from-red-600 to-orange-500"
                 initial={{ width: 0 }}
                 animate={{ width: `${(completedPhases.length / 5) * 100}%` }}
                 transition={{ duration: 0.5 }}
@@ -450,7 +454,7 @@ export default function LevelThreeOne() {
                       <br />
                       <span className="text-yellow-400 text-sm">Hint: It starts with a classic pattern...</span>
                     </p>
-                    <div className="bg-black/40 rounded-xl p-6 font-mono text-3xl text-center mb-4 min-h-[80px] flex items-center justify-center">
+                    <div className="bg-black/40 rounded-xl p-6 font-mono text-3xl text-center mb-4 min-h-20 flex items-center justify-center">
                       {keySequence.length > 0 ? keySequence.join(' ') : '..waiting for input..'}
                     </div>
                     <div className="text-center text-cyan-400 text-sm">
@@ -556,7 +560,6 @@ export default function LevelThreeOne() {
                         onChange={(e) => setCipherInput(e.target.value)}
                         placeholder="Enter decoded key..."
                         className="w-full p-4 rounded-xl bg-black/40 border border-blue-500/40 text-foreground font-mono text-lg"
-                        disabled={loading}
                       />
                       <Button
                         onClick={handleCipherSubmit}
@@ -579,7 +582,7 @@ export default function LevelThreeOne() {
                   exit={{ opacity: 0, x: 20 }}
                   className="space-y-6"
                 >
-                  <div className="bg-gradient-to-br from-red-500/10 via-purple-500/10 to-blue-500/10 border-2 border-cyan-500/50 rounded-xl p-6">
+                  <div className="bg-linear-to-br from-red-500/10 via-purple-500/10 to-blue-500/10 border-2 border-cyan-500/50 rounded-xl p-6">
                     <h3 className="text-2xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
                       <Check className="w-6 h-6" />
                       Phase 5: Final Authentication
@@ -608,7 +611,7 @@ export default function LevelThreeOne() {
                       <Button
                         onClick={handleFinalSubmit}
                         disabled={loading || !finalInput.trim()}
-                        className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 py-6 text-xl font-bold"
+                        className="w-full bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 py-6 text-xl font-bold"
                       >
                         Final Submit
                       </Button>

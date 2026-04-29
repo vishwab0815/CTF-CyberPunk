@@ -30,7 +30,7 @@ const SubmissionSchema = new Schema<ISubmission>(
     level: {
       type: String,
       required: true,
-      enum: ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '3.1', '3.2'],
+      enum: ['1', '2', '3', '4', '5', '6', '7'],
     },
     flag: {
       type: String,

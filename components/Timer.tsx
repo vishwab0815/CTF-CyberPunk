@@ -5,6 +5,8 @@ import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, LogOut, KeyRound, ChevronDown } from 'lucide-react';
+import LEVEL_META from '../lib/levelMeta';
+import { normalizeLevelId } from '../lib/levelIds';
 
 export default function Timer() {
   const { data: session } = useSession();
@@ -91,8 +93,13 @@ export default function Timer() {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const userLabel = session?.user?.email?.split('@')[0] || 'Hacker';
+
   // Don't render timer for non-authenticated or admin users
   if (!session?.user || session.user.isAdmin) return null;
+
+  const currentLevelId = normalizeLevelId(session.user.currentLevel || '1') as keyof typeof LEVEL_META;
+  const currentMeta = LEVEL_META[currentLevelId];
 
   return (
     <motion.div
@@ -101,7 +108,12 @@ export default function Timer() {
       animate={{ opacity: 1, y: 0 }}
       className="fixed top-4 right-4 z-50"
     >
-      <div className="bg-[hsl(220,26%,10%)]/90 backdrop-blur-xl border border-cyan-500/30 rounded-xl px-6 py-3 shadow-2xl">
+      <div className="bg-[hsl(220,26%,10%)]/90 backdrop-blur-xl border border-cyan-500/30 rounded-xl px-6 py-3 shadow-2xl max-w-md">
+        {/* Story header */}
+        <div className="mb-2">
+          <div className="text-xs text-yellow-300 font-semibold">{currentMeta.shortTitle}</div>
+          <div className="text-[10px] text-cyan-400/70 truncate">{currentMeta.tagline}</div>
+        </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${isRunning ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
@@ -116,7 +128,7 @@ export default function Timer() {
           className="mt-1 w-full flex items-center justify-center gap-1 text-xs text-cyan-400/70 hover:text-cyan-400 transition-colors group"
         >
           <User className="w-3 h-3" />
-          <span>{session.user.teamName}</span>
+          <span>{userLabel}</span>
           <ChevronDown className={`w-3 h-3 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
         </button>
       </div>

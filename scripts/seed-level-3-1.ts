@@ -1,5 +1,5 @@
 /**
- * Seed script for Level 3.1 - The Broken Interface
+ * Seed script for Level 6 - The Broken Interface
  *
  * Run with: pnpm tsx scripts/seed-level-3-1.ts
  * Or: node --import tsx scripts/seed-level-3-1.ts
@@ -11,6 +11,7 @@
  */
 
 import mongoose from 'mongoose';
+import { createHash } from 'node:crypto';
 import Level3_1_Step from '../lib/models/Level3_1_Steps';
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
@@ -24,24 +25,38 @@ if (!MONGODB_URI) {
 const seedData = [
   {
     phase: 1,
-    canonicalKey: 'ACCESS-SEQUENCE',
-    acceptedAliases: ['access-sequence', 'ACCESS_SEQUENCE', 'accesssequence'],
-    fragment: 'INTERFACE_',
-    hintText: 'Click "Access" 5 times within 3 seconds',
+    canonicalKey: 'RAPID-ACCESS-OVERRIDE',
+    acceptedAliases: ['rapid-access-override', 'RAPID_ACCESS_OVERRIDE', 'rapidaccessoverride'],
+    fragment: 'INTER',
+    hintText: 'Rapid clicking required - speed is critical',
   },
   {
     phase: 2,
-    canonicalKey: 'KONAMI-VARIANT',
-    acceptedAliases: ['konami-variant', 'KONAMI_VARIANT', 'konamivariant'],
-    fragment: 'NOT_BROKEN_',
-    hintText: 'Arrow key sequence: ↑↑↓↓←→←→',
+    canonicalKey: 'EXTENDED-KONAMI-CIPHER',
+    acceptedAliases: ['extended-konami-cipher', 'EXTENDED_KONAMI_CIPHER', 'extendedkonamicipher'],
+    fragment: 'FACE_',
+    hintText: 'Extended arrow sequence - more complex than before',
   },
   {
     phase: 3,
-    canonicalKey: 'ERROR-FILTER',
-    acceptedAliases: ['error-filter', 'ERROR_FILTER', 'errorfilter'],
-    fragment: 'YOU_ARE',
-    hintText: 'Select only the red error lines in order',
+    canonicalKey: 'CRITICAL-ERROR-TRIAGE',
+    acceptedAliases: ['critical-error-triage', 'CRITICAL_ERROR_TRIAGE', 'criticalerrortriage'],
+    fragment: 'NOT_BR',
+    hintText: 'Identify and select ALL critical errors in exact order',
+  },
+  {
+    phase: 4,
+    canonicalKey: 'CIPHER-MATRIX-DECODE',
+    acceptedAliases: ['cipher-matrix-decode', 'CIPHER_MATRIX_DECODE', 'ciphermatrixdecode'],
+    fragment: 'OKEN_Y',
+    hintText: 'Decode the cipher: ROT13 or Caesar shift may help',
+  },
+  {
+    phase: 5,
+    canonicalKey: 'FINAL-AUTHENTICATION',
+    acceptedAliases: ['final-authentication', 'FINAL_AUTHENTICATION', 'finalauthentication'],
+    fragment: 'OU_ARE',
+    hintText: 'Combine all knowledge gained from previous phases',
   },
 ];
 
@@ -51,8 +66,8 @@ async function seed() {
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Clear existing Level 3.1 data
-    console.log('🗑️  Clearing existing Level 3.1 steps...');
+    // Clear existing Level 6 data
+    console.log('🗑️  Clearing existing Level 6 steps...');
     await Level3_1_Step.deleteMany({});
     console.log('✅ Cleared existing data');
 
@@ -80,8 +95,7 @@ async function seed() {
     console.log(`\n🏁 Final Fragment Concatenation: ${fragments}`);
 
     // Compute SHA1 hash (for verification)
-    const crypto = require('crypto');
-    const finalHash = crypto.createHash('sha1').update(fragments).digest('hex');
+    const finalHash = createHash('sha1').update(fragments).digest('hex');
     console.log(`🔐 SHA1 Hash: ${finalHash}`);
     console.log(`🚩 Final Flag: FLAG{INTERFACE_NOT_BROKEN_YOU_ARE}`);
 

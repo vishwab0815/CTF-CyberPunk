@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import crypto from 'crypto';
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/User';
-import Level3_1_Progress from '@/lib/models/Level3_1_Progress';
-import { authOptions } from '@/lib/auth';
+import connectDB from '../../../../lib/mongodb';
+import User from '../../../../lib/models/User';
+import Level3_1_Progress from '../../../../lib/models/Level3_1_Progress';
+import { authOptions } from '../../../../lib/auth';
 
 // Canonical phase data (server-side only, never exposed to client)
 const PHASE_DATA = {
@@ -67,7 +67,7 @@ const getUserAgent = (req: NextRequest): string => {
 };
 
 /**
- * POST /api/levels/3.1
+ * POST /api/levels/6
  *
  * Body: { phase: number, input: string }
  *
@@ -238,7 +238,7 @@ export async function POST(req: NextRequest) {
       const timeSinceLastAttempt = now.getTime() - lastAttempt.timestamp.getTime();
 
       if (timeSinceLastAttempt < SUSPICIOUS_SPEED_THRESHOLD_MS) {
-        console.warn(`⚠️ Suspicious speed detected for user ${user.teamName} on Phase ${phase}`);
+        console.warn(`⚠️ Suspicious speed detected for user ${user.email} on Phase ${phase}`);
         // Could flag for admin review but still allow
       }
     }
@@ -335,7 +335,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (error: any) {
-    console.error('Level 3.1 API Error:', error);
+    console.error('Level 6 API Error:', error);
 
     return NextResponse.json(
       {
@@ -348,9 +348,9 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * GET /api/levels/3.1
+ * GET /api/levels/6
  *
- * Returns user's current progress for Level 3.1
+ * Returns user's current progress for Level 6
  */
 export async function GET(req: NextRequest) {
   try {
@@ -402,7 +402,7 @@ export async function GET(req: NextRequest) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error('Level 3.1 GET Error:', error);
+    console.error('Level 6 GET Error:', error);
 
     return NextResponse.json(
       {

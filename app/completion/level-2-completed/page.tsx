@@ -1,17 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Trophy, CheckCircle2, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import "@/app/styles/cyber-global.css";
+import "../../app/styles/cyber-global.css";
 
 export default function Level2Completed() {
   const router = useRouter();
   const { data: session } = useSession();
   const [totalTime, setTotalTime] = useState<number>(0);
+  const userLabel = session?.user?.email?.split('@')[0] || 'Hacker';
 
   useEffect(() => {
     // Fetch final time from server
@@ -46,7 +47,7 @@ export default function Level2Completed() {
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-10">
       {/* Background Layers */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem]" />
 
       {/* Animated Glow Orbs */}
       <motion.div
@@ -109,7 +110,7 @@ export default function Level2Completed() {
           transition={{ delay: 0.5 }}
           className="text-center text-foreground/90 text-xl leading-relaxed mb-6"
         >
-          Congratulations, <span className="text-primary font-bold">{session?.user?.teamName || 'Hacker'}</span>!
+          Congratulations, <span className="text-primary font-bold">{userLabel}</span>!
           <br />
           You've mastered server-side vulnerabilities. Chapter 3 awaits...
         </motion.p>
@@ -158,8 +159,8 @@ export default function Level2Completed() {
         >
           <Button
             size="lg"
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 px-8 py-6 rounded-xl text-white text-lg font-bold shadow-[0_0_25px_rgba(0,255,255,0.5)] hover:shadow-[0_0_40px_rgba(0,255,255,0.7)] transition-all"
-            onClick={() => router.push("/levels/3.1")}
+            className="bg-linear-to-r from-cyan-500 to-purple-500 px-8 py-6 rounded-xl text-white text-lg font-bold shadow-[0_0_25px_rgba(0,255,255,0.5)] hover:shadow-[0_0_40px_rgba(0,255,255,0.7)] transition-all"
+            onClick={() => router.push("/levels/6")}
           >
             Continue to Chapter 3
           </Button>

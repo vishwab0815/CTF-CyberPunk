@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface ILevel3_1_Step extends Document {
-  phase: number; // 1, 2, or 3
+  phase: number; // 1-5
   canonicalKey: string; // Expected input value
   acceptedAliases?: string[]; // Optional alternative inputs
   fragment: string; // Fragment revealed on success
@@ -17,7 +17,7 @@ const Level3_1_StepSchema = new Schema<ILevel3_1_Step>(
       required: true,
       unique: true,
       min: 1,
-      max: 3,
+      max: 5,
     },
     canonicalKey: {
       type: String,

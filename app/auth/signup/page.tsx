@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
+import "../../app/styles/cyber-global.css";
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Button } from '../../../components/ui/button';
 
 export default function SignUpPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [teamName, setTeamName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,11 +31,6 @@ export default function SignUpPage() {
       return;
     }
 
-    if (teamName.length < 3) {
-      setError('Team name must be at least 3 characters');
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -45,7 +42,6 @@ export default function SignUpPage() {
         body: JSON.stringify({
           email,
           password,
-          teamName,
         }),
       });
 
@@ -68,7 +64,7 @@ export default function SignUpPage() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-[hsl(220,26%,6%)] flex items-center justify-center p-4">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
 
       {/* Glowing Orbs */}
       <motion.div
@@ -110,7 +106,7 @@ export default function SignUpPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent"
+              className="text-4xl font-bold mb-2 bg-linear-to-r from-green-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent"
             >
               Sign Up
             </motion.h1>
@@ -137,27 +133,6 @@ export default function SignUpPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="teamName" className="block text-sm font-medium text-cyan-300 mb-2">
-                Team Name <span className="text-green-400">*</span>
-              </label>
-              <input
-                id="teamName"
-                type="text"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                required
-                disabled={isLoading}
-                minLength={3}
-                maxLength={50}
-                className="w-full px-4 py-3 bg-[hsl(220,26%,8%)] border border-cyan-500/30 rounded-lg text-cyan-100 placeholder-cyan-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all disabled:opacity-50"
-                placeholder="Enter your team name"
-              />
-              <p className="mt-1 text-xs text-cyan-400/50">
-                This will be displayed on the leaderboard
-              </p>
-            </div>
-
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-cyan-300 mb-2">
                 Email Address
@@ -207,13 +182,24 @@ export default function SignUpPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-green-500/25"
-            >
-              {isLoading ? 'Creating Account...' : 'Sign Up'}
-            </button>
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 text-sm text-cyan-300">
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={(e) => setShowPassword(e.target.checked)}
+                  className="w-4 h-4 rounded bg-[hsl(220,26%,8%)] border-cyan-500/30"
+                />
+                Show password while typing
+              </label>
+              <Button
+                type="submit"
+                className="w-full py-3"
+                disabled={isLoading || password.length < 6 || !email.includes('@') || password !== confirmPassword}
+              >
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
+              </Button>
+            </div>
           </form>
 
           {/* Divider */}

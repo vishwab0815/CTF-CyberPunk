@@ -85,7 +85,7 @@ export default function ChangePasswordPage() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-[hsl(220,26%,6%)] flex items-center justify-center p-4">
       {/* Animated Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(220,26%,10%)_1px,transparent_1px),linear-gradient(to_bottom,hsl(220,26%,10%)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
 
       {/* Glowing Orbs */}
       <motion.div
@@ -127,7 +127,7 @@ export default function ChangePasswordPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-cyan-400 to-green-400 bg-clip-text text-transparent"
+              className="text-4xl font-bold mb-2 bg-linear-to-r from-purple-400 via-cyan-400 to-green-400 bg-clip-text text-transparent"
             >
               Change Password
             </motion.h1>
@@ -206,7 +206,7 @@ export default function ChangePasswordPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/25"
+              className="w-full py-3 bg-linear-to-r from-purple-500 to-cyan-500 hover:from-purple-600 hover:to-cyan-600 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-500/25"
             >
               {isLoading ? 'Changing Password...' : 'Change Password'}
             </button>
@@ -233,7 +233,7 @@ export default function ChangePasswordPage() {
           className="text-center mt-6"
         >
           <Link
-            href="/levels/1.1"
+            href="/levels/1"
             className="text-cyan-400/70 hover:text-cyan-400 text-sm transition-colors"
           >
             ← Back to Levels

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/User';
+import connectDB from '../../../../lib/mongodb';
+import User from '../../../../lib/models/User';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { authOptions } from '../../../../lib/auth';
 import { z } from 'zod';
 
 const changePasswordSchema = z.object({

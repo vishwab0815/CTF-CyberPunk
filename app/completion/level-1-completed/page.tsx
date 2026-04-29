@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import "@/app/styles/cyber-global.css";
+import "../../app/styles/cyber-global.css";
 
 export default function Level1Completed() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function Level1Completed() {
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden p-10">
       {/* Background Layers */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[4rem_4rem]" />
 
       {/* Glow Orbs */}
       <motion.div
@@ -60,7 +60,7 @@ export default function Level1Completed() {
           <Button
             size="lg"
             className="bg-primary px-8 py-6 rounded-xl text-white text-lg shadow-[0_0_20px_rgba(0,255,255,0.5)] hover:shadow-[0_0_35px_rgba(0,255,255,0.7)] transition-all group"
-            onClick={() => router.push("/levels/2.1")}
+            onClick={() => router.push("/levels/5")}
           >
             <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-90 transition-all" />
             Continue to Level 2

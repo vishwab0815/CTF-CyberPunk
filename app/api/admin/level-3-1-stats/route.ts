@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/User';
-import Level3_1_Progress from '@/lib/models/Level3_1_Progress';
-import { authOptions } from '@/lib/auth';
+import connectDB from '../../../../lib/mongodb';
+import User from '../../../../lib/models/User';
+import Level3_1_Progress from '../../../../lib/models/Level3_1_Progress';
+import { authOptions } from '../../../../lib/auth';
 
 /**
  * GET /api/admin/level-3-1-stats
@@ -40,22 +40,26 @@ export async function GET(req: NextRequest) {
     await connectDB();
 
     // 3. Get all Level 3.1 progress records
-    const allProgress = await Level3_1_Progress.find().populate('userId', 'teamName email');
+    const allProgress = await Level3_1_Progress.find().populate('userId', 'email');
 
     // 4. Calculate statistics
     const totalUsers = allProgress.length;
-    const completedUsers = allProgress.filter((p) => p.completedPhases.length === 3).length;
+    const completedUsers = allProgress.filter((p) => p.completedPhases.length === 5).length;
     const inProgressUsers = totalUsers - completedUsers;
 
     // Phase breakdown
     const usersOnPhase1 = allProgress.filter((p) => p.currentPhase === 1 && !p.completedPhases.includes(1)).length;
     const usersOnPhase2 = allProgress.filter((p) => p.currentPhase === 2 && !p.completedPhases.includes(2)).length;
     const usersOnPhase3 = allProgress.filter((p) => p.currentPhase === 3 && !p.completedPhases.includes(3)).length;
+    const usersOnPhase4 = allProgress.filter((p) => p.currentPhase === 4 && !p.completedPhases.includes(4)).length;
+    const usersOnPhase5 = allProgress.filter((p) => p.currentPhase === 5 && !p.completedPhases.includes(5)).length;
 
     // Average attempts per phase
     const phase1Attempts = allProgress.map((p) => p.attempts.filter((a) => a.phase === 1).length);
     const phase2Attempts = allProgress.map((p) => p.attempts.filter((a) => a.phase === 2).length);
     const phase3Attempts = allProgress.map((p) => p.attempts.filter((a) => a.phase === 3).length);
+    const phase4Attempts = allProgress.map((p) => p.attempts.filter((a) => a.phase === 4).length);
+    const phase5Attempts = allProgress.map((p) => p.attempts.filter((a) => a.phase === 5).length);
 
     const avgPhase1Attempts =
       phase1Attempts.reduce((sum, a) => sum + a, 0) / Math.max(phase1Attempts.length, 1);
@@ -63,6 +67,10 @@ export async function GET(req: NextRequest) {
       phase2Attempts.reduce((sum, a) => sum + a, 0) / Math.max(phase2Attempts.length, 1);
     const avgPhase3Attempts =
       phase3Attempts.reduce((sum, a) => sum + a, 0) / Math.max(phase3Attempts.length, 1);
+    const avgPhase4Attempts =
+      phase4Attempts.reduce((sum, a) => sum + a, 0) / Math.max(phase4Attempts.length, 1);
+    const avgPhase5Attempts =
+      phase5Attempts.reduce((sum, a) => sum + a, 0) / Math.max(phase5Attempts.length, 1);
 
     // Average completion time
     const completedTimes = allProgress
@@ -93,7 +101,7 @@ export async function GET(req: NextRequest) {
         return tooFast || tooManyAttempts || lockedOut;
       })
       .map((p) => ({
-        teamName: (p.userId as any)?.teamName || 'Unknown',
+        teamName: (p.userId as any)?.email?.split('@')[0] || 'Unknown',
         email: (p.userId as any)?.email || 'Unknown',
         timeTaken: p.timeTaken,
         totalAttempts: p.attempts.length,
@@ -113,7 +121,7 @@ export async function GET(req: NextRequest) {
         return attemptCount > 10 && !isCompleted;
       })
       .map((p) => ({
-        teamName: (p.userId as any)?.teamName || 'Unknown',
+        teamName: (p.userId as any)?.email?.split('@')[0] || 'Unknown',
         email: (p.userId as any)?.email || 'Unknown',
         stuckOnPhase: p.currentPhase,
         attemptCount: p.attempts.filter((a) => a.phase === p.currentPhase).length,
@@ -125,7 +133,7 @@ export async function GET(req: NextRequest) {
     const recentCompletions = allProgress
       .filter((p) => p.completionTime && p.completionTime > yesterday)
       .map((p) => ({
-        teamName: (p.userId as any)?.teamName || 'Unknown',
+        teamName: (p.userId as any)?.email?.split('@')[0] || 'Unknown',
         email: (p.userId as any)?.email || 'Unknown',
         completionTime: p.completionTime,
         timeTaken: p.timeTaken,
@@ -158,6 +166,14 @@ export async function GET(req: NextRequest) {
           phase3: {
             stuck: usersOnPhase3,
             averageAttempts: avgPhase3Attempts.toFixed(2),
+          },
+          phase4: {
+            stuck: usersOnPhase4,
+            averageAttempts: avgPhase4Attempts.toFixed(2),
+          },
+          phase5: {
+            stuck: usersOnPhase5,
+            averageAttempts: avgPhase5Attempts.toFixed(2),
           },
         },
         timing: {

@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import connectDB from './mongodb';
 import User from './models/User';
+import { normalizeLevelId, normalizeLevelList } from './levelIds';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -34,7 +35,6 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user._id.toString(),
           email: user.email,
-          teamName: user.teamName,
           isAdmin: user.isAdmin,
         };
       },
@@ -45,7 +45,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
-        token.teamName = (user as any).teamName;
         token.isAdmin = (user as any).isAdmin;
       }
 
@@ -57,8 +56,8 @@ export const authOptions: NextAuthOptions = {
           const dbUser = await User.findById(token.id).select('completedLevels currentLevel isAdmin');
 
           if (dbUser) {
-            token.completedLevels = dbUser.completedLevels;
-            token.currentLevel = dbUser.currentLevel;
+            token.completedLevels = normalizeLevelList(dbUser.completedLevels);
+            token.currentLevel = normalizeLevelId(dbUser.currentLevel);
             token.isAdmin = dbUser.isAdmin;
           }
         } catch (error) {
@@ -72,7 +71,6 @@ export const authOptions: NextAuthOptions = {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
-        session.user.teamName = token.teamName as string;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.completedLevels = token.completedLevels as string[];
         session.user.currentLevel = token.currentLevel as string;

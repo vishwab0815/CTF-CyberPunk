@@ -3,15 +3,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ShieldAlert, Terminal as TerminalIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { useRouter } from "next/navigation";
-import { useLevelAccess } from "@/lib/useLevelAccess";
+import { useLevelAccess } from "../../../lib/useLevelAccess";
 import { useSession } from "next-auth/react";
-import "@/app/styles/cyber-global.css";
+import "../../../app/styles/cyber-global.css";
 
 export default function LevelOneTwo() {
   const router = useRouter();
-  const { canAccess, isChecking } = useLevelAccess('1.2');
+  const { canAccess, isChecking } = useLevelAccess('2');
   const { update } = useSession();
 
   // Input (maxlength trap)
@@ -56,7 +56,7 @@ export default function LevelOneTwo() {
       current += line[i];
       logRef.current[idx] = current;
       setLogLines([...logRef.current]);
-      // eslint-disable-next-line no-await-in-loop
+       
       await new Promise((r) => setTimeout(r, 10 + Math.random() * 10));
     }
 
@@ -74,7 +74,7 @@ export default function LevelOneTwo() {
     await appendTypedLine(`> Querying ${domain} ...`);
 
     try {
-      const res = await fetch("/api/levels/1.2", {
+      const res = await fetch("/api/levels/2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ domain }),
@@ -85,7 +85,7 @@ export default function LevelOneTwo() {
 
       const lines = output.split("\n").filter(Boolean);
       for (const ln of lines) {
-        // eslint-disable-next-line no-await-in-loop
+         
         await appendTypedLine(ln);
       }
 
@@ -98,7 +98,7 @@ export default function LevelOneTwo() {
             const submitRes = await fetch('/api/submit-flag', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ level: '1.2', flag }),
+              body: JSON.stringify({ level: '2', flag }),
             });
             const submitData = await submitRes.json();
 
@@ -155,7 +155,7 @@ export default function LevelOneTwo() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden p-6">
       {/* Background grid */}
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-[size:5rem_5rem]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--grid-color))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--grid-color))_1px,transparent_1px)] bg-size-[5rem_5rem]" />
 
       {/* Glowing background elements */}
       <motion.div
@@ -210,7 +210,7 @@ export default function LevelOneTwo() {
               Mission Brief
             </div>
 
-            <p className="text-base text-foreground/90 font-semibold text-cyan-300 mb-3">
+            <p className="text-base font-semibold text-cyan-300 mb-3">
               📖 Chapter 2: The Client Trap
             </p>
 
@@ -271,14 +271,14 @@ export default function LevelOneTwo() {
             {/* terminal */}
             <div
               ref={terminalRef}
-              className="rounded-xl bg-[#071014]/70 border border-primary/10 p-4 h-[320px] overflow-auto font-mono text-[#00ff41] text-sm"
+              className="rounded-xl bg-[#071014]/70 border border-primary/10 p-4 h-80 overflow-auto font-mono text-[#00ff41] text-sm"
             >
               {logLines.length === 0 && (
                 <div className="opacity-70">[Ready] Client patch active — maxlength enforced.</div>
               )}
 
               {logLines.map((ln, i) => (
-                <div key={i} className="leading-6 break-words">
+                <div key={i} className="leading-6 wrap-break-word">
                   {ln}
                 </div>
               ))}

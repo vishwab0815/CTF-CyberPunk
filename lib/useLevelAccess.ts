@@ -2,15 +2,22 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-const LEVEL_ORDER = ['1.1', '1.2', '1.3', '1.4', '2.1', '2.2', '3.1', '3.2'];
+import { useEffect } from 'react';
+import { normalizeLevelId, normalizeLevelList } from './levelIds';
 
 export function useLevelAccess(levelId: string) {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [canAccess, setCanAccess] = useState<boolean>(false);
-  const [isChecking, setIsChecking] = useState<boolean>(true);
+
+  const completedLevels = normalizeLevelList(session?.user?.completedLevels);
+  const currentLevel = normalizeLevelId(session?.user?.currentLevel);
+  const requestedLevel = normalizeLevelId(levelId);
+  const canAccess = Boolean(
+    session?.user &&
+    !session.user.isAdmin &&
+    (requestedLevel === currentLevel || completedLevels.includes(requestedLevel))
+  );
+  const isChecking = status === 'loading' || !session?.user || !canAccess;
 
   useEffect(() => {
     if (status === 'loading') {
@@ -28,23 +35,11 @@ export function useLevelAccess(levelId: string) {
       return;
     }
 
-    const completedLevels = session.user.completedLevels || [];
-    const currentLevel = session.user.currentLevel || '1.1';
-
-    // Check if user can access this level
-    const canAccessLevel =
-      levelId === currentLevel ||
-      completedLevels.includes(levelId);
-
-    if (!canAccessLevel) {
+    if (!canAccess) {
       // Redirect to their current level
       router.push(`/levels/${currentLevel}`);
-      return;
     }
-
-    setCanAccess(true);
-    setIsChecking(false);
-  }, [session, status, levelId, router]);
+  }, [session, status, levelId, router, canAccess, currentLevel]);
 
   return { canAccess, isChecking };
 }

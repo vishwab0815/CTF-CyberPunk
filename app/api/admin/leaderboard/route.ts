@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/User';
+import { authOptions } from '../../../../lib/auth';
+import connectDB from '../../../../lib/mongodb';
+import User from '../../../../lib/models/User';
+import { normalizeLevelList } from '../../../../lib/levelIds';
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,13 +21,14 @@ export async function GET(req: NextRequest) {
       isAdmin: false,
       completedLevels: { $exists: true, $ne: [] },
     })
-      .select('email teamName completedLevels totalTime startTime endTime createdAt')
+      .select('email completedLevels totalTime startTime endTime createdAt')
       .sort({ completedLevels: -1, totalTime: 1 })
       .lean();
 
     // Calculate rankings
     const leaderboard = users.map((user, index) => {
-      const completedCount = user.completedLevels?.length || 0;
+      const completedLevels = normalizeLevelList(user.completedLevels);
+      const completedCount = completedLevels.length;
       const totalLevels = 7; // 1.1, 1.2, 1.3, 1.4, 2.1, 3.1, 3.2
       const completionPercentage = (completedCount / totalLevels) * 100;
 
@@ -39,9 +41,9 @@ export async function GET(req: NextRequest) {
 
       return {
         rank: index + 1,
-        teamName: user.teamName,
+        teamName: user.email.split('@')[0],
         email: user.email,
-        completedLevels: user.completedLevels || [],
+        completedLevels,
         completedCount,
         completionPercentage,
         totalTime: displayTime,

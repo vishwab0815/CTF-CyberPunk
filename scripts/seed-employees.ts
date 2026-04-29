@@ -1,5 +1,5 @@
 /**
- * Seed script for Level 3.2 - Employee Database
+ * Seed script for Level 7 - Employee Database
  *
  * Run with: pnpm tsx scripts/seed-employees.ts
  *

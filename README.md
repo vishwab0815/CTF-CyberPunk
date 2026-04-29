@@ -38,23 +38,23 @@ pnpm seed:all
 
 # Or seed individually
 pnpm seed:flags      # Add all 7 level flags
-pnpm seed:employees  # Add employee data for Level 3.2
+pnpm seed:employees  # Add employee data for Level 7
 ```
 
 ## 🎮 Game Structure
 
 ### Act 1: Client-Side Vulnerabilities (4 Levels)
-- **Level 1.1** - DNS Discovery (View Source, HTML Comments)
-- **Level 1.2** - Client Validation Bypass (MaxLength)
-- **Level 1.3** - JavaScript Guard Bypass (Console Manipulation)
-- **Level 1.4** - Hidden Endpoint Discovery (API Reconnaissance)
+- **Level 1** - DNS Discovery (View Source, HTML Comments)
+- **Level 2** - Client Validation Bypass (MaxLength)
+- **Level 3** - JavaScript Guard Bypass (Console Manipulation)
+- **Level 4** - Hidden Endpoint Discovery (API Reconnaissance)
 
 ### Act 2: Server-Side Exploitation (1 Level)
-- **Level 2.1** - IDOR Vulnerability (User Enumeration → ID 7777)
+- **Level 5** - IDOR Vulnerability (User Enumeration → ID 7777)
 
 ### Act 3: Advanced Challenges (2 Levels) ⚠️ EXTREME DIFFICULTY
-- **Level 3.1** - The Gauntlet (5-Phase Interactive Puzzle: Rapid Click, Extended Konami, Critical Error Triage, Cipher Decode, Final Authentication)
-- **Level 3.2** - NoSQL Injection (MongoDB Query Exploitation)
+- **Level 6** - The Gauntlet (5-Phase Interactive Puzzle: Rapid Click, Extended Konami, Critical Error Triage, Cipher Decode, Final Authentication)
+- **Level 7** - NoSQL Injection (MongoDB Query Exploitation)
 
 **Total Points:** 1,600
 **Total Levels:** 7
@@ -93,7 +93,7 @@ ctf-game/
 ├── app/
 │   ├── api/              # API routes (levels, auth, admin)
 │   ├── auth/             # Authentication pages
-│   ├── levels/           # 7 level pages (1.1-1.4, 2.1, 3.1-3.2)
+│   ├── levels/           # 7 level pages (1-7)
 │   ├── admin/            # Admin dashboard
 │   └── completion/       # Success pages
 ├── components/           # Reusable UI components
@@ -149,7 +149,7 @@ pnpm lint             # Run ESLint
 ### Issue: "Loading..." stuck on level pages
 **Solution:** This has been fixed. If you still see it, clear browser cache and refresh.
 
-### Issue: Level 3.2 returns "No employee found"
+### Issue: Level 7 returns "No employee found"
 **Solution:** Run `pnpm seed:employees` to populate the database.
 
 ### Issue: Timer doesn't persist
@@ -169,12 +169,24 @@ This is an **intentionally vulnerable** application for educational purposes:
 
 ## 📊 Testing
 
+## 🧰 MongoDB Keep-Alive (GitHub Actions)
+
+If you are using a free-tier MongoDB provider that may pause inactive clusters (for example MongoDB Atlas free tier), you can add a simple keep-alive workflow that periodically connects to the database to prevent idle shutdowns.
+
+1. Add the repository secret `MONGODB_URI` (your connection string) in GitHub Settings → Secrets.
+2. The project includes a workflow at `.github/workflows/mongodb-keepalive.yml` that runs `scripts/db-keepalive.ts` on a schedule and pings the DB.
+
+Notes:
+- This is a workaround for development/demo purposes only — for production, prefer a paid always-on cluster.
+- The workflow uses `pnpm` and `tsx` to run the script; ensure your lockfile is committed.
+
+
 ### Create Test Accounts
 
 **Regular User:**
 1. Visit `/auth/signup`
 2. Create account
-3. Complete levels 1.1 through 3.2
+3. Complete levels 1 through 7
 
 **Admin User:**
 Create admin manually in MongoDB:

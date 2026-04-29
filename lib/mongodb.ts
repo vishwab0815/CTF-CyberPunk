@@ -3,9 +3,11 @@ import mongoose from 'mongoose';
 const MONGODB_URI = process.env.MONGODB_URI || '';
 
 if (!MONGODB_URI) {
-  throw new Error(
-    'Please define the MONGODB_URI environment variable inside .env.local'
-  );
+  // Avoid throwing during static build where .env.local may be unavailable.
+  // Connection will be validated when `connectDB()` is invoked at runtime.
+  // This prevents Next.js from failing to collect page data during `next build`.
+  // eslint-disable-next-line no-console
+  console.warn('MONGODB_URI not defined; DB connection will fail at runtime if used');
 }
 
 interface MongooseCache {
@@ -17,13 +19,16 @@ declare global {
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
+const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
 if (!global.mongoose) {
   global.mongoose = cached;
 }
 
 async function connectDB() {
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+  }
   if (cached.conn) {
     return cached.conn;
   }

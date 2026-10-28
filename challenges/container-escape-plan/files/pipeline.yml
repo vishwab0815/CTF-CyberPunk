@@ -1,0 +1,30 @@
+# CI/CD Pipeline — .github/workflows/deploy.yml
+name: Build and Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build -t registry.corp.test/nebula-api:${{ github.sha }} .
+
+    - name: Push to registry
+      run: |
+        echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login registry.corp.test -u deploy --password-stdin
+        docker push registry.corp.test/nebula-api:${{ github.sha }}
+
+    - name: Deploy to production
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        KUBECONFIG_DATA: ${{ secrets.KUBECONFIG }}
+      run: |
+        echo "$DEPLOY_KEY" > /tmp/deploy.pem
+        chmod 600 /tmp/deploy.pem
+        echo "$KUBECONFIG_DATA" | base64 -d > /tmp/kubeconfig
+        scp -o StrictHostKeyChecking=no -i /tmp/deploy.pem deployment.yaml deploy@k8s-master.corp.test:/tmp/
+        ssh -o StrictHostKeyChecking=no -i /tmp/deploy.pem deploy@k8s-master.corp.test "kubectl apply -f /tmp/deployment.yaml"

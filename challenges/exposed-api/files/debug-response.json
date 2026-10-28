@@ -1,0 +1,12 @@
+{
+  "status": "ok",
+  "environment": "production",
+  "database": "postgres://app_user:Pr0d_s3cure!@db.internal.nebula.test:5432/nebula_prod",
+  "redis": "redis://cache.internal.nebula.test:6379/0",
+  "api_key": "sk-live-nebula-f8a3b2d1e4c7956d",
+  "jwt_secret": "super-secret-prod-key-DO-NOT-SHARE",
+  "flag": "RANGE{debug_endpoint_exposed_4e9b}",
+  "debug_mode": true,
+  "build": "nebula-api-v2.14.3-rc1",
+  "deployed_at": "2026-10-14T22:30:00Z"
+}

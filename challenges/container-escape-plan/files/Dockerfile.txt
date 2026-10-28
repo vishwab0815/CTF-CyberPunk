@@ -1,0 +1,24 @@
+# NebulaCorp API Service — Dockerfile
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip curl wget netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/
+RUN pip3 install -r /app/requirements.txt
+
+COPY . /app/
+WORKDIR /app
+
+# TODO: create a non-root user
+# RUN useradd -m appuser && chown -R appuser /app
+# USER appuser
+
+ENV DATABASE_URL=postgres://nebula_admin:Pr0d_DBpa55!@db.internal:5432/production
+ENV AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+ENV AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+ENV FLASK_DEBUG=1
+
+EXPOSE 8080
+CMD ["python3", "server.py"]

@@ -1,0 +1,45 @@
+; Partial disassembly of /opt/nebula/beacon
+; Focused on the flag decryption routine identified by the analyst
+;
+; Tool: objdump -d -M intel /opt/nebula/beacon (excerpt)
+
+0000000000401a00 <decrypt_payload>:
+  401a00:  55                    push   rbp
+  401a01:  48 89 e5              mov    rbp, rsp
+  401a04:  48 89 7d f8           mov    QWORD PTR [rbp-0x8], rdi    ; payload pointer
+  401a08:  89 75 f4              mov    DWORD PTR [rbp-0xc], esi    ; payload length
+  401a0b:  c6 45 f3 5a           mov    BYTE PTR [rbp-0xd], 0x5a   ; XOR key = 0x5a
+  401a0f:  c7 45 ec 00 00 00 00  mov    DWORD PTR [rbp-0x14], 0x0  ; loop counter = 0
+  401a16:  eb 1a                 jmp    401a32 <decrypt_payload+0x32>
+
+  ; --- loop body: XOR each byte with 0x5a ---
+  401a18:  8b 45 ec              mov    eax, DWORD PTR [rbp-0x14]   ; i
+  401a1b:  48 98                 cdqe
+  401a1d:  48 03 45 f8           add    rax, QWORD PTR [rbp-0x8]    ; &payload[i]
+  401a21:  0f b6 10              movzx  edx, BYTE PTR [rax]         ; payload[i]
+  401a24:  0f b6 4d f3           movzx  ecx, BYTE PTR [rbp-0xd]    ; key (0x5a)
+  401a28:  31 ca                 xor    edx, ecx                    ; payload[i] ^= key
+  401a2a:  88 10                 mov    BYTE PTR [rax], dl          ; store result
+  401a2c:  83 45 ec 01           add    DWORD PTR [rbp-0x14], 0x1  ; i++
+
+  ; --- loop condition ---
+  401a32:  8b 45 ec              mov    eax, DWORD PTR [rbp-0x14]   ; i
+  401a35:  3b 45 f4              cmp    eax, DWORD PTR [rbp-0xc]   ; i < length?
+  401a38:  7c de                 jl     401a18 <decrypt_payload+0x18>
+
+  401a3a:  5d                    pop    rbp
+  401a3b:  c3                    ret
+
+; --- Embedded encrypted payload (identified in .rodata section) ---
+; Address: 0x404060
+; Length: 34 bytes
+; Analyst note: this is XOR-encrypted with key 0x5a
+
+section .rodata:
+  404060: 0x08 0x1b 0x14 0x1d 0x1f 0x21 0x22 0x35
+  404068: 0x28 0x05 0x31 0x3f 0x23 0x05 0x6a 0x22
+  404070: 0x6f 0x3b 0x05 0x3c 0x36 0x3b 0x3d 0x05
+  404078: 0x28 0x3f 0x39 0x35 0x2c 0x3f 0x28 0x3f
+  404080: 0x3e 0x27
+
+; Total: 34 bytes

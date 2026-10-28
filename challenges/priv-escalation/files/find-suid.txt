@@ -1,0 +1,18 @@
+# find / -perm -4000 -type f 2>/dev/null
+# Executed on nebula-ws01 by incident responder
+# Timestamp: 2026-10-15T10:00:00Z
+
+/usr/bin/passwd
+/usr/bin/sudo
+/usr/bin/chfn
+/usr/bin/chsh
+/usr/bin/gpasswd
+/usr/bin/newgrp
+/usr/bin/mount
+/usr/bin/umount
+/usr/bin/su
+/usr/bin/pkexec
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/snapd/snap-confine
+/opt/nebula/logmon

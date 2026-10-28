@@ -1,0 +1,5 @@
+# Captured from HTTP Authorization header during traffic analysis
+# Source: 192.168.1.201 → api.corp.test:443
+# Timestamp: 2026-10-15T09:30:00Z
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJndWVzdF80MjgxIiwicm9sZSI6InZpZXdlciIsImlhdCI6MTcyOTAwODAwMCwiZXhwIjoxNzI5MDk0NDAwLCJpc3MiOiJuZWJ1bGEtYXV0aC5jb3JwLnRlc3QiLCJub3RlIjoiVGhpcyB0b2tlbiBncmFudHMgcmVhZC1vbmx5IGFjY2Vzcy4gQWRtaW4gdG9rZW5zIHVzZSBhIGRpZmZlcmVudCBzZWNyZXQuLi4gb3IgZG8gdGhleT8ifQ.iNC8h00BuLmpPG0rKYePIiMvurh-c0XOr4LSmySA5Gk

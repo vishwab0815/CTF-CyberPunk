@@ -1,0 +1,22 @@
+Return-Path: <j.morrow@nebula-research.test>
+Received: from mx1.nebula-research.test (198.51.100.77)
+    by mail.nebulasec-forum.test (192.0.2.10)
+    with ESMTPS id 4Xk2Mn1R0Yz
+    for <submissions@nebulasec-forum.test>;
+    Sat, 10 Oct 2026 15:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; d=nebula-research.test; s=sel1;
+    h=from:to:subject:date;
+    b=pK3mZxQ9wN8fT2vR...
+From: Jordan Morrow <j.morrow@nebula-research.test>
+To: submissions@nebulasec-forum.test
+Subject: Re: Gateway Analysis — Initial Findings
+Date: Sat, 10 Oct 2026 15:01:33 +0000
+Message-ID: <20261010-jmorrow-signal-echo@nebula-research.test>
+X-Mailer: Thunderbird 115.4.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+
+Attached my initial write-up. Please review before I post the full thread.
+
+Regards,
+Jordan

@@ -1,0 +1,58 @@
+{
+  "id": "ghost-in-the-wire",
+  "title": "Ghost in the Wire",
+  "category": "reversing",
+  "difficulty": "advanced",
+  "points": 350,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "reversing",
+    "xor",
+    "binary-analysis",
+    "disassembly"
+  ],
+  "summary": "Reverse-engineer a binary's encryption routine to recover a hidden payload.",
+  "briefing": "NebulaCorp's malware analysis team recovered a suspicious binary from a compromised workstation. The binary appears to be a C2 beacon that encrypts its payloads before transmission.\n\nThe team ran strings and partial disassembly on the binary and identified:\n1. An encryption routine that uses single-byte XOR\n2. An embedded encrypted payload in the .rodata section\n3. The XOR key, visible in both the strings output and the disassembly\n\nYour task: read the disassembly to understand the encryption algorithm, extract the encrypted bytes from the .rodata section, and XOR-decrypt them with the correct key to recover the hidden flag.\n\nThe decrypted payload is the flag. Submit it exactly as it appears.",
+  "objectives": [
+    "Find the XOR key in the strings output or disassembly",
+    "Understand the decrypt_payload function's logic",
+    "Extract the encrypted bytes from the .rodata section",
+    "XOR each byte with the key to recover the plaintext",
+    "Submit the decrypted flag"
+  ],
+  "tools": [
+    "python3",
+    "CyberChef",
+    "xxd",
+    "text-editor"
+  ],
+  "hints": [
+    {
+      "title": "The key",
+      "text": "The XOR key is 0x5a. It appears in the strings output (\"XOR key loaded: 0x5a\") and in the disassembly (mov BYTE PTR [rbp-0xd], 0x5a).",
+      "cost": 30
+    },
+    {
+      "title": "Decryption script",
+      "text": "In Python: key = 0x5a; encrypted = [0x08, 0x1b, ...]; print(\"\".join(chr(b ^ key) for b in encrypted)). Extract all hex bytes from the .rodata section in order.",
+      "cost": 55
+    }
+  ],
+  "requires": [
+    "rsa-paper"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "c2ff2b24c2b9204d6e469eb2c0629c7a697406cf573f1051b3a42530c70ba6f4"
+  },
+  "artifacts": [
+    {
+      "file": "strings-output.txt",
+      "description": "Output of strings -n 4 on the recovered binary."
+    },
+    {
+      "file": "disassembly.txt",
+      "description": "Partial disassembly (objdump) of the decryption routine and embedded payload."
+    }
+  ]
+}

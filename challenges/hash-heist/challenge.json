@@ -1,0 +1,57 @@
+{
+  "id": "hash-heist",
+  "title": "Hash Heist",
+  "category": "crypto",
+  "difficulty": "intermediate",
+  "points": 300,
+  "mission": "Field Operations",
+  "tags": [
+    "hashcat",
+    "john",
+    "password-cracking",
+    "md5"
+  ],
+  "summary": "A dump of unsalted MD5 password hashes. Crack the admin account.",
+  "briefing": "A database breach exposed NebulaCorp's internal account table, which stored passwords as unsalted MD5 hashes — a serious weakness. Incident response recovered the dump (hashes.txt) in \"username:md5\" format, plus a wordlist of candidate passwords (wordlist.txt).\n\nYour task: crack the password for the \"nebula_admin\" account.\n\nNot every account's password is in the wordlist (some chose strong passwords), but the admin's is. Use a real cracking tool:\n\n  hashcat -m 0 -a 0 --username hashes.txt wordlist.txt\n  john --format=raw-md5 --wordlist=wordlist.txt hashes.txt\n\nOnce you recover nebula_admin's plaintext password, submit:\n  RANGE{cracked_nebula_admin_<password>}\n\nFor example, if the password were \"hunter2\": RANGE{cracked_nebula_admin_hunter2}",
+  "objectives": [
+    "Identify the hash algorithm (unsalted MD5)",
+    "Run hashcat or John against the wordlist",
+    "Recover the plaintext for nebula_admin",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "hashcat",
+    "John the Ripper",
+    "hashid",
+    "python3"
+  ],
+  "hints": [
+    {
+      "title": "Which account",
+      "text": "Only nebula_admin matters. Isolate its hash: grep nebula_admin hashes.txt. It is a 32-hex-character MD5.",
+      "cost": 30
+    },
+    {
+      "title": "Cracking command",
+      "text": "hashcat mode 0 is raw MD5. With \"username:hash\" lines, pass --username. Example: hashcat -m 0 -a 0 --username hashes.txt wordlist.txt --show",
+      "cost": 55
+    }
+  ],
+  "requires": [
+    "layered-encoding"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "bd2d4a4ba8ccc509a919eeb959e466c97a17b0014be068a27bd31cc73e5f92c1"
+  },
+  "artifacts": [
+    {
+      "file": "hashes.txt",
+      "description": "Breached account table (username:md5)."
+    },
+    {
+      "file": "wordlist.txt",
+      "description": "Candidate password wordlist (~200 entries)."
+    }
+  ]
+}

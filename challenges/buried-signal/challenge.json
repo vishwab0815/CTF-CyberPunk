@@ -1,0 +1,55 @@
+{
+  "id": "buried-signal",
+  "title": "Buried Signal",
+  "category": "forensics",
+  "difficulty": "intermediate",
+  "points": 250,
+  "mission": "Field Operations",
+  "tags": [
+    "steganography",
+    "binwalk",
+    "foremost",
+    "file-carving"
+  ],
+  "summary": "An innocent-looking PNG has another file hidden inside it. Carve it out.",
+  "briefing": "An analyst pulled an image (evidence.png) off a suspect's USB drive. It renders as a tiny, unremarkable picture — but the file on disk is much larger than a 1x1 image should be. Something is appended after the end of the PNG data.\n\nUse file-carving tools to find and extract the hidden content:\n\n  file evidence.png          # identify\n  binwalk evidence.png       # shows embedded file signatures\n  binwalk -e evidence.png    # auto-extract\n  foremost evidence.png      # alternative carver\n  unzip evidence.png         # the appended data is a ZIP archive\n\nExtract the hidden archive, read the file inside it, and submit the flag.",
+  "objectives": [
+    "Notice the PNG is larger than its image dimensions justify",
+    "Run binwalk to find the appended file signature",
+    "Carve/extract the embedded ZIP archive",
+    "Read the file inside and submit the flag"
+  ],
+  "tools": [
+    "binwalk",
+    "foremost",
+    "unzip",
+    "exiftool",
+    "xxd",
+    "file"
+  ],
+  "hints": [
+    {
+      "title": "Look past IEND",
+      "text": "A PNG ends at its IEND chunk. Anything after that is extra. binwalk evidence.png will show a \"Zip archive data\" entry after the PNG image.",
+      "cost": 25
+    },
+    {
+      "title": "Extract it",
+      "text": "The appended data is a valid ZIP. You can run unzip directly on the PNG: unzip evidence.png (ignore the \"extra bytes\" warning). It contains flag.txt.",
+      "cost": 45
+    }
+  ],
+  "requires": [
+    "ledger-audit"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "33fd22ee1dfea523cfd3ad2f814181919d279aa568c6800f374b78b36103225d"
+  },
+  "artifacts": [
+    {
+      "file": "evidence.png",
+      "description": "PNG image carved from a USB drive — larger than it looks."
+    }
+  ]
+}

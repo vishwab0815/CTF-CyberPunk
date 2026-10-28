@@ -1,0 +1,48 @@
+# Kubernetes Deployment — nebula-api
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nebula-api
+  namespace: production
+  labels:
+    app: nebula-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nebula-api
+  template:
+    metadata:
+      labels:
+        app: nebula-api
+    spec:
+      hostPID: true
+      hostNetwork: true
+      serviceAccountName: nebula-api-sa
+      containers:
+      - name: api
+        image: registry.corp.test/nebula-api:latest
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+        env:
+        - name: DB_PASSWORD
+          value: "Pr0d_DBpa55!"
+        volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: host-root
+          mountPath: /host
+          readOnly: false
+        resources: {}
+      volumes:
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+      - name: host-root
+        hostPath:
+          path: /

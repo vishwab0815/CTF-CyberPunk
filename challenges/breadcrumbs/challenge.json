@@ -1,0 +1,63 @@
+{
+  "id": "breadcrumbs",
+  "title": "Breadcrumbs",
+  "category": "osint",
+  "difficulty": "beginner",
+  "points": 150,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "osint",
+    "correlation",
+    "attribution"
+  ],
+  "summary": "Correlate fragments across four documents to identify a researcher and their alias.",
+  "briefing": "NebulaCorp's threat intelligence team intercepted four documents related to a vulnerability disclosure that may affect corporate infrastructure. The documents come from different sources and each contains partial information about the researcher involved.\n\nYour task: correlate the information across all four documents to identify the researcher's real name and their forum handle.\n\nSubmit your finding as RANGE{osint_<first_initial>_<last_name_lowercase>_<forum_handle>}\n\nFor example, if the researcher were Alex Chen with handle \"rev_ninja\", the flag would be RANGE{osint_a_chen_rev_ninja}.",
+  "objectives": [
+    "Read all four documents and note identifying details",
+    "Cross-reference names, handles, email addresses and organizations",
+    "Identify the researcher and their forum handle",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "grep",
+    "less",
+    "text-editor"
+  ],
+  "hints": [
+    {
+      "title": "Start with the email",
+      "text": "The email headers contain both a real name (From:) and a forum handle (Message-ID). Cross-reference these with the other documents.",
+      "cost": 20
+    },
+    {
+      "title": "Name format",
+      "text": "The researcher's first name starts with J. Their last name is in the email From header. The forum handle appears in the forum post signature.",
+      "cost": 35
+    }
+  ],
+  "requires": [
+    "ledger-audit"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "1849d8d2ef80b16aa0baa3fc60bfb0d6468f64a815274de63c21b5d178fad709"
+  },
+  "artifacts": [
+    {
+      "file": "forum-post.txt",
+      "description": "NebulaSec Forum thread excerpt."
+    },
+    {
+      "file": "email-headers.txt",
+      "description": "Intercepted email headers and partial body."
+    },
+    {
+      "file": "social-profile.txt",
+      "description": "Cached professional network profile."
+    },
+    {
+      "file": "whois-lookup.txt",
+      "description": "WHOIS record for a research domain."
+    }
+  ]
+}

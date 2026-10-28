@@ -1,0 +1,67 @@
+{
+  "id": "crime-scene",
+  "title": "Crime Scene",
+  "category": "forensics",
+  "difficulty": "intermediate",
+  "points": 300,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "dfir",
+    "incident-response",
+    "log-analysis",
+    "timeline"
+  ],
+  "summary": "Reconstruct an intrusion from auth logs, bash history, crontab and a timeline.",
+  "briefing": "NebulaCorp's incident response team preserved forensic artifacts from a compromised workstation. The evidence suggests a full attack lifecycle: initial access, reconnaissance, privilege escalation, data staging, exfiltration, persistence and cleanup.\n\nYou have four evidence files:\n- auth.log — SSH authentication events\n- bash-history.txt — recovered command history from the compromised account\n- crontab-dump.txt — crontab entries (system and user)\n- timeline.csv — analyst-prepared incident timeline\n\nReconstruct the attack and identify:\n1. The attacker's IP address\n2. The compromised user account\n3. The name of the exfiltrated database file (without path or extension)\n\nSubmit: RANGE{intrusion_<ip_with_underscores>_<username>_<dbname>}\n\nFor example: RANGE{intrusion_10_0_0_1_admin_orders_db}",
+  "objectives": [
+    "Identify the attacker IP from brute-force attempts in auth.log",
+    "Determine which account was compromised",
+    "Trace the data exfiltration in bash history",
+    "Identify the exfiltrated database file",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "grep",
+    "awk",
+    "less",
+    "csvkit",
+    "timeline-explorer"
+  ],
+  "hints": [
+    {
+      "title": "Find the brute force",
+      "text": "grep \"Failed password\" auth.log | awk '{print $NF}' | sort | uniq -c — the attacker IP will have the most failures.",
+      "cost": 25
+    },
+    {
+      "title": "Follow the exfil",
+      "text": "In bash-history.txt, look for tar and curl commands. The tar creates an archive of a .sql file, and curl uploads it to the attacker.",
+      "cost": 45
+    }
+  ],
+  "requires": [
+    "priv-escalation"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "520176682a289af5462924b1f6822617e55056e6b0eb10b4704c7c7b4832e58d"
+  },
+  "artifacts": [
+    {
+      "file": "auth.log",
+      "description": "SSH authentication log from the compromised workstation."
+    },
+    {
+      "file": "bash-history.txt",
+      "description": "Recovered bash history for the compromised user."
+    },
+    {
+      "file": "crontab-dump.txt",
+      "description": "System and user crontab entries."
+    },
+    {
+      "file": "timeline.csv",
+      "description": "Analyst-prepared incident timeline."
+    }
+  ]
+}

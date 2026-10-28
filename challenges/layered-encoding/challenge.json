@@ -1,0 +1,50 @@
+{
+  "id": "layered-encoding",
+  "title": "Layered Encoding",
+  "category": "crypto",
+  "difficulty": "beginner",
+  "points": 100,
+  "mission": "Calibration",
+  "tags": [
+    "encoding",
+    "cyberchef"
+  ],
+  "summary": "A transmission was wrapped in several reversible encodings. Peel them back.",
+  "briefing": "An outbound relay queue holds a payload that someone wrapped in more than one reversible transform to make it look opaque.\n\nNone of these transforms use a key, so none of them is encryption. Identify each layer in turn, undo it, and recover the original text.\n\nThe inner message is a flag.",
+  "objectives": [
+    "Identify the outermost encoding from its alphabet and padding",
+    "Undo each layer in order",
+    "Submit the recovered flag"
+  ],
+  "tools": [
+    "CyberChef",
+    "base64",
+    "xxd",
+    "python3"
+  ],
+  "hints": [
+    {
+      "title": "Magic",
+      "text": "The CyberChef \"Magic\" operation can suggest the first layer. Confirm each suggestion yourself instead of trusting it blindly.",
+      "cost": 15
+    },
+    {
+      "title": "Layer order",
+      "text": "The text is Base64 on the outside. Inside that is a hex string. Inside that is a classical rotation cipher.",
+      "cost": 30
+    }
+  ],
+  "requires": [
+    "range-check"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "177a4c7e35b983ed9c49a05dbe92ce54f8e1f37df7da0e77905c5b9d2c57e658"
+  },
+  "artifacts": [
+    {
+      "file": "transmission.txt",
+      "description": "The queued payload."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "packet-storm",
+  "title": "Packet Storm",
+  "category": "network",
+  "difficulty": "intermediate",
+  "points": 250,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "netflow",
+    "c2",
+    "beaconing",
+    "traffic-analysis"
+  ],
+  "summary": "One internal host is beaconing to an external server at a suspiciously regular interval.",
+  "briefing": "NebulaCorp's SOC exported three hours of network flow data from the perimeter firewall. Analysts suspect that a compromised workstation is communicating with a command-and-control server, but the traffic is mixed with thousands of legitimate HTTPS connections.\n\nC2 beacons typically stand out because of their regularity: the same internal host contacts the same external IP at a consistent interval, with similar small payload sizes, regardless of user activity.\n\nAnalyze the flow data to find the beaconing pattern. Identify the C2 server IP and the approximate beacon interval.\n\nSubmit your finding as RANGE{c2_<external_ip_with_underscores>_beacon_<interval>s}\n\nFor example, if host 10.0.0.5 beacons to 1.2.3.4 every 30 seconds: RANGE{c2_1_2_3_4_beacon_30s}",
+  "objectives": [
+    "Identify internal-to-external connections with regular timing",
+    "Look for consistent small payload sizes that suggest beaconing",
+    "Determine the C2 server IP address",
+    "Calculate the beacon interval in seconds",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "awk",
+    "sort",
+    "python3",
+    "Excel",
+    "Wireshark-stats"
+  ],
+  "hints": [
+    {
+      "title": "Counting connections",
+      "text": "Group flows by (src_ip, dst_ip) pair and count occurrences. The C2 pair will have far more connections than normal browsing patterns to a single destination.",
+      "cost": 30
+    },
+    {
+      "title": "Narrow it down",
+      "text": "The beacon source is 192.168.1.201. Filter for that IP and look at which destination has connections every minute.",
+      "cost": 50
+    }
+  ],
+  "requires": [
+    "dead-drop"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "172e0882aabe7e36f5c9ead55aedfcaea1023f860ed7321aecc84822aa49aea9"
+  },
+  "artifacts": [
+    {
+      "file": "netflow-export.csv",
+      "description": "Three hours of perimeter firewall flow data (~1000 entries)."
+    }
+  ]
+}

@@ -1,220 +1,89 @@
-# 🎯 NebulaCorp CTF Challenge
+# Obsidian Range
 
-A full-stack Capture The Flag (CTF) web application with 7 progressive security challenges, built with Next.js 16, MongoDB, and NextAuth.
+A self-contained cybersecurity CTF platform for hackathons and training events. Players investigate downloadable evidence with their own tooling (Kali Linux, Wireshark, Ghidra, Burp, CyberChef and so on) and submit flags that are validated server-side. Flags can be unique per player, so sharing answers is detectable.
 
-## 🚀 Quick Start
+- **No MongoDB, no external services.** Storage is a single SQLite file created on first start.
+- **No player setup.** Guests play instantly; registering later keeps their progress.
+- **Challenge packs.** Organisers add a folder; no code changes or rebuild.
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
-- pnpm (recommended) or npm
+> **Scope note.** This repository ships the platform and three neutral *calibration* packs that prove the full lifecycle. It does **not** ship a full competition's worth of challenge content (network, web, forensics, reversing and so on); those are authored by your organisers as packs. See [docs/AUTHORING.md](docs/AUTHORING.md).
 
-### Installation
+## Quick start
+
+Requires **Node.js 22.13+** (uses the built-in `node:sqlite`) and pnpm.
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your MongoDB URI and secrets
-
-# Seed the database (REQUIRED before first use)
-pnpm seed:all
-
-# Run development server
-pnpm dev
+pnpm admin:create organiser 'a-long-passphrase'   # optional: creates an admin
+pnpm dev                                          # http://localhost:3000
 ```
 
-Visit http://localhost:3000
-
-## 📦 Database Setup
-
-**IMPORTANT:** Before users can play, you must seed the database:
+Production:
 
 ```bash
-# Seed everything (recommended)
-pnpm seed:all
-
-# Or seed individually
-pnpm seed:flags      # Add all 7 level flags
-pnpm seed:employees  # Add employee data for Level 7
+pnpm build
+DATA_DIR=/var/lib/range pnpm start
 ```
 
-## 🎮 Game Structure
+The database, schema migrations and the flag secret are created automatically in `DATA_DIR` (default `./data`). Back that folder up.
 
-### Act 1: Client-Side Vulnerabilities (4 Levels)
-- **Level 1** - DNS Discovery (View Source, HTML Comments)
-- **Level 2** - Client Validation Bypass (MaxLength)
-- **Level 3** - JavaScript Guard Bypass (Console Manipulation)
-- **Level 4** - Hidden Endpoint Discovery (API Reconnaissance)
+## Commands
 
-### Act 2: Server-Side Exploitation (1 Level)
-- **Level 5** - IDOR Vulnerability (User Enumeration → ID 7777)
+| Command | Purpose |
+| --- | --- |
+| `pnpm dev` / `build` / `start` | Run the app |
+| `pnpm test` | Unit and integration tests (vitest) |
+| `pnpm typecheck` / `pnpm lint` | Static checks |
+| `pnpm smoke` | End-to-end test against a running server (`BASE`, `ADMIN_HANDLE`, `ADMIN_PASSWORD`) |
+| `pnpm admin:create <handle> <password>` | Create or promote an administrator |
+| `pnpm db:reset --yes` | Wipe players, progress and logs (packs untouched) |
+| `pnpm tsx scripts/hash-flag.ts '<flag>'` | Print the `flag` JSON for a static challenge |
 
-### Act 3: Advanced Challenges (2 Levels) ⚠️ EXTREME DIFFICULTY
-- **Level 6** - The Gauntlet (5-Phase Interactive Puzzle: Rapid Click, Extended Konami, Critical Error Triage, Cipher Decode, Final Authentication)
-- **Level 7** - NoSQL Injection (MongoDB Query Exploitation)
+## Configuration
 
-**Total Points:** 1,600
-**Total Levels:** 7
+All optional. See [.env.example](.env.example).
 
-## 🔑 Key Features
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `DATA_DIR` | `./data` | SQLite database and generated flag secret |
+| `CHALLENGES_DIR` | `./challenges` | Where packs are loaded from |
+| `FLAG_PREFIX` | `RANGE` | Flag wrapper, e.g. `RANGE{...}` |
+| `FLAG_SECRET` | auto-generated | HMAC secret (>= 32 chars) for per-player flags |
+| `ADMIN_HANDLE` / `ADMIN_PASSWORD` | unset | Bootstrap an admin at startup |
+| `TRUST_PROXY` | `0` | Trust `X-Forwarded-For` (only behind your own proxy) |
+| `COOKIE_SECURE` | on in production | `Secure` session cookie. Set `0` for plain-HTTP LAN events |
+| `APP_ORIGIN` | derived from `Host` | Exact public origin for CSRF checks behind a rewriting proxy |
+| `SESSION_TTL_DAYS` | `30` | Session lifetime |
 
-### Authentication System
-- ✅ Secure signup/signin with bcrypt
-- ✅ Session management with NextAuth
-- ✅ Change password functionality
-- ✅ JWT-based session tokens
-- ✅ Protected routes and middleware
+## What is implemented
 
-### Timer System
-- ✅ Auto-starts when user begins
-- ✅ Persists across page reloads
-- ✅ Stored in MongoDB
-- ✅ Real-time countdown display
+**Challenge engine** — categories, four difficulty levels, tags, missions; server-side flag validation (constant-time); static flags (SHA-256 in the pack) and **per-player dynamic flags** (HMAC) embedded into template artifacts; hints with point penalties; prerequisite chains; per-challenge attempt caps; rate limiting; flag-sharing detection; static or decaying (dynamic) scoring; competition window and scoreboard freeze; per-challenge and per-player reset.
 
-### Admin Dashboard
-- ✅ Real-time leaderboard
-- ✅ Level monitoring and statistics
-- ✅ Submission tracking
-- ✅ Auto-refresh (5s intervals)
-- ✅ Filter by all 7 levels
+**Players** — guest sessions, optional registration with in-place guest upgrade, scrypt-hashed passwords, opaque session tokens (stored hashed), logout and password change.
 
-### Progressive Hint System
-- ✅ Hints appear after multiple attempts
-- ✅ No spoilers on first tries
-- ✅ Guides users without giving away answers
+**Admin** — live settings, enable/disable and re-point challenges, quick-create static challenges, pack error reporting, ban/unban/reset/delete players, event and submission logs.
 
-## 📁 Project Structure
+**UI** — dark SOC-style interface: landing, operator console, operations board with filters, challenge briefing/evidence/hints/submit, scoreboard with progression chart, admin.
+
+## Tests and results
 
 ```
-ctf-game/
-├── app/
-│   ├── api/              # API routes (levels, auth, admin)
-│   ├── auth/             # Authentication pages
-│   ├── levels/           # 7 level pages (1-7)
-│   ├── admin/            # Admin dashboard
-│   └── completion/       # Success pages
-├── components/           # Reusable UI components
-├── lib/
-│   ├── models/          # MongoDB schemas
-│   └── auth.ts          # NextAuth configuration
-├── scripts/             # Database seed scripts
-└── proxy.ts             # Middleware (route protection)
+pnpm test        42 tests, 3 files, all passing
+pnpm smoke       45 HTTP checks against a production build, all passing
+pnpm lint        clean        pnpm typecheck   clean        pnpm build   succeeds
 ```
 
-## 🔧 Environment Variables
+The tests cover flag validation, per-player flags and sharing detection, secret leakage in API shapes, prerequisites, hints and scoring (including decay, ties, freeze, bans), competition windows, rate limits and attempt caps, resets, artifact path-traversal, sessions (hashed storage, expiry, revocation, isolation), guest upgrade, passwords, migrations, and solving the shipped packs from their downloaded evidence.
 
-Create `.env.local` with:
+## What changed from the original project
 
-```env
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017/ctf-game
-# or MongoDB Atlas: mongodb+srv://user:pass@cluster.mongodb.net/ctf-game
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the original architecture, its weaknesses, the MongoDB removal map, and the new design. Security controls and the threat model are in [docs/SECURITY.md](docs/SECURITY.md).
 
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-super-secret-key-here-min-32-chars
+## Known limitations
 
-# Optional: Node Environment
-NODE_ENV=development
-```
-
-## 🎯 Level Solutions Reference
-
-See [SOLUTIONS.md](SOLUTIONS.md) for complete walkthrough and hints.
-
-## 🛠️ Development Commands
-
-```bash
-# Development
-pnpm dev              # Start dev server on port 3000
-
-# Production
-pnpm build            # Build for production
-pnpm start            # Start production server
-
-# Database
-pnpm seed:all         # Seed all collections
-pnpm seed:flags       # Seed flags only
-pnpm seed:employees   # Seed employees only
-
-# Code Quality
-pnpm lint             # Run ESLint
-```
-
-## 🐛 Troubleshooting
-
-### Issue: "Loading..." stuck on level pages
-**Solution:** This has been fixed. If you still see it, clear browser cache and refresh.
-
-### Issue: Level 7 returns "No employee found"
-**Solution:** Run `pnpm seed:employees` to populate the database.
-
-### Issue: Timer doesn't persist
-**Solution:** Verify MongoDB connection and check that timer API routes are working.
-
-### Issue: Admin dashboard shows 0/0
-**Solution:** Users need to complete levels first. Admin accounts cannot play levels.
-
-## 🔐 Security Notes
-
-This is an **intentionally vulnerable** application for educational purposes:
-
-- ✅ Real vulnerabilities: IDOR, Client-Side Bypass, NoSQL Injection
-- ✅ Safe environment: Sandboxed, no real user data
-- ⚠️ **DO NOT** deploy on public internet without security hardening
-- ⚠️ **FOR EDUCATIONAL USE ONLY**
-
-## 📊 Testing
-
-## 🧰 MongoDB Keep-Alive (GitHub Actions)
-
-If you are using a free-tier MongoDB provider that may pause inactive clusters (for example MongoDB Atlas free tier), you can add a simple keep-alive workflow that periodically connects to the database to prevent idle shutdowns.
-
-1. Add the repository secret `MONGODB_URI` (your connection string) in GitHub Settings → Secrets.
-2. The project includes a workflow at `.github/workflows/mongodb-keepalive.yml` that runs `scripts/db-keepalive.ts` on a schedule and pings the DB.
-
-Notes:
-- This is a workaround for development/demo purposes only — for production, prefer a paid always-on cluster.
-- The workflow uses `pnpm` and `tsx` to run the script; ensure your lockfile is committed.
-
-
-### Create Test Accounts
-
-**Regular User:**
-1. Visit `/auth/signup`
-2. Create account
-3. Complete levels 1 through 7
-
-**Admin User:**
-Create admin manually in MongoDB:
-```javascript
-db.users.updateOne(
-  { email: "admin@example.com" },
-  { $set: { isAdmin: true } }
-)
-```
-
-## 🎨 Tech Stack
-
-- **Framework:** Next.js 16 (App Router, Turbopack)
-- **Database:** MongoDB with Mongoose
-- **Authentication:** NextAuth v4
-- **Styling:** Tailwind CSS v4
-- **Animations:** Framer Motion
-- **Forms:** React Hook Form + Zod
-- **Icons:** Lucide React
-
-## 📝 License
-
-MIT License - Free for educational use
-
-## 🤝 Contributing
-
-This is a complete, production-ready CTF platform. Fork and customize for your own events!
-
----
-
-**Ready to hack?** Start with `pnpm install && pnpm seed:all && pnpm dev` 🚀
+- **No live vulnerable targets are provisioned.** Challenges are evidence-based (files to analyse offline). Hosting live targets (web apps, SSH hosts, AD labs) needs separate isolated infrastructure; the engine does not spawn containers. See the roadmap in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- SQLite means a **single app instance** (multiple processes on one host are fine; multiple hosts are not).
+- Per-IP limits need `TRUST_PROXY=1` behind a proxy; otherwise a global ceiling applies.
+- The Dockerfile and compose file are provided but were **not built or run** in the development environment (no Docker daemon was available).
+- The UI was type-checked, linted, built and served (all pages return 200) but **not visually reviewed in a browser** or tested with assistive technology.
+- Dynamic flags are tied to `FLAG_SECRET`; rotating it mid-event invalidates issued flags.

@@ -1,0 +1,56 @@
+{
+  "id": "ticket-to-ride",
+  "title": "Ticket to Ride",
+  "category": "enterprise",
+  "difficulty": "advanced",
+  "points": 400,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "kerberos",
+    "active-directory",
+    "golden-ticket",
+    "event-log"
+  ],
+  "summary": "Analyze Windows Event Logs to identify a Kerberos golden ticket attack.",
+  "briefing": "NebulaCorp's SOC exported Windows Security Event Logs from the primary domain controller (DC01). An analyst flagged anomalous Kerberos activity but did not finish the investigation.\n\nYou have a CSV export of security events including Kerberos authentication (Event 4768), service ticket requests (Event 4769), special privilege assignments (Event 4672), logon events (Event 4624), and directory service access (Event 4662).\n\nLook for signs of a Golden Ticket attack:\n- Encryption downgrade (RC4-HMAC instead of AES256)\n- Abnormal ticket lifetimes\n- Service ticket requests targeting the krbtgt account\n- Unusual service account behavior\n- DCSync indicators\n\nIdentify the target service name used in the forged ticket, the compromised account, and the attack type.\n\nSubmit: RANGE{<target_service_from_forged_ticket>_<compromised_account>_golden_ticket}\n\nFor example, if the forged ticket targeted krbtgt and used the account svc_admin: RANGE{krbtgt_svc_admin_golden_ticket}",
+  "objectives": [
+    "Filter for Kerberos events (4768, 4769) and look for RC4 encryption downgrades",
+    "Identify the anomalous service ticket targeting krbtgt",
+    "Determine which account was used for the attack",
+    "Correlate with privilege escalation and DCSync events",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "grep",
+    "awk",
+    "csvkit",
+    "Excel",
+    "python3",
+    "Timeline Explorer"
+  ],
+  "hints": [
+    {
+      "title": "Encryption is the key",
+      "text": "Normal Kerberos uses AES256 (0x12). Filter for RC4-HMAC (0x17) — those events are the attacker. grep \"RC4-HMAC\" security-events.csv",
+      "cost": 40
+    },
+    {
+      "title": "The golden ticket target",
+      "text": "A golden ticket forges a TGT by targeting the krbtgt service. The compromised account is svc_sqldb. Look at the 4769 event requesting krbtgt/NEBULA.TEST.",
+      "cost": 70
+    }
+  ],
+  "requires": [
+    "crime-scene"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "507a7b7846aa39f1139f70efd59003a16804954c995aedb3dc6dd271c3c024f2"
+  },
+  "artifacts": [
+    {
+      "file": "security-events.csv",
+      "description": "Windows Security Event Log export from DC01 (~250 events)."
+    }
+  ]
+}

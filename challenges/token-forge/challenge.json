@@ -1,0 +1,57 @@
+{
+  "id": "token-forge",
+  "title": "Token Forge",
+  "category": "web",
+  "difficulty": "intermediate",
+  "points": 300,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "jwt",
+    "hmac",
+    "authentication",
+    "brute-force"
+  ],
+  "summary": "A captured JWT was signed with a weak secret. Crack it.",
+  "briefing": "During traffic analysis, a JWT bearer token was captured from a request to NebulaCorp's internal API.\n\nThe token uses HMAC-SHA256 (HS256) signing, which means the same secret key is used to both create and verify the signature. If the secret is weak enough to brute-force, anyone with the token and the secret can forge new tokens with elevated privileges.\n\nYou are given the captured token and a wordlist of commonly used signing secrets. Your task:\n\n1. Decode the JWT header and payload (they are Base64URL-encoded, not encrypted)\n2. Identify the signing algorithm\n3. Try each word in the provided wordlist as the HMAC-SHA256 key\n4. When you find the correct secret (the signature matches), you have cracked the token\n\nSubmit: RANGE{jwt_secret_<the_secret>_cracked}\n\nFor example, if the secret were \"admin123\": RANGE{jwt_secret_admin123_cracked}",
+  "objectives": [
+    "Decode the JWT header and payload (Base64URL)",
+    "Confirm the algorithm is HS256",
+    "Brute-force the HMAC secret using the wordlist",
+    "Submit the flag with the discovered secret"
+  ],
+  "tools": [
+    "python3",
+    "CyberChef",
+    "jwt-tool",
+    "hashcat"
+  ],
+  "hints": [
+    {
+      "title": "JWT structure",
+      "text": "A JWT has three parts separated by dots: header.payload.signature. The first two are Base64URL-encoded JSON. Decode them with: echo \"<part>\" | base64 -d (you may need to add padding).",
+      "cost": 25
+    },
+    {
+      "title": "Verification script",
+      "text": "In Python: import hmac, hashlib, base64; sig = hmac.new(secret.encode(), (header_b64 + \".\" + payload_b64).encode(), hashlib.sha256).digest(); compare base64url(sig) to the third JWT segment.",
+      "cost": 50
+    }
+  ],
+  "requires": [
+    "exposed-api"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "5a7ce74d75fa313a4230cdbdbc87f5eb90787b388e931c6af09b7fc3a16a7125"
+  },
+  "artifacts": [
+    {
+      "file": "captured-token.txt",
+      "description": "Intercepted JWT bearer token."
+    },
+    {
+      "file": "common-secrets.txt",
+      "description": "Wordlist of ~50 commonly used signing secrets."
+    }
+  ]
+}

@@ -13,12 +13,13 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["./*"] },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    
   },
   "include": [
     "next-env.d.ts",

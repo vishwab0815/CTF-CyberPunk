@@ -1,0 +1,58 @@
+{
+  "id": "binary-ghost",
+  "title": "Binary Ghost",
+  "category": "reversing",
+  "difficulty": "advanced",
+  "points": 400,
+  "mission": "Field Operations",
+  "tags": [
+    "reversing",
+    "elf",
+    "xor",
+    "ghidra",
+    "gdb"
+  ],
+  "summary": "A real ELF binary hides an XOR-encrypted payload. Reverse it to recover the flag.",
+  "briefing": "Malware analysis recovered a Linux binary (\"beacon\") from a compromised host. It is a real 64-bit ELF executable. Inside, a decrypt routine un-scrambles an embedded payload using a single-byte XOR before the beacon transmits it.\n\nAnalyse the binary with your own tools:\n- \"file beacon\" confirms the format\n- \"strings beacon\" reveals the XOR key and other artifacts\n- \"objdump -d beacon\" (or Ghidra / radare2 / GDB) shows the decrypt loop in the .text section\n- The encrypted payload sits in the .rodata section\n\nExtract the encrypted bytes from .rodata and XOR each one with the key you found. The result is the flag.\n\n(Note: the binary is not meant to be executed — analyse it statically.)",
+  "objectives": [
+    "Identify the file type with \"file\"",
+    "Recover the XOR key from strings / disassembly",
+    "Locate the encrypted payload in the .rodata section",
+    "XOR-decode it to recover the flag",
+    "Submit the flag"
+  ],
+  "tools": [
+    "file",
+    "strings",
+    "objdump",
+    "Ghidra",
+    "radare2",
+    "GDB",
+    "python3"
+  ],
+  "hints": [
+    {
+      "title": "Find the key",
+      "text": "Run: strings beacon | grep -i xor — the key is printed as \"XOR key: 0x5a\". Confirm it in the disassembly (mov al,0x5a).",
+      "cost": 40
+    },
+    {
+      "title": "Extract .rodata",
+      "text": "Dump the read-only data: objdump -s -j .rodata beacon. The printable strings come first; the encrypted flag bytes follow them. XOR each byte with 0x5a.",
+      "cost": 70
+    }
+  ],
+  "requires": [
+    "rsa-paper"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "0cd0b073e7893de578d43e3c05c30698e116e5fcb6c721a4e024b7d7b4fef6c2"
+  },
+  "artifacts": [
+    {
+      "file": "beacon",
+      "description": "Recovered 64-bit ELF binary. Analyse statically — do not run it."
+    }
+  ]
+}

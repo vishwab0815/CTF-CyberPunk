@@ -1,0 +1,229 @@
+TimeGenerated,EventID,Source,Category,AccountName,ComputerName,SourceIP,Message
+2026-10-15 07:02:40,4624,Security,Logon/Logoff,ljohnson,WS-HR02,192.168.10.106,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:02:53,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.112,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:06:34,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.173,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:07:33,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.199,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:07:35,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.182,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:08:02,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.163,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:10:43,4624,Security,Logon/Logoff,ljohnson,WS-EXEC01,192.168.10.105,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:15:24,4624,Security,Logon/Logoff,ljohnson,WS-EXEC01,192.168.10.37,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:16:14,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.59,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:17:15,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.130,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:19:02,4624,Security,Logon/Logoff,jsmith,WS-EXEC01,192.168.10.15,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:19:54,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.148,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:20:26,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.117,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:20:30,4624,Security,Logon/Logoff,agarcia,WS-DEV03,192.168.10.72,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:20:49,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.49,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:21:04,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.138,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:21:49,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.66,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:22:12,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.95,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:22:44,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.135,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:24:41,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.151,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:31:03,4624,Security,Logon/Logoff,mchen,WS-EXEC01,192.168.10.71,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:32:43,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.150,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:33:49,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.80,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:38:07,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.197,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 07:41:32,4624,Security,Logon/Logoff,jsmith,WS-EXEC01,192.168.10.149,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:42:16,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.138,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:44:30,4624,Security,Logon/Logoff,kpatel,WS-FINANCE01,192.168.10.115,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:45:09,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.173,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:48:20,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.102,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:50:21,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.167,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:52:00,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.122,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 07:52:15,4624,Security,Logon/Logoff,jsmith,WS-SALES01,192.168.10.172,Logon Type 10 (RemoteInteractive)
+2026-10-15 07:54:17,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.38,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 08:01:06,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.75,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 08:03:41,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.113,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:04:26,4624,Security,Logon/Logoff,ljohnson,WS-HR02,192.168.10.165,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:10:12,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.101,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:12:54,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.182,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:14:04,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.66,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:15:22,4624,Security,Logon/Logoff,mchen,WS-FINANCE01,192.168.10.33,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:16:40,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.182,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 08:16:45,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.199,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:17:10,4624,Security,Logon/Logoff,agarcia,WS-HR02,192.168.10.13,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:20:11,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.172,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 08:20:38,4624,Security,Logon/Logoff,jsmith,WS-DEV03,192.168.10.12,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:28:44,4624,Security,Logon/Logoff,mchen,WS-EXEC01,192.168.10.72,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:36:16,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.100,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:37:28,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.29,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 08:41:26,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.199,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:41:41,4624,Security,Logon/Logoff,agarcia,WS-EXEC01,192.168.10.107,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:41:52,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.181,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:42:09,4624,Security,Logon/Logoff,mchen,WS-FINANCE01,192.168.10.13,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:44:11,4624,Security,Logon/Logoff,mchen,WS-EXEC01,192.168.10.53,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:45:07,4624,Security,Logon/Logoff,jsmith,WS-SALES01,192.168.10.92,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:50:22,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.15,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:52:25,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.56,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 08:58:27,4624,Security,Logon/Logoff,mchen,WS-FINANCE01,192.168.10.141,Logon Type 10 (RemoteInteractive)
+2026-10-15 08:58:54,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.39,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:00:01,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.28,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:01:00,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.42,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:02:46,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.189,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:02:51,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.183,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:05:01,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.163,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:05:58,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.95,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:09:43,4624,Security,Logon/Logoff,agarcia,WS-DEV03,192.168.10.52,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:10:04,4624,Security,Logon/Logoff,jsmith,WS-SALES01,192.168.10.163,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:12:32,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.171,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:13:17,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.172,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:13:18,4624,Security,Logon/Logoff,ljohnson,WS-FINANCE01,192.168.10.14,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:13:19,4624,Security,Logon/Logoff,agarcia,WS-DEV03,192.168.10.84,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:16:04,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.104,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:16:49,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.120,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:16:50,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.20,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:18:33,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.40,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:21:23,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.17,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:21:30,4624,Security,Logon/Logoff,mchen,WS-HR02,192.168.10.92,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:21:37,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.82,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:23:39,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.136,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:24:01,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.89,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:24:33,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.176,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:27:04,4624,Security,Logon/Logoff,ljohnson,WS-FINANCE01,192.168.10.178,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:27:16,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.13,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:30:00,4768,Security,Kerberos Authentication,svc_sqldb,DC01,192.168.10.201,TGT requested — Encryption: 0x17 (RC4-HMAC) — Status: 0x0 (Success) — WARNING: Encryption downgrade from AES256 to RC4
+2026-10-15 09:30:01,4769,Security,Kerberos Service Ticket,svc_sqldb,DC01,192.168.10.201,Service ticket requested for krbtgt/NEBULA.TEST — Encryption: 0x17 (RC4-HMAC) — ANOMALY: Ticket lifetime exceeds policy (requested: 87600h / policy max: 10h)
+2026-10-15 09:30:05,4769,Security,Kerberos Service Ticket,svc_sqldb,DC01,192.168.10.201,Service ticket requested for cifs/DC01.nebula.test — Encryption: 0x17 (RC4-HMAC) — Status: 0x0
+2026-10-15 09:30:08,4769,Security,Kerberos Service Ticket,svc_sqldb,DC01,192.168.10.201,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x17 (RC4-HMAC) — Status: 0x0
+2026-10-15 09:30:10,4769,Security,Kerberos Service Ticket,svc_sqldb,DC01,192.168.10.201,Service ticket requested for host/DC01.nebula.test — Encryption: 0x17 (RC4-HMAC) — Status: 0x0
+2026-10-15 09:30:12,4672,Security,Special Logon,svc_sqldb,DC01,192.168.10.201,Special privileges assigned to new logon: SeDebugPrivilege SeBackupPrivilege SeRestorePrivilege
+2026-10-15 09:30:15,4624,Security,Logon/Logoff,svc_sqldb,DC01,192.168.10.201,Logon Type 3 (Network) — Elevated: Yes
+2026-10-15 09:31:00,4662,Security,Directory Service Access,svc_sqldb,DC01,192.168.10.201,Replication request: DS-Replication-Get-Changes-All on domain NC — ALERT: Potential DCSync operation
+2026-10-15 09:32:31,4624,Security,Logon/Logoff,kpatel,WS-FINANCE01,192.168.10.190,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:33:25,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.48,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:35:22,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.141,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:35:50,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.183,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:36:53,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.170,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:37:43,4624,Security,Logon/Logoff,kpatel,WS-DEV03,192.168.10.122,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:37:45,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.103,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:39:53,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.198,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:41:53,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.142,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:41:59,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.111,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:44:03,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.57,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:44:19,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.93,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:44:35,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.192,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:44:52,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.189,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:44:56,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.76,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:45:01,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.45,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:45:12,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.23,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:45:22,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.113,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:45:23,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.151,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:45:28,4624,Security,Logon/Logoff,mchen,WS-HR02,192.168.10.176,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:45:36,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.106,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:46:31,4624,Security,Logon/Logoff,kpatel,WS-EXEC01,192.168.10.20,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:46:34,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.162,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:46:50,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.63,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:47:56,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.181,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:48:06,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.92,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:48:10,4624,Security,Logon/Logoff,mchen,WS-DEV03,192.168.10.195,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:48:27,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.12,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:48:34,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.108,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:48:59,4624,Security,Logon/Logoff,jsmith,WS-HR02,192.168.10.18,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:49:06,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.87,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:50:07,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.148,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:50:45,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.89,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:51:43,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.60,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:51:50,4624,Security,Logon/Logoff,kpatel,WS-FINANCE01,192.168.10.70,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:51:59,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.79,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:52:12,4624,Security,Logon/Logoff,kpatel,WS-DEV03,192.168.10.52,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:52:20,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.166,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:52:33,4624,Security,Logon/Logoff,jsmith,WS-EXEC01,192.168.10.98,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:52:36,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.105,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:54:05,4624,Security,Logon/Logoff,mchen,WS-FINANCE01,192.168.10.125,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:54:52,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.117,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:54:54,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.56,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:55:11,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.49,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 09:55:38,4624,Security,Logon/Logoff,mchen,WS-HR02,192.168.10.13,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:56:52,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.185,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:56:58,4624,Security,Logon/Logoff,agarcia,WS-SALES01,192.168.10.11,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:57:19,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.197,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:57:59,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.13,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 09:58:01,4624,Security,Logon/Logoff,kpatel,WS-EXEC01,192.168.10.38,Logon Type 10 (RemoteInteractive)
+2026-10-15 09:58:28,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.21,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:00:10,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.127,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:00:29,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.73,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:00:52,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.95,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:02:01,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.85,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:05:18,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.100,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:05:31,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.52,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:06:16,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.177,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:08:22,4624,Security,Logon/Logoff,agarcia,WS-HR02,192.168.10.92,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:10:49,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.112,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:11:16,4624,Security,Logon/Logoff,mchen,WS-HR02,192.168.10.53,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:15:30,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.68,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:16:10,4624,Security,Logon/Logoff,mchen,WS-SALES01,192.168.10.76,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:16:13,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.76,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:16:19,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.29,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:18:37,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.91,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:19:19,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.70,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:20:30,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.193,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:22:20,4624,Security,Logon/Logoff,jsmith,WS-HR02,192.168.10.73,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:22:45,4624,Security,Logon/Logoff,jsmith,WS-HR02,192.168.10.50,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:23:03,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.168,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:23:14,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.136,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:23:20,4624,Security,Logon/Logoff,agarcia,WS-FINANCE01,192.168.10.177,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:28:29,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.177,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:28:58,4624,Security,Logon/Logoff,jsmith,WS-HR02,192.168.10.117,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:31:09,4624,Security,Logon/Logoff,agarcia,WS-HR02,192.168.10.186,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:32:16,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.200,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:33:51,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.159,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:34:18,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.99,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:34:45,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.71,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:35:09,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.54,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:36:03,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.105,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:36:04,4624,Security,Logon/Logoff,mchen,WS-DEV03,192.168.10.59,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:36:09,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.172,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:37:05,4624,Security,Logon/Logoff,mchen,WS-SALES01,192.168.10.170,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:37:43,4624,Security,Logon/Logoff,ljohnson,WS-DEV03,192.168.10.31,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:39:58,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.22,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:41:02,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.23,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:41:23,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.42,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:41:26,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.90,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:41:57,4624,Security,Logon/Logoff,agarcia,WS-EXEC01,192.168.10.28,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:44:34,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.93,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:48:04,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.153,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:51:33,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.75,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:52:02,4624,Security,Logon/Logoff,agarcia,WS-EXEC01,192.168.10.98,Logon Type 10 (RemoteInteractive)
+2026-10-15 10:54:15,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.58,Service ticket requested for ldap/DC01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 10:54:58,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.193,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 10:55:17,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.156,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:00:39,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.151,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:00:44,4624,Security,Logon/Logoff,ljohnson,WS-SALES01,192.168.10.51,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:02:18,4624,Security,Logon/Logoff,agarcia,WS-FINANCE01,192.168.10.86,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:02:54,4624,Security,Logon/Logoff,agarcia,WS-SALES01,192.168.10.126,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:03:01,4624,Security,Logon/Logoff,ljohnson,WS-EXEC01,192.168.10.149,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:04:39,4769,Security,Kerberos Service Ticket,mchen,DC01,192.168.10.140,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:04:43,4624,Security,Logon/Logoff,kpatel,WS-SALES01,192.168.10.157,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:05:58,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.10,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:06:26,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.191,Service ticket requested for host/PRINT01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:06:31,4624,Security,Logon/Logoff,kpatel,WS-FINANCE01,192.168.10.84,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:06:44,4624,Security,Logon/Logoff,mchen,WS-SALES01,192.168.10.141,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:07:00,4624,Security,Logon/Logoff,ljohnson,WS-DEV03,192.168.10.132,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:07:28,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.132,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:08:39,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.24,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:08:46,4624,Security,Logon/Logoff,agarcia,WS-FINANCE01,192.168.10.149,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:12:33,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.184,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:12:38,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.141,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:15:26,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.181,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:18:25,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.130,Service ticket requested for cifs/FS01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:18:47,4769,Security,Kerberos Service Ticket,agarcia,DC01,192.168.10.96,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:19:13,4624,Security,Logon/Logoff,jsmith,WS-DEV03,192.168.10.191,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:20:42,4624,Security,Logon/Logoff,jsmith,WS-FINANCE01,192.168.10.134,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:21:02,4624,Security,Logon/Logoff,agarcia,WS-EXEC01,192.168.10.101,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:22:49,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.81,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:24:55,4624,Security,Logon/Logoff,jsmith,WS-HR02,192.168.10.27,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:28:12,4624,Security,Logon/Logoff,mchen,WS-EXEC01,192.168.10.136,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:28:34,4769,Security,Kerberos Service Ticket,ljohnson,DC01,192.168.10.195,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:29:57,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.23,Service ticket requested for MSSQLSvc/SQL01.nebula.test:1433 — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:33:43,4768,Security,Kerberos Authentication,jsmith,DC01,192.168.10.13,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:35:06,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.15,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:35:42,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.194,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:37:10,4768,Security,Kerberos Authentication,mchen,DC01,192.168.10.176,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:41:10,4769,Security,Kerberos Service Ticket,kpatel,DC01,192.168.10.119,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:47:12,4624,Security,Logon/Logoff,mchen,WS-EXEC01,192.168.10.41,Logon Type 10 (RemoteInteractive)
+2026-10-15 11:48:46,4768,Security,Kerberos Authentication,kpatel,DC01,192.168.10.157,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:52:07,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.126,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:53:45,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.179,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:56:27,4768,Security,Kerberos Authentication,agarcia,DC01,192.168.10.23,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)
+2026-10-15 11:58:08,4769,Security,Kerberos Service Ticket,jsmith,DC01,192.168.10.106,Service ticket requested for http/WEBAPP01.nebula.test — Encryption: 0x12 (AES256) — Status: 0x0
+2026-10-15 11:59:15,4768,Security,Kerberos Authentication,ljohnson,DC01,192.168.10.49,TGT requested — Encryption: 0x12 (AES256-CTS-HMAC-SHA1-96) — Status: 0x0 (Success)

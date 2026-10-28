@@ -1,0 +1,64 @@
+{
+  "id": "priv-escalation",
+  "title": "Privilege Escalation",
+  "category": "linux",
+  "difficulty": "intermediate",
+  "points": 250,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "suid",
+    "linux",
+    "privilege-escalation",
+    "forensics"
+  ],
+  "summary": "A non-standard SUID binary was abused to read a sensitive file. Reconstruct what happened.",
+  "briefing": "Incident responders recovered forensic artifacts from a compromised NebulaCorp workstation. A low-privilege user account was able to read /etc/shadow — a file normally readable only by root.\n\nThe responders collected:\n- The output of find / -perm -4000 (SUID binaries)\n- The user's recovered bash history\n- Relevant syslog entries\n- Directory listing and file details for a suspicious binary\n\nAnalyze these artifacts to determine:\n1. Which SUID binary does NOT belong to the standard OS installation?\n2. What sensitive file was read through it?\n3. Which user account exploited it?\n\nSubmit: RANGE{suid_<binary_name>_<sensitive_file_basename>_<username>}\n\nFor example, if the binary were /opt/tools/helper, the file /etc/passwd, and the user admin1: RANGE{suid_helper_passwd_admin1}",
+  "objectives": [
+    "Identify the non-standard SUID binary from the find output",
+    "Trace how it was used in the bash history",
+    "Confirm the sensitive file access in syslog",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "grep",
+    "less",
+    "text-editor"
+  ],
+  "hints": [
+    {
+      "title": "Standard vs custom",
+      "text": "Standard SUID binaries live in /usr/bin/ and /usr/lib/. Look for one in an unusual location like /opt/.",
+      "cost": 20
+    },
+    {
+      "title": "Trace the attack",
+      "text": "The binary is /opt/nebula/logmon. The bash history shows it was used with --read /etc/shadow. The user is dev01.",
+      "cost": 45
+    }
+  ],
+  "requires": [
+    "ledger-audit"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "d61dcc87a13cf507c352c6cea80df5f3e204e65069951f20a3b88b7bf37b61f3"
+  },
+  "artifacts": [
+    {
+      "file": "find-suid.txt",
+      "description": "Output of find / -perm -4000 on the compromised host."
+    },
+    {
+      "file": "bash-history.txt",
+      "description": "Recovered bash history for the suspect user."
+    },
+    {
+      "file": "syslog-extract.txt",
+      "description": "Syslog entries around the incident window."
+    },
+    {
+      "file": "ls-details.txt",
+      "description": "File details for the suspicious binary."
+    }
+  ]
+}

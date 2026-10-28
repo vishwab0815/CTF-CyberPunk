@@ -1,0 +1,25 @@
+# Optional. The app is stateless — all data lives in MongoDB. Put a TLS-terminating
+# reverse proxy in front for real events. Set MONGODB_URI (and FLAG_SECRET) in a .env file.
+services:
+  range:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI:-}
+      MONGODB_DB: ${MONGODB_DB:-nebula_range}
+      FLAG_SECRET: ${FLAG_SECRET:-}
+      ADMIN_HANDLE: ${ADMIN_HANDLE:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # TRUST_PROXY: "1"     # only if a proxy you control sets X-Forwarded-For
+      # COOKIE_SECURE: "0"   # only for plain-HTTP LAN events
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 256
+    restart: unless-stopped

@@ -1,0 +1,42 @@
+$ strings -n 4 /opt/nebula/beacon
+
+/lib64/ld-linux-x86-64.so.2
+__cxa_finalize
+__libc_start_main
+socket
+connect
+send
+recv
+close
+malloc
+free
+memcpy
+printf
+fprintf
+sleep
+GLIBC_2.2.5
+GLIBC_2.17
+_ITM_deregisterTMCloneTable
+_ITM_registerTMCloneTable
+203.0.113.42
+443
+/var/log/.beacon.pid
+/tmp/.beacon.sock
+%s: connection established
+%s: transmission complete
+%s: retry in %d seconds
+beacon v2.1-nebula
+Usage: beacon [--interval N] [--stealth] [--key FILE]
+--interval  Beacon interval in seconds (default: 60)
+--stealth   Reduce beacon size and jitter timing
+--key       Path to encryption key file
+XOR key loaded: 0x5a
+Encrypting payload (%d bytes)...
+Decrypting response (%d bytes)...
+[!] Error: connection refused
+[!] Error: key file not found
+[*] Beacon started (PID %d)
+[*] Payload size: %d bytes
+NEBULA_C2_HOST
+NEBULA_C2_PORT
+HOME

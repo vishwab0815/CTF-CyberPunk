@@ -1,0 +1,52 @@
+{
+  "id": "dead-drop",
+  "title": "Dead Drop",
+  "category": "network",
+  "difficulty": "beginner",
+  "points": 150,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "dns",
+    "exfiltration",
+    "hex"
+  ],
+  "summary": "Suspicious DNS queries are hiding data in plain sight. Decode the payload.",
+  "briefing": "NebulaCorp's edge DNS resolver logged a burst of unusual queries. Normal internal traffic queries known corporate domains, but a handful of queries resolve subdomains of \"exfil.nebula.test\" — a domain that does not exist in the corporate zone.\n\nThe subdomain labels look like hex-encoded data. If someone is tunnelling information out through DNS, the payload is in those labels.\n\nExtract every query to *.exfil.nebula.test, concatenate the subdomain labels (the part before \".exfil.nebula.test\") in chronological order, and decode the hex to recover the hidden message.\n\nThe decoded message is a flag. Submit it exactly as it appears.",
+  "objectives": [
+    "Filter the DNS log for queries to *.exfil.nebula.test",
+    "Extract the hex-encoded subdomain labels",
+    "Concatenate them in timestamp order and decode from hex",
+    "Submit the decoded flag"
+  ],
+  "tools": [
+    "grep",
+    "awk",
+    "xxd",
+    "CyberChef"
+  ],
+  "hints": [
+    {
+      "title": "Filter pattern",
+      "text": "grep \"exfil.nebula.test\" dns-queries.log isolates the suspicious queries. The subdomain label is the first dot-separated segment of the query name.",
+      "cost": 20
+    },
+    {
+      "title": "Decode method",
+      "text": "After extracting the hex labels, concatenate them into one string and run: echo \"<hex>\" | xxd -r -p",
+      "cost": 30
+    }
+  ],
+  "requires": [
+    "ledger-audit"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "88284f14100b9d796f2a50e202e8f235826329f3a9e9dfcc4d12f9f79405248d"
+  },
+  "artifacts": [
+    {
+      "file": "dns-queries.log",
+      "description": "Edge resolver query log, ~500 entries."
+    }
+  ]
+}

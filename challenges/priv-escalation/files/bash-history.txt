@@ -1,0 +1,22 @@
+# Recovered bash_history for user: dev01
+# Host: nebula-ws01
+# Note: timestamps reconstructed from syslog correlation
+
+whoami
+id
+uname -a
+cat /etc/os-release
+ls -la /home/
+ls -la /opt/
+ls -la /opt/nebula/
+file /opt/nebula/logmon
+ls -la /opt/nebula/logmon
+strings /opt/nebula/logmon | grep -i usage
+/opt/nebula/logmon --help
+/opt/nebula/logmon --read /var/log/syslog
+/opt/nebula/logmon --read /var/log/auth.log
+/opt/nebula/logmon --read /etc/shadow
+cat /tmp/logmon_out.txt
+grep svc_backup /tmp/logmon_out.txt
+rm /tmp/logmon_out.txt
+history -c

@@ -1,0 +1,45 @@
+{
+  "id": "ledger-audit",
+  "title": "Ledger Audit",
+  "category": "forensics",
+  "difficulty": "intermediate",
+  "points": 200,
+  "mission": "Calibration",
+  "tags": [
+    "data-analysis",
+    "csv"
+  ],
+  "summary": "One invoice id appears twice with different amounts. Quantify the discrepancy.",
+  "briefing": "Finance exported a month of synthetic invoices and asked the security team to check for tampering.\n\nInvoice ids are meant to be unique. Exactly one id appears more than once, and the two rows disagree on the amount.\n\nReport the finding as RANGE{dup_<invoice id lowercased, with an underscore instead of the dash>_delta_<difference in cents between the two amounts>}.\n\nFor example, an id INV-00001 with amounts 100 and 250 would be written RANGE{dup_inv_00001_delta_150}.",
+  "objectives": [
+    "Find the duplicated invoice id",
+    "Compute the absolute difference in cents",
+    "Format and submit the finding"
+  ],
+  "tools": [
+    "csvkit",
+    "awk",
+    "sort/uniq",
+    "python3"
+  ],
+  "hints": [
+    {
+      "title": "One-liner",
+      "text": "cut -d, -f1 ledger-feb.csv | sort | uniq -d prints ids that occur more than once.",
+      "cost": 20
+    }
+  ],
+  "requires": [
+    "layered-encoding"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "c0a039a4c3a8dd1b137eb1bc9d749deb4239ed28d9b6e865cd871b911fc60ebd"
+  },
+  "artifacts": [
+    {
+      "file": "ledger-feb.csv",
+      "description": "242 synthetic invoice rows."
+    }
+  ]
+}

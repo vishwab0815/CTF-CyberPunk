@@ -1,0 +1,20 @@
+% WHOIS query for nebula-research.test
+% This is synthetic data.
+
+Domain Name: nebula-research.test
+Registry Domain ID: D12345678-TEST
+Registrar: Example Registrar Inc.
+Updated Date: 2026-08-20T00:00:00Z
+Creation Date: 2025-03-15T00:00:00Z
+
+Registrant Name: Jordan Morrow
+Registrant Organization: NebulaCorp Research Division
+Registrant Street: 1400 Signal Way
+Registrant City: Portland
+Registrant State: OR
+Registrant Postal Code: 97201
+Registrant Country: US
+Registrant Email: j.morrow@nebula-research.test
+
+Name Server: ns1.nebula-research.test
+Name Server: ns2.nebula-research.test

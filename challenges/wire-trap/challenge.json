@@ -1,0 +1,55 @@
+{
+  "id": "wire-trap",
+  "title": "Wire Trap",
+  "category": "network",
+  "difficulty": "intermediate",
+  "points": 300,
+  "mission": "Field Operations",
+  "tags": [
+    "pcap",
+    "wireshark",
+    "tcp-reassembly",
+    "http"
+  ],
+  "summary": "A packet capture holds a file transfer split across TCP segments. Reassemble it.",
+  "briefing": "NebulaCorp's SOC captured traffic from a host suspected of exfiltrating data over plain HTTP. You have a raw packet capture (capture.pcap).\n\nThe interesting exchange is a single TCP conversation on port 80. The server's response body was transmitted across more than one TCP segment, so you cannot just read a single packet — you must reassemble the TCP stream to recover the full payload.\n\nOpen the capture in Wireshark, find the HTTP conversation, and use \"Follow > TCP Stream\" to reassemble it. The response body is Base64-encoded. Decode it to recover the flag.\n\n(This is a real libpcap file. Tools: Wireshark, tshark, tcpflow, or scapy.)",
+  "objectives": [
+    "Open capture.pcap in Wireshark",
+    "Locate the TCP conversation on port 80",
+    "Follow the TCP stream to reassemble the response body",
+    "Base64-decode the reassembled body",
+    "Submit the recovered flag"
+  ],
+  "tools": [
+    "Wireshark",
+    "tshark",
+    "tcpflow",
+    "scapy",
+    "base64"
+  ],
+  "hints": [
+    {
+      "title": "Follow the stream",
+      "text": "In Wireshark: right-click any packet in the port-80 conversation > Follow > TCP Stream. Or on the CLI: tshark -r capture.pcap -q -z follow,tcp,raw,0",
+      "cost": 30
+    },
+    {
+      "title": "Decode the body",
+      "text": "The HTTP response body (after the blank line) is Base64. Concatenate it (ignore line breaks) and run: echo \"<b64>\" | base64 -d",
+      "cost": 50
+    }
+  ],
+  "requires": [
+    "dead-drop"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "8a2f019be7976798f3e252219ee7f7c8a25fdd0189b7873b740fe69048e64767"
+  },
+  "artifacts": [
+    {
+      "file": "capture.pcap",
+      "description": "Raw libpcap capture (Ethernet/IPv4/TCP). Open in Wireshark."
+    }
+  ]
+}

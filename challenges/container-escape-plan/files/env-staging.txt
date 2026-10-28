@@ -1,0 +1,15 @@
+# Staging Environment Configuration
+# Last updated: 2026-10-01 by devops team
+
+DATABASE_URL=postgres://staging_user:stg_pa55w0rd@staging-db.internal:5432/staging
+REDIS_URL=redis://staging-cache.internal:6379/0
+JWT_SECRET=super_secret_staging_key_2026
+API_KEY=sk-staging-nebula-a1b2c3d4e5f6
+
+# Previous security audit finding (encoded for ticket reference):
+# UkFOR0V7azhzX3ByaXZpbGVnZWRfaG9zdHBpZF9kb2NrZXJfc29ja30=
+
+FLASK_ENV=development
+FLASK_DEBUG=1
+LOG_LEVEL=DEBUG
+CORS_ORIGINS=*

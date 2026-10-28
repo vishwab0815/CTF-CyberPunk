@@ -1,0 +1,22 @@
+=== Cached Profile: Professional Network (nebula-research.test/~jmorrow) ===
+Last cached: 2026-10-12
+
+Name:     Jordan Morrow
+Title:    Security Researcher
+Org:      NebulaCorp — Research Division
+Location: Portland, OR
+
+About:
+  Reverse engineer and vulnerability researcher focused on embedded systems
+  security. Previously worked on IoT firmware analysis at Tidewater Labs.
+
+Handles:
+  Forum:    signal_echo (NebulaSec Forum)
+  Git:      j.morrow (git.corp.test)
+  Email:    j.morrow@nebula-research.test
+
+Publications:
+  - "Gateway Firmware Extraction Techniques" (Oct 2026)
+  - "Side-Channel Timing in Low-Power SoCs" (Jul 2026)
+
+PGP Fingerprint: 0xA44F B32C 91DE ...

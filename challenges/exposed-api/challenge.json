@@ -1,0 +1,56 @@
+{
+  "id": "exposed-api",
+  "title": "Exposed API",
+  "category": "web",
+  "difficulty": "beginner",
+  "points": 150,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "http",
+    "access-log",
+    "api"
+  ],
+  "summary": "An API debug endpoint is leaking sensitive configuration in production.",
+  "briefing": "NebulaCorp's web application firewall flagged an anomaly: the /api/debug/config endpoint should return 403 to all callers, but the access log shows at least one successful 200 response.\n\nYou have two files:\n- access.log — the HTTP access log from the production reverse proxy\n- debug-response.json — the response body captured by the WAF for the anomalous 200 request\n\nExamine both files. The response body contains leaked secrets, including a flag. Find it and submit it.",
+  "objectives": [
+    "Find the 200-status request to /api/debug/config in the access log",
+    "Note the source IP and user agent of the successful request",
+    "Read the captured response body for leaked secrets",
+    "Submit the flag from the response"
+  ],
+  "tools": [
+    "grep",
+    "jq",
+    "curl",
+    "less"
+  ],
+  "hints": [
+    {
+      "title": "Narrow the search",
+      "text": "grep \"debug/config\" access.log shows all requests to that endpoint. Compare the status codes.",
+      "cost": 15
+    },
+    {
+      "title": "Response file",
+      "text": "The flag is a JSON field in debug-response.json. Use jq or just read the file.",
+      "cost": 25
+    }
+  ],
+  "requires": [
+    "ledger-audit"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "e4201e6f7798320996d2535b6fb7392d6e9267971c52cd903e0513c0dcec11fb"
+  },
+  "artifacts": [
+    {
+      "file": "access.log",
+      "description": "HTTP access log from the production reverse proxy (~300 entries)."
+    },
+    {
+      "file": "debug-response.json",
+      "description": "Captured response body from the anomalous request."
+    }
+  ]
+}

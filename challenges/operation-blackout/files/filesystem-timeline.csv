@@ -1,0 +1,13 @@
+timestamp,action,host,path,user,size_bytes,notes
+2026-10-15T09:14:05Z,create,nebula-ws01,/tmp/~$Benefits_Enrollment_2027.docx,dev01,0,Office temp file — macro document opened
+2026-10-15T09:14:08Z,create,nebula-ws01,/tmp/.update.ps1,dev01,4280,PowerShell dropper extracted from macro
+2026-10-15T09:14:10Z,execute,nebula-ws01,/tmp/.update.ps1,dev01,4280,Dropper executed
+2026-10-15T09:18:30Z,create,nebula-ws01,/opt/nebula/.beacon,dev01,35280,C2 beacon binary dropped
+2026-10-15T09:19:00Z,execute,nebula-ws01,/opt/nebula/.beacon,dev01,35280,Beacon started — connects to 203.0.113.42:443
+2026-10-15T09:25:00Z,read,nebula-ws01,/etc/passwd,dev01,2048,Reconnaissance
+2026-10-15T09:26:00Z,read,nebula-ws01,/home/dev01/.ssh/id_rsa,dev01,1679,SSH key harvested for lateral movement
+2026-10-15T10:15:05Z,create,nebula-db01,/tmp/export.sql,dev01,12582912,pg_dump of production database
+2026-10-15T10:40:00Z,create,nebula-ws01,/tmp/.staging.tar.gz,dev01,4528000,Compressed database export staged for exfil
+2026-10-15T10:45:30Z,delete,nebula-ws01,/tmp/.staging.tar.gz,dev01,0,Staging file deleted after exfiltration
+2026-10-15T10:46:00Z,delete,nebula-ws01,/tmp/.update.ps1,dev01,0,Dropper deleted
+2026-10-15T10:46:05Z,modify,nebula-ws01,/home/dev01/.bash_history,dev01,0,History cleared

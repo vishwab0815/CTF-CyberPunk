@@ -1,0 +1,14 @@
+# Extracted syslog entries for nebula-ws01 around the incident window
+# Filtered for user dev01 and logmon activity
+
+Oct 15 09:28:00 nebula-ws01 systemd[1]: Started Session 42 of user dev01.
+Oct 15 09:28:05 nebula-ws01 sshd[4501]: pam_unix(sshd:session): session opened for user dev01(uid=1001) by (uid=0)
+Oct 15 09:30:10 nebula-ws01 sudo[4515]: dev01 : command not allowed ; TTY=pts/0 ; PWD=/home/dev01 ; USER=root ; COMMAND=/bin/cat /etc/shadow
+Oct 15 09:31:00 nebula-ws01 logmon[4521]: started by uid=1001 (dev01)
+Oct 15 09:31:00 nebula-ws01 logmon[4521]: reading /var/log/syslog — access granted (suid root)
+Oct 15 09:31:45 nebula-ws01 logmon[4522]: started by uid=1001 (dev01)
+Oct 15 09:31:45 nebula-ws01 logmon[4522]: reading /var/log/auth.log — access granted (suid root)
+Oct 15 09:32:30 nebula-ws01 logmon[4523]: started by uid=1001 (dev01)
+Oct 15 09:32:30 nebula-ws01 logmon[4523]: reading /etc/shadow — access granted (suid root)
+Oct 15 09:32:30 nebula-ws01 logmon[4523]: output written to /tmp/logmon_out.txt
+Oct 15 09:33:15 nebula-ws01 logmon[4523]: process exited normally

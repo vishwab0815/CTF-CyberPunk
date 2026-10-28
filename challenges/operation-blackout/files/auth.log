@@ -1,0 +1,21 @@
+Oct 15 06:01:33 nebula-ws01 sshd[3132]: Accepted publickey for agarcia from 192.168.1.94 port 51296 ssh2
+Oct 15 06:22:32 nebula-ws01 sshd[3173]: Accepted publickey for mchen from 192.168.1.99 port 64511 ssh2
+Oct 15 06:37:21 nebula-ws01 sshd[3305]: Accepted publickey for jsmith from 192.168.1.66 port 63981 ssh2
+Oct 15 06:37:24 nebula-ws01 sshd[3110]: Accepted publickey for jsmith from 192.168.1.63 port 61348 ssh2
+Oct 15 06:55:31 nebula-ws01 sshd[3382]: Accepted publickey for jsmith from 192.168.1.90 port 62000 ssh2
+Oct 15 06:59:24 nebula-ws01 sshd[3390]: Accepted publickey for agarcia from 192.168.1.65 port 57923 ssh2
+Oct 15 06:59:57 nebula-ws01 sshd[3348]: Accepted publickey for mchen from 192.168.1.63 port 52724 ssh2
+Oct 15 07:08:49 nebula-ws01 sshd[3001]: Accepted publickey for jsmith from 192.168.1.92 port 53753 ssh2
+Oct 15 07:10:57 nebula-ws01 sshd[3470]: Accepted publickey for jsmith from 192.168.1.46 port 59478 ssh2
+Oct 15 07:27:10 nebula-ws01 sshd[3438]: Accepted publickey for mchen from 192.168.1.92 port 61218 ssh2
+Oct 15 07:31:05 nebula-ws01 sshd[3412]: Accepted publickey for mchen from 192.168.1.45 port 50598 ssh2
+Oct 15 07:33:04 nebula-ws01 sshd[3051]: Accepted publickey for agarcia from 192.168.1.64 port 55912 ssh2
+Oct 15 07:46:57 nebula-ws01 sshd[3172]: Accepted publickey for mchen from 192.168.1.69 port 51594 ssh2
+Oct 15 08:13:50 nebula-ws01 sshd[3419]: Accepted publickey for mchen from 192.168.1.72 port 53932 ssh2
+Oct 15 09:19:00 nebula-ws01 kernel: [42513.201] process beacon (pid 5201) started by dev01
+Oct 15 09:53:52 nebula-ws01 sshd[3274]: Accepted publickey for jsmith from 192.168.1.88 port 59786 ssh2
+Oct 15 10:14:30 nebula-ws01 sshd[5501]: Failed password for postgres from 192.168.1.201 port 52001 ssh2
+Oct 15 10:14:45 nebula-ws01 sshd[5502]: Failed password for admin from 192.168.1.201 port 52002 ssh2
+Oct 15 10:15:00 nebula-db01 sshd[2201]: Accepted password for dev01 from 192.168.1.201 port 52003 ssh2
+Oct 15 10:15:01 nebula-db01 sshd[2201]: pam_unix(sshd:session): session opened for user dev01(uid=1001) by (uid=0)
+Oct 15 10:20:00 nebula-db01 sudo[2250]: dev01 : TTY=pts/0 ; PWD=/home/dev01 ; USER=root ; COMMAND=/usr/bin/pg_dump production -f /tmp/export.sql

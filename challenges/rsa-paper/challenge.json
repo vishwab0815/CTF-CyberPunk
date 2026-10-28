@@ -1,0 +1,53 @@
+{
+  "id": "rsa-paper",
+  "title": "RSA Paper",
+  "category": "crypto",
+  "difficulty": "intermediate",
+  "points": 300,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "rsa",
+    "factoring",
+    "modular-arithmetic",
+    "cryptanalysis"
+  ],
+  "summary": "An RSA-encrypted message uses a dangerously small modulus. Factor it and decrypt.",
+  "briefing": "An encrypted message was intercepted from a NebulaCorp internal relay. The encryption uses textbook RSA — each byte of the plaintext is encrypted independently as c = m^e mod n, with no padding.\n\nThe modulus n is suspiciously small. If you can factor it into its two prime components p and q, you can compute the private exponent d and decrypt the message.\n\nSteps:\n1. Factor n into primes p × q (hint: both primes are under 110,000)\n2. Compute φ(n) = (p−1)(q−1)\n3. Compute d = e⁻¹ mod φ(n) (modular inverse)\n4. For each ciphertext integer c, compute m = c^d mod n\n5. Convert each m to its ASCII character\n\nThe decrypted message is the flag. Submit it exactly as it appears.",
+  "objectives": [
+    "Factor the modulus n by trial division",
+    "Compute the private exponent d",
+    "Decrypt each ciphertext byte",
+    "Assemble and submit the flag"
+  ],
+  "tools": [
+    "python3",
+    "SageMath",
+    "factordb.com",
+    "CyberChef"
+  ],
+  "hints": [
+    {
+      "title": "Factoring approach",
+      "text": "Try dividing n by every odd number from 3 up to sqrt(n). With both primes under 110,000, trial division finishes in milliseconds. In Python: for i in range(3, 110000, 2): if n % i == 0: print(i, n//i); break",
+      "cost": 30
+    },
+    {
+      "title": "Decryption in Python",
+      "text": "Use pow(c, d, n) for modular exponentiation. chr(pow(c, d, n)) gives the ASCII character. Apply to each line of ciphertext.",
+      "cost": 50
+    }
+  ],
+  "requires": [
+    "layered-encoding"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "2e82b0a8b0b947c5aa20afc777a764d8f672198c1b4e43998792a02b486ac3a2"
+  },
+  "artifacts": [
+    {
+      "file": "intercept.txt",
+      "description": "Intercepted RSA-encrypted transmission with public key parameters."
+    }
+  ]
+}

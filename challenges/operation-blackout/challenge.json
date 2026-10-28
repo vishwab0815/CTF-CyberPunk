@@ -1,0 +1,81 @@
+{
+  "id": "operation-blackout",
+  "title": "Operation Blackout",
+  "category": "hunting",
+  "difficulty": "expert",
+  "points": 500,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "threat-hunting",
+    "incident-response",
+    "kill-chain",
+    "correlation",
+    "capstone"
+  ],
+  "summary": "Correlate five evidence sources to reconstruct a complete APT kill chain.",
+  "briefing": "This is the capstone. NebulaCorp suffered a major breach. Your team has collected five types of evidence from across the environment:\n\n- phishing-email.txt — the initial access phishing email with macro attachment\n- netflows.csv — perimeter firewall flow data showing beaconing and exfiltration\n- dns-log.txt — edge resolver query log with DNS tunneling evidence\n- auth.log — SSH authentication events across multiple hosts\n- filesystem-timeline.csv — file system events reconstructed from forensic images\n\nReconstruct the complete attack kill chain:\n1. Initial access (phishing → macro execution)\n2. C2 establishment (beacon → external server)\n3. Reconnaissance and credential harvesting\n4. Lateral movement (workstation → database server)\n5. Data staging and exfiltration (database dump → DNS tunnel and HTTPS upload)\n6. Cleanup (artifact deletion, history clearing)\n\nIdentify the C2 server IP address and the DNS exfiltration domain.\n\nSubmit: RANGE{blackout_c2_<c2_ip_with_underscores>_exfil_<exfil_domain_with_underscores>}\n\nFor example, if C2 were 10.0.0.1 and exfil went to evil.example: RANGE{blackout_c2_10_0_0_1_exfil_evil_example}",
+  "objectives": [
+    "Identify the initial access vector from the phishing email",
+    "Find the C2 beacon pattern in network flows",
+    "Trace lateral movement in auth.log",
+    "Identify the exfiltration channel in DNS logs",
+    "Correlate the filesystem timeline with network activity",
+    "Format and submit the flag"
+  ],
+  "tools": [
+    "grep",
+    "awk",
+    "python3",
+    "csvkit",
+    "Timeline Explorer",
+    "CyberChef"
+  ],
+  "hints": [
+    {
+      "title": "C2 beacon",
+      "text": "In netflows.csv, look for a persistent connection from an internal IP to a single external IP with very regular timing (~60s intervals) and small consistent payload sizes.",
+      "cost": 40
+    },
+    {
+      "title": "DNS exfiltration",
+      "text": "In dns-log.txt, filter for TXT queries with NXDOMAIN responses. The exfiltration domain is the parent domain of those queries (the part after the hex-encoded subdomain).",
+      "cost": 60
+    },
+    {
+      "title": "Almost there",
+      "text": "The C2 IP is 203.0.113.42 (visible in netflows and resolved via c2-relay.nightfall.test in DNS). The DNS exfil goes to data.nebula.test. Format the domain with underscores: data_nebula_test.",
+      "cost": 90
+    }
+  ],
+  "requires": [
+    "packet-storm",
+    "crime-scene",
+    "ghost-in-the-wire"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "1ff29ab24aeaf43f467842c993e03d15665f244fec167e9788e703cd997e7fe7"
+  },
+  "artifacts": [
+    {
+      "file": "phishing-email.txt",
+      "description": "Intercepted phishing email (initial access vector)."
+    },
+    {
+      "file": "netflows.csv",
+      "description": "Perimeter firewall flow data (~500 entries)."
+    },
+    {
+      "file": "dns-log.txt",
+      "description": "Edge resolver query log (~300 entries)."
+    },
+    {
+      "file": "auth.log",
+      "description": "SSH authentication events from multiple hosts."
+    },
+    {
+      "file": "filesystem-timeline.csv",
+      "description": "File creation/modification/deletion timeline."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "range-check",
+  "title": "Range Check",
+  "category": "linux",
+  "difficulty": "beginner",
+  "points": 50,
+  "mission": "Calibration",
+  "tags": [
+    "grep",
+    "warmup"
+  ],
+  "summary": "Verify your toolchain and the submission pipeline on a noisy log file.",
+  "briefing": "Before the real operations begin, organisers want to confirm every operator can pull evidence, search it, and submit a result.\n\nThe attached maintenance log contains a single line that is not like the others. It carries your personal range token. Find it and submit it.\n\nThis operation is intentionally easy. It exists to prove your session, your downloads and your submissions work end to end.",
+  "objectives": [
+    "Download range-notes.log",
+    "Locate the one non-routine line",
+    "Submit the token in full"
+  ],
+  "tools": [
+    "grep",
+    "less",
+    "awk"
+  ],
+  "hints": [
+    {
+      "title": "Pattern hint",
+      "text": "Routine lines all contain a service name and \"tick=\". The odd line does not follow that shape. Try grep -v with a pattern for routine lines.",
+      "cost": 10
+    }
+  ],
+  "flag": {
+    "type": "dynamic",
+    "tag": "range_check"
+  },
+  "artifacts": [
+    {
+      "file": "range-notes.log",
+      "description": "About 400 lines of routine service chatter plus one odd line.",
+      "template": true
+    }
+  ]
+}

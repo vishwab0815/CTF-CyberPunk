@@ -1,0 +1,23 @@
+== NebulaSec Forum — Subtopic: Vulnerability Research ==
+Thread: Gateway firmware analysis — anyone else looking at this?
+
+Posted by: signal_echo | 2026-10-10 14:23 UTC
+
+I have been analyzing the NebulaCorp gateway firmware (v3.8.2) and found an
+undocumented management API on port 8443. The endpoint accepts unauthenticated
+requests if you send the right vendor header.
+
+I documented my findings but I am not posting them publicly yet. DM me on the
+forum or reach out to my research group — we go by "J.Morrow Research" on Signal.
+
+I will present the full chain at the next NebulaSec meetup in Portland.
+
+-- signal_echo
+   PGP: 0xA44F (keyserver: keys.nebula-research.test)
+
+---
+Reply by: fw_reversing_fan | 2026-10-10 15:01 UTC
+
+Interesting. I noticed signal_echo also published a paper on embedded extraction
+techniques last month. The WHOIS for their research domain might have more info
+if you want to collaborate.

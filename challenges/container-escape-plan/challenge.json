@@ -1,0 +1,65 @@
+{
+  "id": "container-escape-plan",
+  "title": "Container Escape Plan",
+  "category": "cloud",
+  "difficulty": "advanced",
+  "points": 400,
+  "mission": "Operation Nightfall",
+  "tags": [
+    "docker",
+    "kubernetes",
+    "devsecops",
+    "misconfiguration"
+  ],
+  "summary": "Audit a set of deployment artifacts riddled with security misconfigurations.",
+  "briefing": "NebulaCorp's DevSecOps team recovered four deployment artifacts from a misconfigured CI/CD pipeline that was accidentally made public:\n\n- Dockerfile.txt — the container image build instructions\n- deployment.yaml — the Kubernetes deployment manifest\n- pipeline.yml — the GitHub Actions CI/CD workflow\n- env-staging.txt — a staging environment configuration file\n\nEach file contains one or more serious security misconfigurations: hardcoded credentials, privileged containers, exposed host resources, and more.\n\nA previous security auditor left an encoded summary of the most critical finding in one of the files. Find the Base64-encoded string that does not look like a normal configuration value, decode it, and submit the flag it contains.\n\nThe flag summarizes the three worst Kubernetes misconfigurations in the deployment manifest.",
+  "objectives": [
+    "Review all four files for security misconfigurations",
+    "Find the Base64-encoded audit finding hidden in one of the files",
+    "Decode it to recover the flag",
+    "Submit the flag"
+  ],
+  "tools": [
+    "base64",
+    "text-editor",
+    "CyberChef",
+    "kubectl-lint"
+  ],
+  "hints": [
+    {
+      "title": "Where to look",
+      "text": "One of the configuration files contains a comment with a Base64-encoded string. It looks like a long alphanumeric string ending in = signs.",
+      "cost": 40
+    },
+    {
+      "title": "Which file",
+      "text": "The encoded finding is in the env-staging.txt file, in a comment line. Decode it with: echo \"<string>\" | base64 -d",
+      "cost": 70
+    }
+  ],
+  "requires": [
+    "token-forge"
+  ],
+  "flag": {
+    "type": "static",
+    "sha256": "6c9871787ff0e0211054d2ff8af6aa4e8d336114da2707e22ce5801934d43872"
+  },
+  "artifacts": [
+    {
+      "file": "Dockerfile.txt",
+      "description": "Docker build instructions for the API service."
+    },
+    {
+      "file": "deployment.yaml",
+      "description": "Kubernetes deployment manifest."
+    },
+    {
+      "file": "pipeline.yml",
+      "description": "GitHub Actions CI/CD workflow."
+    },
+    {
+      "file": "env-staging.txt",
+      "description": "Staging environment configuration."
+    }
+  ]
+}

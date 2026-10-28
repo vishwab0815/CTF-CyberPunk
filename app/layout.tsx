@@ -16,13 +16,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Skip to content
         </a>
         <SessionProvider>
-          <TopNav />
-          <main id="main" className="mx-auto max-w-7xl px-4 py-8">
-            {children}
-          </main>
-          <footer className="mx-auto max-w-7xl px-4 pb-10 pt-4 font-mono text-[11px] uppercase tracking-widest text-ink-400">
-            Obsidian Range · isolated training environment · all targets are synthetic
-          </footer>
+          <div className="flex min-h-[100svh] flex-col">
+            <TopNav />
+            <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
+              {children}
+            </main>
+            <footer className="mx-auto w-full max-w-7xl px-4 pb-10 pt-4 font-mono text-[11px] uppercase tracking-widest text-ink-400">
+              Obsidian Range · isolated training environment · all targets are synthetic
+            </footer>
+          </div>
         </SessionProvider>
       </body>
     </html>

@@ -18,6 +18,9 @@ const csp = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Challenge packs are read from disk at runtime via computed paths, so the
+  // serverless bundles must ship them explicitly.
+  outputFileTracingIncludes: { '/api/**/*': ['./challenges/**/*'] },
   async headers() {
     return [
       {
